@@ -23,6 +23,9 @@ public class ZsetonMozgato extends Thread {
         jatekosokSzama = szalVezerlo.jatekosokSzama();
     }
 
+    /**
+     * Betölti a zsetonokat és megfelelően elrendezi a játéktéren.
+     */
     private void zsetonokBetolt() {
         Map<Byte, List<Zseton>> jatekosokZsetonjai = new HashMap<>();
         List<Zseton> zsetonok;
@@ -38,20 +41,22 @@ public class ZsetonMozgato extends Thread {
             zsetonok = ZsetonKezelo.zsetonKioszt(osszeg);
             jatekosokZsetonjai.put(i, zsetonok);
 
-            for (Zseton zseton : zsetonok) {               
-                veletlenForgSzog = Math.random()*360;
-                szoras = (int)(-3 + Math.random()*6);
+            for (Zseton zseton : zsetonok) {                    
+                veletlenForgSzog = Math.random()*360;//Létrehoz egy véletlen szöget 0 és 360 fok között. A létrehozott értéknek megfelelően fognak elfordulni a zsetonok.                
+                szoras = (int)(-3 + Math.random()*6);//Létrehoz egy véletlen számot -2 és +4 között. Ennyivel fognak a zsetonok eltérni az aktuális x középponttól.
                 x = vegpontLista.get(i).x;
                 y = vegpontLista.get(i).y;
-                szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y)+90;
+                szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y)+90;//Kiszámolja hogy az adott x,y pozícióban lévő pont hány fokos szöget zár be. Ehhez a szöghöz hozzá ad még kilencven fokot.
                 elteres = 150;
-                x += elteres * Math.cos(Math.toRadians(szog));
+                x += elteres * Math.cos(Math.toRadians(szog));//Az x koordináta pozícióját eltolja az elteres értékkel a megadott szög irányba.
                 y += elteres * Math.sin(Math.toRadians(szog));
-                vegpont = SzogSzamito.vegpontSzamit(SzogSzamito.foSzogSzamit(jatekterSzelesseg, jatekterMagassag, x, y), jatekterSzelesseg, jatekterMagassag);
-                x = (int) (vegpont.x + 50 * Math.cos(Math.toRadians(SzogSzamito.foSzogSzamit(jatekterSzelesseg, jatekterMagassag, x, y))));
-                y = (int) (vegpont.y + 50 * Math.sin(Math.toRadians(SzogSzamito.foSzogSzamit(jatekterSzelesseg, jatekterMagassag, x, y))));
-                szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, vegpont.x, vegpont.y)+90;
+                vegpont = SzogSzamito.vegpontSzamit(SzogSzamito.foSzogSzamit(jatekterSzelesseg, jatekterMagassag, x, y), jatekterSzelesseg, jatekterMagassag);//kiszámolja az új végontot.
+                elteres = 40;
+                x = (int) (vegpont.x + elteres * Math.cos(Math.toRadians(SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y))));//Az új végpont x értékét eltolja az eltérés értékkel a megadott irányba.
+                y = (int) (vegpont.y + elteres * Math.sin(Math.toRadians(SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y))));
+                szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y)+90;//Kiszámolja az x,y értékekhez tartozó szöget és hozzáad 90 fokot;
                 
+                /*Beállítja a játékosokhoz tartozó zsetonok elhelyezkedését.*/
                 switch (zseton.getErtek()) {
                     case 1:
                         elteres = 40;
@@ -70,7 +75,7 @@ public class ZsetonMozgato extends Thread {
                     case 100:
                         elteres = 40;
                         szog += 110;
-                }
+                }                
                 
                 x += elteres * Math.cos(Math.toRadians(szog)) + szoras;
                 y += elteres * Math.sin(Math.toRadians(szog)) + szoras;
@@ -81,7 +86,7 @@ public class ZsetonMozgato extends Thread {
                 zseton.forgat(veletlenForgSzog);
             }
         }
-        szalVezerlo.setJatekosokZsetonjai(jatekosokZsetonjai);
+        szalVezerlo.setJatekosokZsetonjai(jatekosokZsetonjai);//Átadja a szálvezérlőnek a jatekosokZsetonjai HashMap-et.
         szalVezerlo.frissit();
     }
 
