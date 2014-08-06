@@ -76,10 +76,8 @@ public final class ZsetonKezelo {
      */
     public static List<Zseton> pot(List<Zseton> jatekosZsetonok, int osszeg){
         int osszeg2;
-        List<Zseton> potZsetonok = new ArrayList<>();
-        /*Ez azért kell mert ennek az új arányosságnak megfelelően 
-        bontja fel a zsetonkioszt metódus az összeget.*/
-        aranySzamok = new byte[] {1, 1, 1, 1, 1};
+        List<Zseton> potZsetonok = new ArrayList<>();        
+        aranySzamok = new byte[] {1, 1, 1, 1, 1};//Ez azért kell mert ennek az új arányosságnak megfelelően bontja fel a zsetonkioszt metódus az összeget.
         
         zsetonKioszt(osszeg);
 

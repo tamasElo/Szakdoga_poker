@@ -31,9 +31,7 @@ public final class SorrendKevero {
         int balOldalMeret;
         int kartyaSzam;
 
-            /*
-             * Alap pakli keverés
-             */
+            /*Alap pakli keverés*/
             while (kevertSorrendLista.size() != teljesPakliMeret) {
                 varakozasIdo();
                 kartyaSzam = general.nextInt(teljesPakliMeret); //Generál 52 db számot
@@ -42,16 +40,12 @@ public final class SorrendKevero {
                 }
             }
 
-            /*
-             * Pakli megkeverése annyiszor amennyi a keverések száma
-             */
+            /* Pakli megkeverése annyiszor amennyi a keverések száma*/
             for (int i = 0; i < keveresekSzama; i++) {                
                 varakozasIdo();
                 balOldalMeret = general.nextInt(balOldalFelsoKorlat) + balOldalAlsoKorlat;
 
-                /*
-                 * Feltölti a szétválasztott paklikat
-                 */
+                /*Feltölti a szétválasztott paklikat*/
                 for (byte j = 0; j < balOldalMeret; j++) {
                     balOldaliSorrendLista.add(kevertSorrendLista.get(j));
                 }

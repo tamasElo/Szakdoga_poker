@@ -13,8 +13,7 @@ public class Zseton implements Comparable<Zseton>{
     private int ky;
     private int zsetonKepSzelesseg;
     private int zsetonKepMagassag;
-    private boolean forgat;
-    private double fok;
+    private double forgat;
 
     public Zseton(byte ertek, Image zsetonKep) {
         this.ertek = ertek;
@@ -24,34 +23,20 @@ public class Zseton implements Comparable<Zseton>{
     public void rajzol(Graphics2D g2D, ImageObserver o) {
         AffineTransform at = g2D.getTransform();
 
-        if (forgat) {
-            g2D.rotate(Math.toRadians(fok), kx, ky);
+        if (forgat != 0) {
+            g2D.rotate(Math.toRadians(forgat), kx, ky);
         }
         
         g2D.drawImage(zsetonKep, kx-zsetonKepSzelesseg/2, ky-zsetonKepMagassag/2, zsetonKepSzelesseg, zsetonKepMagassag, o);
         
-        if (forgat) {
+        if (forgat != 0) {
             g2D.setTransform(at);
         }
     }
 
-    public void forgat(double fok) {
-        forgat = (fok != 0);
-        this.fok = fok;
-    }
-        
-    @Override
-    public String toString() {
-        return String.valueOf(ertek);
-    }
-
     @Override
     public int compareTo(Zseton t) {
-        return this.ertek-t.ertek;
-    }
-
-    public byte getErtek() {
-        return ertek;
+        return this.ertek - t.ertek;
     }
 
     public void setKx(int kx) {
@@ -68,5 +53,37 @@ public class Zseton implements Comparable<Zseton>{
 
     public void setZsetonKepMagassag(int zsetonKepMagassag) {
         this.zsetonKepMagassag = zsetonKepMagassag;
+    }
+
+    public void setForgat(double forgat) {
+        this.forgat = forgat;
+    }
+
+    public Image getZsetonKep() {
+        return zsetonKep;
+    }
+
+    public byte getErtek() {
+        return ertek;
+    }
+
+    public int getKx() {
+        return kx;
+    }
+
+    public int getKy() {
+        return ky;
+    }
+
+    public int getZsetonKepSzelesseg() {
+        return zsetonKepSzelesseg;
+    }
+
+    public int getZsetonKepMagassag() {
+        return zsetonKepMagassag;
+    }
+
+    public double getForgat() {
+        return forgat;
     }
 }

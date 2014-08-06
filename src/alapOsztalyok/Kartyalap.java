@@ -17,8 +17,7 @@ public class Kartyalap implements Comparable<Kartyalap>{
     private final String kartyaNev;
     private final String kartyaSzin;
     private boolean mutat;
-    private boolean forgat;
-    private double fok;
+    private double forgat;
 
     public Kartyalap(Image elolap, String kartyaNev, String kartyaSzin, byte kartyaErtek) {
         this.elolap = elolap;
@@ -30,8 +29,8 @@ public class Kartyalap implements Comparable<Kartyalap>{
     public void rajzol(Graphics2D g2D, ImageObserver o){
         AffineTransform at = g2D.getTransform();          
 
-        if (forgat) {
-            g2D.rotate(Math.toRadians(fok), kx, ky);
+        if (forgat != 0) {
+            g2D.rotate(Math.toRadians(forgat), kx, ky);
         } 
         if (!mutat) {
             g2D.drawImage(hatlap, (int) kx-kartyaKepSzelesseg/2, (int) ky-kartyaKepMagassag/2, kartyaKepSzelesseg, kartyaKepMagassag, o);
@@ -39,40 +38,16 @@ public class Kartyalap implements Comparable<Kartyalap>{
             g2D.drawImage(elolap, (int) kx-kartyaKepSzelesseg/2, (int) ky-kartyaKepMagassag/2, kartyaKepSzelesseg, kartyaKepMagassag, o);
         }
 
-        if (forgat) {
+        if (forgat != 0) {
             g2D.setTransform(at);
         }
+    }   
+    
+    @Override
+    public int compareTo(Kartyalap t) {
+        return this.kartyaErtek-t.getKartyaErtek();
     }
     
-    public void forgat(double fok){
-        forgat = (fok != 0);                    
-        this.fok = fok;
-    }       
-
-    public Image getElolap() {
-        return elolap;
-    }
-
-    public Image getHatlap() {
-        return hatlap;
-    }   
-
-    public byte getKartyaErtek() {
-        return kartyaErtek;
-    }
-
-    public String getKartyaSzin() {
-        return kartyaSzin;
-    }
-
-    public double getKx() {
-        return kx;
-    }
-
-    public double getKy() {
-        return ky;
-    }
-
     public void setKx(double kx) {
         this.kx = kx;
     }
@@ -81,10 +56,6 @@ public class Kartyalap implements Comparable<Kartyalap>{
         this.ky = ky;
     }
 
-    public boolean isMutat() {
-        return mutat;
-    }
-    
     public void setKartyaKepSzelesseg(int kartyaKepSzelesseg) {
         this.kartyaKepSzelesseg = kartyaKepSzelesseg;
     }
@@ -97,6 +68,26 @@ public class Kartyalap implements Comparable<Kartyalap>{
         this.mutat = mutat;
     }
 
+    public void setForgat(double forgat) {
+        this.forgat = forgat;
+    }
+
+    public Image getElolap() {
+        return elolap;
+    }
+
+    public Image getHatlap() {
+        return hatlap;
+    }
+
+    public double getKx() {
+        return kx;
+    }
+
+    public double getKy() {
+        return ky;
+    }
+
     public int getKartyaKepSzelesseg() {
         return kartyaKepSzelesseg;
     }
@@ -105,13 +96,23 @@ public class Kartyalap implements Comparable<Kartyalap>{
         return kartyaKepMagassag;
     }
 
-    public double getFok() {
-        return fok;
+    public byte getKartyaErtek() {
+        return kartyaErtek;
     }
 
-    @Override
-    public int compareTo(Kartyalap t) {
-        return this.kartyaErtek-t.getKartyaErtek();
+    public String getKartyaNev() {
+        return kartyaNev;
     }
-    
+
+    public String getKartyaSzin() {
+        return kartyaSzin;
+    }
+
+    public boolean isMutat() {
+        return mutat;
+    }
+
+    public double getForgat() {
+        return forgat;
+    }    
 }

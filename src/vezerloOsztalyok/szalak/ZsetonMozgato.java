@@ -83,7 +83,7 @@ public class ZsetonMozgato extends Thread {
                 zseton.setKy(y);
                 zseton.setZsetonKepSzelesseg(30);
                 zseton.setZsetonKepMagassag(30);
-                zseton.forgat(veletlenForgSzog);
+                zseton.setForgat(veletlenForgSzog);
             }
         }
         szalVezerlo.setJatekosokZsetonjai(jatekosokZsetonjai);//Átadja a szálvezérlőnek a jatekosokZsetonjai HashMap-et.

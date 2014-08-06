@@ -108,7 +108,7 @@ public class KartyaMozgato extends Thread{
             for (byte i = 0; i < kartyalapok.size(); i++) {                 
                 kartyalapok.get(i).setKx(aktx + szorasok.get(i).getX());
                 kartyalapok.get(i).setKy(akty + szorasok.get(i).getY());
-                kartyalapok.get(i).forgat(aktForgSzog);
+                kartyalapok.get(i).setForgat(aktForgSzog);
             }
             szalVezerlo.frissit();
         }
@@ -155,7 +155,7 @@ public class KartyaMozgato extends Thread{
                 aktForgSzog += vegForgSzog / (tavolsag / lepes);
                 kartyalap.setKx(aktx);
                 kartyalap.setKy(akty);
-                kartyalap.forgat(aktForgSzog);
+                kartyalap.setForgat(aktForgSzog);
                 try {
                     sleep(ido);
                 } catch (InterruptedException ex) {
@@ -190,7 +190,7 @@ public class KartyaMozgato extends Thread{
                 ky = kartyalap.getKy();
                 vx = vegpontok.get(i).x;
                 vy = vegpontok.get(i).y;
-                aktForgSzog = kartyalap.getFok();     
+                aktForgSzog = kartyalap.getForgat();     
                 vegpontSzog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, vx, vy);//Kiszámítja a végponthoz tartozó szöget.
                 vegpontSzog -= 90 * elojel;//Elöjelnek megfelelöen az ehhez a szöghöz viszonyítottan +- 90 fokban hozzáad egy eltérési értéket. Ebböl jön ki a játékos egyik kártyájának végpontja.*/
                 vx += elteres * Math.cos(Math.toRadians(vegpontSzog));
@@ -202,7 +202,7 @@ public class KartyaMozgato extends Thread{
                 aktForgSzog += 2 * elojel;
                 kartyalap.setKx(aktx);
                 kartyalap.setKy(akty);
-                kartyalap.forgat(aktForgSzog);
+                kartyalap.setForgat(aktForgSzog);
                 try {
                     sleep(ido);
                 } catch (InterruptedException ex) {
@@ -244,7 +244,7 @@ public class KartyaMozgato extends Thread{
                 aktForgSzog += vegForgSzog / (tavolsag / lepes);
                 kartyalap.setKx(aktx+veletlenX);
                 kartyalap.setKy(akty+veletlenY);
-                kartyalap.forgat(aktForgSzog);
+                kartyalap.setForgat(aktForgSzog);
                 try {
                     sleep(ido);
                 } catch (InterruptedException ex) {
