@@ -1,5 +1,6 @@
 package alapOsztalyok;
 
+import java.awt.Font;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class JatekosTest {
      */
     @Test
     public void testSetPokerKezNev_GetPokerKezNev() {
-        String pokerKezNev = "Ász";
+        String pokerKezNev = "Sor";
         jatekos.setPokerKezNev(pokerKezNev);
         assertEquals(pokerKezNev, jatekos.getPokerKezNev());
     }
@@ -60,91 +61,17 @@ public class JatekosTest {
      */
     @Test
     public void testGetSorszam() {
-        int sorszam = 0;
-        assertEquals(sorszam, jatekos.getSorszam());
+        int sorszam = jatekos.getSorszam();
+        assertEquals(sorszam+1, new Jatekos("Teszt_Geza").getSorszam());
     }   
 
     /**
-     * Test of rajzol method, of class Jatekos.
+     * A setFont és getFong metódusokat teszteli.
      */
     @Test
-    public void testRajzol() {
-    }
-
-    /**
-     * Test of setX method, of class Jatekos.
-     */
-    @Test
-    public void testSetX() {
-    }
-
-    /**
-     * Test of setY method, of class Jatekos.
-     */
-    @Test
-    public void testSetY() {
-    }
-
-    /**
-     * Test of setFont method, of class Jatekos.
-     */
-    @Test
-    public void testSetFont() {
-    }
-
-    /**
-     * Test of setPokerKezNev method, of class Jatekos.
-     */
-    @Test
-    public void testSetPokerKezNev() {
-    }
-
-    /**
-     * Test of setPokerKezLapok method, of class Jatekos.
-     */
-    @Test
-    public void testSetPokerKezLapok() {
-    }
-
-    /**
-     * Test of setJatekosZsetonok method, of class Jatekos.
-     */
-    @Test
-    public void testSetJatekosZsetonok() {
-    }
-
-    /**
-     * Test of getX method, of class Jatekos.
-     */
-    @Test
-    public void testGetX() {
-    }
-
-    /**
-     * Test of getY method, of class Jatekos.
-     */
-    @Test
-    public void testGetY() {
-    }
-
-    /**
-     * Test of getJatekosZsetonok method, of class Jatekos.
-     */
-    @Test
-    public void testGetJatekosZsetonok() {
-    }
-
-    /**
-     * Test of getPokerKezLapok method, of class Jatekos.
-     */
-    @Test
-    public void testGetPokerKezLapok() {
-    }
-
-    /**
-     * Test of getPokerKezNev method, of class Jatekos.
-     */
-    @Test
-    public void testGetPokerKezNev() {
+    public void testSetFont_getFont() {
+        Font font = new Font("Arial", 1, 1);
+        jatekos.setFont(font);
+        assertEquals(font, jatekos.getFont());        
     }
 }

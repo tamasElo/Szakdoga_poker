@@ -74,7 +74,7 @@ public class SzogSzamito {
     }
 
     public static double forgasSzogSzamit(int szelesseg, int magassag, double vx, double vy) {        
-        double kulonbseg = 0;
+        double kulonbseg;
         szog = 0;
         
         foSzogSzamit(szelesseg, magassag, vx, vy);
@@ -84,7 +84,7 @@ public class SzogSzamito {
             ky = magassag / 2;
             szog = Math.atan2(vy - ky, vx - kx);
             szog = Math.toDegrees(szog);
-            kulonbseg += (foSzog <= 180) ? -90 : 90;
+            kulonbseg = (foSzog <= 180) ? -90 : 90;
             szog += kulonbseg;
         }
         if (foSzog <= 45 || foSzog >= 300) {
@@ -92,7 +92,7 @@ public class SzogSzamito {
             ky = magassag / 2;
             szog = Math.atan2(vy - ky, vx - kx);
             szog = Math.toDegrees(szog);
-            kulonbseg += (foSzog <= 360 && foSzog> 45) ? 90 : -90;
+            kulonbseg = (foSzog <= 360 && foSzog> 45) ? 90 : -90;
             szog += kulonbseg;
         }
         return szog;

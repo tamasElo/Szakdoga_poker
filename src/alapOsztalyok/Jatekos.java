@@ -74,6 +74,10 @@ public class Jatekos {
         return sorszam;
     }
 
+    public Font getFont() {
+        return font;
+    }
+
     public List<Zseton> getJatekosZsetonok() {
         return jatekosZsetonok;
     }

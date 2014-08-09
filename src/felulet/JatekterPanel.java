@@ -24,7 +24,6 @@ public class JatekterPanel extends JPanel{
     private int magassag;
     private List<Gomb> gombok;
     private Gomb lenyomottGomb;
-    private byte jatekosokSzama;
 
     public JatekterPanel() {
         inicializal();
@@ -161,9 +160,5 @@ public class JatekterPanel extends JPanel{
     
     public void setSzalVezerlo(SzalVezerlo szalVezerlo) {
         this.szalVezerlo = szalVezerlo;
-    }
-
-    public byte getJatekosokSzama() {
-        return jatekosokSzama;
     }
 }
