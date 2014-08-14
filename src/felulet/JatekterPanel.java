@@ -122,40 +122,53 @@ public class JatekterPanel extends JPanel{
                     + gombNev[i] + "_3.png")).getImage();            
             gomb = new Gomb(nev, elsoKep, masodikKep, harmadikKep, (int)xyPoziciok[0][i], 
                     (int)xyPoziciok[1][i] - meretek[1][i] / 2, meretek[0][i], meretek[1][i]);
-            gomb.setMegjSorszam(2);
+            gomb.setMegjSorszam(3);
             gombok.add(gomb);
         }
     }
     
-     private void jatekTerAncestorAdded(AncestorEvent ae){       
+    public void gombsorAktival(){
+        for (Gomb gomb : gombok) {
+            gomb.setMegjSorszam(2);
+        }
+    }
+    
+    public void gomsorPasszival() {
+        for (Gomb gomb : gombok) {
+            gomb.setMegjSorszam(3);
+        }
+    }
+    
+    private void jatekTerAncestorAdded(AncestorEvent ae){       
         szelesseg = this.getWidth();
         magassag = this.getHeight();       
         
         gombsorBeallit();
         szalVezerlo.jatekosokBeallit();
-        szalVezerlo.zsetonSzalIndit();
-        szalVezerlo.kartyaSzalIndit();
+        szalVezerlo.jatekvezerloSzalIndit();
         repaint();
     }
     
-    private void jatekTerMousePressed(MouseEvent me){
-         for (Gomb gomb : gombok) {
-                    Rectangle2D negyszog = new Rectangle2D.Double(gomb.getX(), gomb.getY(), gomb.getSzelesseg(), gomb.getMagassag());
-                    if (negyszog.contains(me.getX(), me.getY()) && me.getButton() == 1) {
-                        gomb.setMegjSorszam(1);
-                        gomb.setY((int) (gomb.getY() + magassag / 300));
-                        lenyomottGomb = gomb;
-                    }
-                    repaint();
-                }
+    private void jatekTerMousePressed(MouseEvent me) {
+        for (Gomb gomb : gombok) {
+            if(gomb.getMegjSorszam() == 2){
+                Rectangle2D negyszog = new Rectangle2D.Double(gomb.getX(), gomb.getY(), gomb.getSzelesseg(), gomb.getMagassag());
+                if (negyszog.contains(me.getX(), me.getY()) && me.getButton() == 1) {
+                    gomb.setMegjSorszam(1);
+                    gomb.setY((int) (gomb.getY() + magassag / 300));
+                    lenyomottGomb = gomb;
+                }  
+            }
+        }
+        repaint();
     }
-    
-    private void jatekTermouseReleased(MouseEvent me){
-         if (lenyomottGomb != null && lenyomottGomb.getMegjSorszam() == 1) {
-                    lenyomottGomb.setMegjSorszam(2);
-                    lenyomottGomb.setY((int) (lenyomottGomb.getY() - magassag / 300));
-                }
-                repaint();
+
+    private void jatekTermouseReleased(MouseEvent me) {
+        if (lenyomottGomb != null && lenyomottGomb.getMegjSorszam() == 1) {
+            lenyomottGomb.setMegjSorszam(2);
+            lenyomottGomb.setY((int) (lenyomottGomb.getY() - magassag / 300));
+        }
+        repaint();
     }
     
     public void setSzalVezerlo(SzalVezerlo szalVezerlo) {
