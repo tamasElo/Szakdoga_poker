@@ -90,7 +90,7 @@ public class ZsetonTest {
      */
     @Test
     public void testGetZsetonKep() {
-//        assertTrue(zseton.getZsetonKep() != null);
+        assertTrue(zseton.getZsetonKep() != null);
     }
 
     /**
