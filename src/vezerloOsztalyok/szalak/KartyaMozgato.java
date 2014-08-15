@@ -76,9 +76,8 @@ public class KartyaMozgato extends Thread{
      * Az egész kártyapaklit mozgatja középről a megadott szögbe és irányba.
      */
     @SuppressWarnings("SleepWhileInLoop")
-    private void kartyaPakliMozgat() {           
-        double vegSzog;     
-        dealer = 1;          
+    private void kartyaPakliMozgat() {
+        double vegSzog;        
         aktTav = 0;        
         lepes = 3;    
         aktForgSzog = 0;
@@ -118,7 +117,7 @@ public class KartyaMozgato extends Thread{
      * Kiosztja a kártyalapokat a pakli pozíciójától indulva a játékosoknak.
      */
     @SuppressWarnings("SleepWhileInLoop")
-    private void kartyalapMozgat() {  
+    private void kartyalapokKioszt() {  
         szalVezerlo.setKartyaGrafikaElore(true);//A kártyalapok elsőként való kirajzolását teszi lehetővé a játéktéren.        
         double vegpontSzog;        
         int elteres = jatekterSzelesseg/80;//A játékos lapjai közötti távolság értékét adja meg.
@@ -128,10 +127,10 @@ public class KartyaMozgato extends Thread{
         változót és lejjebb egyesével növeljük majd.*/
         byte j, k;
         byte jatekosSorszam = dealer;
-        Kartyalap kartyalap;      
-
+        Kartyalap kartyalap;   
         lepes = 3;        
         vegpontok.addAll(vegpontok);//Megduplázza a végpontokat. Mivel egy játékosnak két lapja van, ezért kétszer kell a ciklusban ugyanazzal a végponttal számolni.
+        
         for (byte i = 0; i<vegpontok.size(); i++) { 
             jatekosSorszam++;//Megnöveli egyel az jatekosSorszam változót hogy a megfelelő játékoshoz kerüljön a kiosztott kártyalap.
             if(jatekosSorszam == jatekosokSzama) jatekosSorszam = 0;//Ha az jatekosSorszam eléri a játékosok számát akkor a számláló kinullázódik.            
@@ -165,9 +164,9 @@ public class KartyaMozgato extends Thread{
             }
         }  
      
-        szalVezerlo.setKartyaGrafikaElore(false);//A zsetonokat lesz elsőként kirajzolva a játékpanelre.        
-        
+        szalVezerlo.setKartyaGrafikaElore(false);//A zsetonokat lesz elsőként kirajzolva a játékpanelre.                
         Map<Byte, List<Kartyalap>> jatekosokKartyalapjai = szalVezerlo.getJatekosokKartyalapjai();//Lekéri a szálvezérlőtől a játékosok kártyalapjait.
+        
         while (lepes <= tavolsag) {
             for (byte i = 0; i < vegpontok.size(); i++) {               
                 /*A feltételnek megfelelöen előjelet vált. A j változó a játékos 
@@ -218,11 +217,14 @@ public class KartyaMozgato extends Thread{
      */
     @SuppressWarnings("SleepWhileInLoop")
     private void kartyalapLeosztas(){
-        Kartyalap kartyalap;    
+        Kartyalap kartyalap;   
+        int leosztandoKartyalapokSzama;
         double veletlenX, veletlenY;
         double novekmeny = jatekterSzelesseg/2.5;        
         lepes = 3;
-        for (byte i = 0; i < 5; i++) {
+        leosztandoKartyalapokSzama = (szalVezerlo.leosztottKartyalapokSzama() == 0) ? 3 : 1;
+        
+        for (byte i = 0; i < leosztandoKartyalapokSzama; i++) {
             veletlenX = -jatekterSzelesseg/620 + Math.random() * jatekterSzelesseg/310;
             veletlenY = -jatekterMagassag/240 + Math.random() * jatekterMagassag/120;
             kartyalap = kartyalapok.remove(kartyalapok.size()-1);
@@ -237,6 +239,7 @@ public class KartyaMozgato extends Thread{
             foSzog = Math.atan2(vy - ky, vx - kx);
             tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
             novekmeny+=kartyalap.getKartyaKepSzelesseg()+jatekterSzelesseg/160;//A leosztott lapok közötti távolságot számolja ki
+            
             while (aktTav <= tavolsag) {
                 aktTav += lepes;
                 aktx = kx + aktTav * Math.cos(foSzog);
@@ -264,7 +267,7 @@ public class KartyaMozgato extends Thread{
         if (kartyalapokKiosztasa) {
             pakliBetolt();
             kartyaPakliMozgat();
-            kartyalapMozgat();
+            kartyalapokKioszt();
         }
         if(kartyalapLeosztas)kartyalapLeosztas();
     }    
@@ -282,5 +285,9 @@ public class KartyaMozgato extends Thread{
         for (Kartyalap kartyalap : kartyalapok) {
             this.kartyalapok.add(kartyalap);
         }
+    }
+
+    public void setDealer(byte dealer) {
+        this.dealer = dealer;
     }
 }

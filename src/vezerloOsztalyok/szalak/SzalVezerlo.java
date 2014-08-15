@@ -1,7 +1,9 @@
 package vezerloOsztalyok.szalak;
 
+import alapOsztalyok.Dealer;
 import alapOsztalyok.Jatekos;
 import alapOsztalyok.Kartyalap;
+import alapOsztalyok.Vak;
 import alapOsztalyok.Zseton;
 import felulet.JatekterPanel;
 import java.awt.Font;
@@ -22,9 +24,12 @@ public class SzalVezerlo {
     private List<Jatekos> jatekosok;
     private Map<Byte, List<Kartyalap>> jatekosokKartyalapjai;
     private Map<Byte, List<Zseton>> jatekosokZsetonjai;
-    private final Image keveresAnimacio;
-    private JatekterPanel jatekterPanel;
     private boolean kartyaGrafikaElore;
+    private Dealer dealer;
+    private Vak kisVak;
+    private Vak nagyVak;
+    private JatekterPanel jatekterPanel;
+    private final Image keveresAnimacio;
 
     public SzalVezerlo() {
         keveresAnimacio = new ImageIcon(this.getClass().getResource("/adatFajlok/kartyaPakli/keveresAnimacio.gif")).getImage();
@@ -39,13 +44,15 @@ public class SzalVezerlo {
         /*-----------------------------------*/
         
     } 
-    
+
     /**
-     * Kirajzolja a kártyapaklit, a játékosok lapjait és a leosztott kártyalapokat a panelre.
-     * @param g2D 
+     * Kirajzolja a kártyapaklit, a játékosok lapjait és a leosztott
+     * kártyalapokat a panelre.
+     *
+     * @param g2D
      */
     public void kartyalapokRajzol(Graphics2D g2D) {
-        if (kartyalapok != null) {           
+        if (kartyalapok != null) {
             for (Kartyalap kartyalap : kartyalapok) {
                 kartyalap.rajzol(g2D, jatekterPanel);
             }
@@ -69,10 +76,11 @@ public class SzalVezerlo {
                 }
             }
     }
-    
+
     /**
      * Kirajzolja a panelre a játékosok neveit.
-     * @param g2D 
+     *
+     * @param g2D
      */
     public void jatekosokRajzol(Graphics2D g2D) {
         if (jatekosok != null) {
@@ -84,10 +92,11 @@ public class SzalVezerlo {
 
     /**
      * Kirajzolja a zsetonokat a panelre.
-     * @param g2D 
+     *
+     * @param g2D
      */
     public void zsetonokRajzol(Graphics2D g2D) {
-        if(jatekosokZsetonjai != null){
+        if (jatekosokZsetonjai != null) {
             List<Zseton> jatekosZsetonok;
             for (Map.Entry<Byte, List<Zseton>> entry : jatekosokZsetonjai.entrySet()) {
                 jatekosZsetonok = entry.getValue();
@@ -97,9 +106,10 @@ public class SzalVezerlo {
             }
         }
     }
-     
+
     /**
-     * Beállítja a játékosok neveinek pozícióját, hogy az asztal szélétől azonos távolságra legyenek.
+     * Beállítja a játékosok neveinek pozícióját, hogy az asztal szélétől azonos
+     * távolságra legyenek.
      */
     public void jatekosokBeallit() {
         int i = 0;
@@ -112,23 +122,30 @@ public class SzalVezerlo {
             jatekos.setFont(new Font("Arial", 1, jatekterPanelMagassag() / 60));
         }
     }
-
-    public void zsetonSzalIndit(){
+    
+    public void jatekvezerloSzalIndit() {
+        JatekVezerlo jatekVezerlo = new JatekVezerlo(this);
+        jatekVezerlo.start();
+    }
+    
+    public void zsetonokKiosztSzalIndit(){
         ZsetonMozgato zsetonMozgato = new ZsetonMozgato(this);
         zsetonMozgato.setZsetonokBetolt(true);
         zsetonMozgato.start();
     }
     
-    /**
-     * Elindítja a kártyaszálat ami a képernyőn megjelenő kártya animációkat vezérli.
-     */
-    public void kartyaSzalIndit() {
+    public void kartyalapokKiosztSzalIndit(byte dealer) {
         KartyaMozgato kartyaMozgato = new KartyaMozgato(this);
         kartyaMozgato.setKartyalapokKiosztasa(true);
         kartyaMozgato.setKartyalapLeosztas(true);
+        kartyaMozgato.setDealer(dealer);
         kartyaMozgato.start();
     }
-
+ 
+    public void korongokMozgatSzalIndit(byte dealer){
+        
+    }
+    
     /**
      * Hozzáad egy kártyalapot a leosztottKartyalapok listához. Ha a lista 
      * null-ra hivatkozik akkor létrehoz egy új ArrayList-et.
@@ -137,8 +154,12 @@ public class SzalVezerlo {
     public void leosztottKartyalapHozzaad(Kartyalap kartyalap){        
         if(leosztottKartyalapok == null) leosztottKartyalapok = new ArrayList<>();
         leosztottKartyalapok.add(kartyalap);
+    }    
+   
+    public int leosztottKartyalapokSzama() {
+        return (leosztottKartyalapok == null) ? 0 : leosztottKartyalapok.size();
     }
-    
+
     /**
      * Egy feltétel vizsgálattal eldönti, hogy a HashMap tartalmazza e a játékos azonosító kulcsot.
      * Ha igen, akkor a kulcshoz tartozó értéket ami egy lista, lekéri és hozzá adja a metódus paramétereként
@@ -158,8 +179,12 @@ public class SzalVezerlo {
         }
     }
     
-    public void zsetonRajzElore(){
-        
+    public void gombsorAktival() {
+        jatekterPanel.gombsorAktival();
+    }
+    
+    public void gombsorPasszival(){
+        jatekterPanel.gomsorPasszival();
     }
     
     /**

@@ -8,8 +8,8 @@ import javax.swing.ImageIcon;
 
 public class Kartyalap implements Comparable<Kartyalap>{
     private Image elolap;
-    private final Image hatlap = new ImageIcon(this.getClass().getResource
-        ("/adatFajlok/kartyaPakli/hatlap.png")).getImage(); //A forgatást még le kell tesztelni és ha működik statikussal akkor úgy marad
+    private final Image hatlap;
+    private final Image keret;
     private double kx;
     private double ky;
     private int kartyaKepSzelesseg, kartyaKepMagassag;
@@ -24,6 +24,8 @@ public class Kartyalap implements Comparable<Kartyalap>{
         this.kartyaNev = kartyaNev;
         this.kartyaSzin = kartyaSzin;
         this.kartyaErtek = kartyaErtek;
+        hatlap = new ImageIcon(this.getClass().getResource("/adatFajlok/kartyaPakli/hatlap.png")).getImage();
+        keret = new ImageIcon(this.getClass().getResource("/adatFajlok/kartyaPakli/keret.png")).getImage(); 
     }
     
     public void rajzol(Graphics2D g2D, ImageObserver o){
@@ -32,10 +34,12 @@ public class Kartyalap implements Comparable<Kartyalap>{
         if (forgat != 0) {
             g2D.rotate(Math.toRadians(forgat), kx, ky);
         } 
-        if (!mutat) {
+        if (!mutat) {          
             g2D.drawImage(hatlap, (int) kx-kartyaKepSzelesseg/2, (int) ky-kartyaKepMagassag/2, kartyaKepSzelesseg, kartyaKepMagassag, o);
         } else {
-            g2D.drawImage(elolap, (int) kx-kartyaKepSzelesseg/2, (int) ky-kartyaKepMagassag/2, kartyaKepSzelesseg, kartyaKepMagassag, o);
+            /*egy animációban fog növekedni a mérete*/
+            g2D.drawImage(keret, (int) kx - (kartyaKepSzelesseg+15) / 2, (int) ky - (kartyaKepMagassag+15) / 2, kartyaKepSzelesseg+15, kartyaKepMagassag+15, o);
+            g2D.drawImage(elolap, (int) kx - kartyaKepSzelesseg / 2, (int) ky - kartyaKepMagassag / 2, kartyaKepSzelesseg, kartyaKepMagassag, o);
         }
 
         if (forgat != 0) {

@@ -81,8 +81,8 @@ public class ZsetonMozgato extends Thread {
                 y += elteres * Math.sin(Math.toRadians(szog)) + szoras;
                 zseton.setKx(x);
                 zseton.setKy(y);
-                zseton.setZsetonKepSzelesseg(30);
-                zseton.setZsetonKepMagassag(30);
+                zseton.setKorongKepSzelesseg(30);
+                zseton.setKorongKepMagassag(30);
                 zseton.setForgat(veletlenForgSzog);
             }
         }
