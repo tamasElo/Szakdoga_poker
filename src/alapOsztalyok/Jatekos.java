@@ -9,11 +9,12 @@ import java.util.List;
 public class Jatekos {
     private String nev;
     private Color szin;
+    private boolean aktiv;
     private static byte index;
     private byte sorszam;
     private double x;
     private double y;
-    private Font font;
+    private Font font;    
     private String pokerKezNev;
     private List<Kartyalap> pokerKezLapok;
     private List<Zseton> jatekosZsetonok;  
@@ -50,6 +51,10 @@ public class Jatekos {
         this.pokerKezNev = pokerKezNev;
     }
 
+    public void setAktiv(boolean aktiv) {
+        this.aktiv = aktiv;
+    }
+
     public void setPokerKezLapok(List<Kartyalap> pokerKezLapok) {
         this.pokerKezLapok = pokerKezLapok;
     }
@@ -60,6 +65,10 @@ public class Jatekos {
 
     public String getNev() {
         return nev;
+    }
+
+    public boolean isAktiv() {
+        return aktiv;
     }
 
     public double getX() {

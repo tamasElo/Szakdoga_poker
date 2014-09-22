@@ -88,10 +88,10 @@ public class ZsetonTest {
     /**
      * A getZsetonKep tesztelése.
      */
-    @Test
-    public void testGetZsetonKep() {
-        assertTrue(zseton.getZsetonKep() != null);
-    }
+//    @Test
+//    public void testGetZsetonKep() {
+//        assertTrue(zseton.getZsetonKep() != null);
+//    }
 
     /**
      * A getErtek metódus tesztelése.

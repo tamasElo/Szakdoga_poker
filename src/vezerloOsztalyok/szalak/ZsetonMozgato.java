@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import vezerloOsztalyok.SzogSzamito;
 import vezerloOsztalyok.ZsetonKezelo;
 
@@ -27,7 +28,7 @@ public class ZsetonMozgato extends Thread {
      * Betölti a zsetonokat és megfelelően elrendezi a játéktéren.
      */
     private void zsetonokBetolt() {
-        Map<Byte, List<Zseton>> jatekosokZsetonjai = new HashMap<>();
+        Map<Byte, List<Zseton>> jatekosokZsetonjai = new ConcurrentHashMap<>();
         List<Zseton> zsetonok;
         List<Point> vegpontLista = SzogSzamito.vegpontLista(jatekosokSzama, jatekterSzelesseg, jatekterMagassag);
         Point vegpont;
@@ -54,27 +55,29 @@ public class ZsetonMozgato extends Thread {
                 elteres = 40;
                 x = (int) (vegpont.x + elteres * Math.cos(Math.toRadians(SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y))));//Az új végpont x értékét eltolja az eltérés értékkel a megadott irányba.
                 y = (int) (vegpont.y + elteres * Math.sin(Math.toRadians(SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y))));
-                szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y)+90;//Kiszámolja az x,y értékekhez tartozó szöget és hozzáad 90 fokot;
+                szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y);//Kiszámolja az x,y értékekhez tartozó szöget és hozzáad 90 fokot;
                 
                 /*Beállítja a játékosokhoz tartozó zsetonok elhelyezkedését.*/
                 switch (zseton.getErtek()) {
                     case 1:
                         elteres = 40;
-                        szog += 60;
+                        szog += 150;
                         break;
                     case 5:
                         elteres = 40;
+                        szog += 90;
                         break;
                     case 10:
                         elteres = 0;
+                        szog += 90;
                         break;
                     case 25:
                         elteres = 40;
-                        szog += 180;
+                        szog += 270;
                         break;
                     case 100:
                         elteres = 40;
-                        szog += 110;
+                        szog += 210;
                 }                
                 
                 x += elteres * Math.cos(Math.toRadians(szog)) + szoras;

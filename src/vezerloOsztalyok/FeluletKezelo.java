@@ -4,6 +4,7 @@ import felulet.TeljesKepernyo;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.DisplayMode;
 import javax.swing.JFrame;
@@ -19,6 +20,7 @@ public class FeluletKezelo {
         JFrame pokerFrame = new JFrame();
         SzalVezerlo szalVezerlo = new SzalVezerlo();
         JatekterPanel jatekterPanel = new JatekterPanel();
+        jatekterPanel.setBackground(Color.black);
         szalVezerlo.setJatekTerPanel(jatekterPanel);
         jatekterPanel.setSzalVezerlo(szalVezerlo);
         

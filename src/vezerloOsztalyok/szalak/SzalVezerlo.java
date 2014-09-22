@@ -1,8 +1,10 @@
 package vezerloOsztalyok.szalak;
 
+import vezerloOsztalyok.JatekVezerlo;
 import alapOsztalyok.Dealer;
 import alapOsztalyok.Jatekos;
 import alapOsztalyok.Kartyalap;
+import alapOsztalyok.Korong;
 import alapOsztalyok.Vak;
 import alapOsztalyok.Zseton;
 import felulet.JatekterPanel;
@@ -11,9 +13,9 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.ImageIcon;
 import vezerloOsztalyok.SzogSzamito;
@@ -22,6 +24,7 @@ public class SzalVezerlo {
     private List<Kartyalap> kartyalapok;  
     private List<Kartyalap> leosztottKartyalapok;
     private List<Jatekos> jatekosok;
+    private List<Korong> korongok;
     private Map<Byte, List<Kartyalap>> jatekosokKartyalapjai;
     private Map<Byte, List<Zseton>> jatekosokZsetonjai;
     private boolean kartyaGrafikaElore;
@@ -29,20 +32,12 @@ public class SzalVezerlo {
     private Vak kisVak;
     private Vak nagyVak;
     private JatekterPanel jatekterPanel;
+    private JatekVezerlo jatekVezerlo;
     private final Image keveresAnimacio;
+    private boolean gombsorAktiv;
 
     public SzalVezerlo() {
         keveresAnimacio = new ImageIcon(this.getClass().getResource("/adatFajlok/kartyaPakli/keveresAnimacio.gif")).getImage();
-         
-        /*tesztelés*/
-        jatekosok = new ArrayList<>();
-        jatekosok.add(new Jatekos("Sanyai"));
-        jatekosok.add(new Jatekos("Pityua"));
-        jatekosok.add(new Jatekos("Tomias"));
-        jatekosok.add(new Jatekos("Gézaka"));
-        jatekosok.add(new Jatekos("Kndras"));
-        /*-----------------------------------*/
-        
     } 
 
     /**
@@ -106,12 +101,29 @@ public class SzalVezerlo {
             }
         }
     }
-
+    
+    public void korongokRajzol(Graphics2D g2D){
+        if(korongok != null){
+            for (Korong korong : korongok) {
+                korong.rajzol(g2D, jatekterPanel);
+            }
+        }
+    }
+    
     /**
-     * Beállítja a játékosok neveinek pozícióját, hogy az asztal szélétől azonos
+     * Létrehozza a játékosokat és beállítja a neveik pozícióját, hogy az asztal szélétől azonos
      * távolságra legyenek.
      */
     public void jatekosokBeallit() {
+       /*tesztelés*/
+        jatekosok = new ArrayList<>();
+        jatekosok.add(new Jatekos("Sanyai"));
+        jatekosok.add(new Jatekos("Pityua"));
+        jatekosok.add(new Jatekos("Tomias"));
+        jatekosok.add(new Jatekos("Gézaka"));
+        jatekosok.add(new Jatekos("Kndras"));
+       /*-----------------------------------*/
+        
         int i = 0;
         List<Point> vegpontLista = SzogSzamito.vegpontLista(jatekosokSzama(), jatekterPanelSzelesseg(), jatekterPanelMagassag());
         Point vegpont;
@@ -120,12 +132,12 @@ public class SzalVezerlo {
             jatekos.setX(vegpont.getX() + jatekterPanelSzelesseg()/11.035 * Math.cos(Math.toRadians(SzogSzamito.szogSzamit(jatekterPanelSzelesseg(), jatekterPanelMagassag(), vegpont.getX(), vegpont.getY()))));
             jatekos.setY(vegpont.getY() + jatekterPanelMagassag()/8.276 * Math.sin(Math.toRadians(SzogSzamito.szogSzamit(jatekterPanelSzelesseg(), jatekterPanelMagassag(), vegpont.getX(), vegpont.getY()))));
             jatekos.setFont(new Font("Arial", 1, jatekterPanelMagassag() / 60));
+            jatekos.setAktiv(true);
         }
     }
     
-    public void jatekvezerloSzalIndit() {
-        JatekVezerlo jatekVezerlo = new JatekVezerlo(this);
-        jatekVezerlo.start();
+    public void jatekvezerloIndit() {
+        jatekVezerlo = new JatekVezerlo(this);
     }
     
     public void zsetonokKiosztSzalIndit(){
@@ -143,7 +155,9 @@ public class SzalVezerlo {
     }
  
     public void korongokMozgatSzalIndit(byte dealer){
-        
+        KorongMozgato korongMozgato = new KorongMozgato(this);
+        korongMozgato.setDealer(dealer);
+        korongMozgato.start();
     }
     
     /**
@@ -169,7 +183,7 @@ public class SzalVezerlo {
      * @param kartyalap 
      */
     public void jatekosKartyalapokhozAd(byte sorszam, Kartyalap kartyalap) {        
-        if(jatekosokKartyalapjai == null) jatekosokKartyalapjai = new HashMap<>();
+        if(jatekosokKartyalapjai == null) jatekosokKartyalapjai = new ConcurrentHashMap<>();
         if (jatekosokKartyalapjai.containsKey(sorszam)) {
             jatekosokKartyalapjai.get(sorszam).add(kartyalap);
         } else {
@@ -179,12 +193,30 @@ public class SzalVezerlo {
         }
     }
     
-    public void gombsorAktival() {
-        jatekterPanel.gombsorAktival();
-    }
-    
-    public void gombsorPasszival(){
-        jatekterPanel.gomsorPasszival();
+    public void gombSorAllapotvalt() {
+        if (jatekVezerlo != null) {
+            if (!jatekVezerlo.gepiJatekos() && !gombsorAktiv) {
+                boolean[] aktivalandoGombok = {true, true, true, true, true, true};
+
+                if (!jatekVezerlo.isMegadhat() && !jatekVezerlo.isPasszolhat()) {
+                    aktivalandoGombok[1] = false;
+                }
+                
+                if (!jatekVezerlo.isEmelhet() && !jatekVezerlo.isNyithat()) {
+                    for (int i = 2; i < 5; i++) {
+                        aktivalandoGombok[i] = false;
+                    }
+                }
+                
+                jatekterPanel.gombsorAktival(aktivalandoGombok);
+                gombsorAktiv = true;
+            }
+
+            if (jatekVezerlo.gepiJatekos() && gombsorAktiv) {
+                jatekterPanel.gombsorPasszival();
+                gombsorAktiv = false;
+            }
+        }
     }
     
     /**
@@ -218,12 +250,28 @@ public class SzalVezerlo {
         return (byte)jatekosok.size();
     }
     
+    public void jatekosokAktival() {
+        for (Jatekos jatekos : jatekosok) {
+            if (jatekosokZsetonjai != null && !jatekosokZsetonjai.get(jatekos.getSorszam()).isEmpty()) {
+                jatekos.setAktiv(true);
+            }
+        }
+    }
+    
+    public void jatekosDeaktival(byte jatekosSorszam){
+        jatekosok.get(jatekosSorszam).setAktiv(false);
+    }
+    
     public void setJatekTerPanel(JatekterPanel jatekTerPanel) {
         this.jatekterPanel = jatekTerPanel;
     }
 
     public void setKartyalapok(List<Kartyalap> kartyalapok) {
         this.kartyalapok = kartyalapok;
+    }
+
+    public void setKorongok(List<Korong> korongok) {
+        this.korongok = korongok;
     }
 
     public void setKartyaGrafikaElore(boolean kartyaGrafikaElore) {
@@ -240,6 +288,10 @@ public class SzalVezerlo {
 
     public List<Jatekos> getJatekosok() {
         return jatekosok;
+    }
+
+    public List<Zseton> getJatekosZsetonjai(byte jatekosSorszam) {
+        return jatekosokZsetonjai.get(jatekosSorszam);
     }
 
     public boolean isKartyaGrafikaElore() {

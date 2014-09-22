@@ -115,4 +115,12 @@ public final class ZsetonKezelo {
         }
         return potZsetonok;
     }
+    
+    public static int zsetonokOsszege(List<Zseton> jatekosZsetonok){
+        int osszeg = 0;
+        for (Zseton zseton : jatekosZsetonok) {
+            osszeg += zseton.getErtek();
+        }
+        return osszeg;
+    }
 }

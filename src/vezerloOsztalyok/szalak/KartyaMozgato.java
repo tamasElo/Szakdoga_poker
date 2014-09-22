@@ -209,7 +209,8 @@ public class KartyaMozgato extends Thread{
                 }
                 szalVezerlo.frissit();
             }
-        }
+        }        
+        szalVezerlo.gombSorAllapotvalt();
     }
     
     /**

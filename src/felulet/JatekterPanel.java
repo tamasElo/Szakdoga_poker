@@ -85,7 +85,9 @@ public class JatekterPanel extends JPanel{
         g2D.drawImage(jatekTer, 0, 0, this.getWidth(), this.getHeight(), this);
         
         if (szalVezerlo != null) {
-            szalVezerlo.jatekosokRajzol(g2D);
+            szalVezerlo.jatekosokRajzol(g2D);            
+            szalVezerlo.korongokRajzol(g2D);
+            
             if (szalVezerlo.isKartyaGrafikaElore()) {
                 szalVezerlo.zsetonokRajzol(g2D);
                 szalVezerlo.kartyalapokRajzol(g2D);
@@ -109,7 +111,7 @@ public class JatekterPanel extends JPanel{
                               {magassag * 0.95,magassag * 0.95,magassag * 0.95,magassag * 0.968,magassag * 0.943,magassag * 0.95}};
         int[][] meretek = {{szelesseg / 16, szelesseg / 25, szelesseg / 25, szelesseg / 50, szelesseg / 40, szelesseg / 32},
                            {magassag / 20, (int)(magassag / 18.75), (int)(magassag / 18.75), magassag / 70, magassag / 30, magassag / 24}};
-        String[] gombNev = {"allin", "call", "raise", "minus", "plus", "fold"};
+        String[] gombNev = {"allin", "call_check", "raise_bet", "minus", "plus", "fold"};
         gombok = new ArrayList<>();
         Gomb gomb;
         for (int i = 0; i < gombNev.length; i++) {
@@ -127,13 +129,13 @@ public class JatekterPanel extends JPanel{
         }
     }
     
-    public void gombsorAktival(){
-        for (Gomb gomb : gombok) {
-            gomb.setMegjSorszam(2);
+    public void gombsorAktival(boolean[] aktivalandoGombok){
+        for (byte i = 0; i < gombok.size(); i++) {
+            if(aktivalandoGombok[i])gombok.get(i).setMegjSorszam(2);
         }
     }
     
-    public void gomsorPasszival() {
+    public void gombsorPasszival() {
         for (Gomb gomb : gombok) {
             gomb.setMegjSorszam(3);
         }
@@ -145,7 +147,7 @@ public class JatekterPanel extends JPanel{
         
         gombsorBeallit();
         szalVezerlo.jatekosokBeallit();
-        szalVezerlo.jatekvezerloSzalIndit();
+        szalVezerlo.jatekvezerloIndit();
         repaint();
     }
     
