@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.ImageIcon;
 import vezerloOsztalyok.SzogSzamito;
+import vezerloOsztalyok.ZsetonKezelo;
 
 public class SzalVezerlo {
     private List<Kartyalap> kartyalapok;  
@@ -26,7 +27,8 @@ public class SzalVezerlo {
     private List<Jatekos> jatekosok;
     private List<Korong> korongok;
     private Map<Byte, List<Kartyalap>> jatekosokKartyalapjai;
-    private Map<Byte, List<Zseton>> jatekosokZsetonjai;
+    private Map<Byte, List<Zseton>> jatekosokZsetonjai;    
+    private List<Zseton> pot;
     private boolean kartyaGrafikaElore;
     private Dealer dealer;
     private Vak kisVak;
@@ -140,10 +142,18 @@ public class SzalVezerlo {
         jatekVezerlo = new JatekVezerlo(this);
     }
     
-    public void zsetonokKiosztSzalIndit(){
+    public void zsetonokKioszt(){
         ZsetonMozgato zsetonMozgato = new ZsetonMozgato(this);
-        zsetonMozgato.setZsetonokBetolt(true);
-        zsetonMozgato.start();
+        zsetonMozgato.zsetonokBetolt();
+        pot = new ArrayList<>();
+    }
+    public void zsetonokPotba(byte jatekosSorszam, int osszeg){
+        List<Zseton> jatekosZsetonjai = jatekosokZsetonjai.get(jatekosSorszam);
+        pot.addAll(ZsetonKezelo.pot(jatekosZsetonjai, osszeg));
+        if(!jatekosZsetonjai.isEmpty() && jatekosZsetonjai.get(0).getKx() == 0){ 
+            ZsetonMozgato zsetonMozgato = new ZsetonMozgato(this);
+            zsetonMozgato.zsetonokUjratolt(jatekosSorszam, jatekosZsetonjai);
+        }
     }
     
     public void kartyalapokKiosztSzalIndit(byte dealer) {
@@ -290,11 +300,46 @@ public class SzalVezerlo {
         return jatekosok;
     }
 
-    public List<Zseton> getJatekosZsetonjai(byte jatekosSorszam) {
-        return jatekosokZsetonjai.get(jatekosSorszam);
+    public int getJatekosZsetonOsszeg(byte jatekosSorszam) {
+        return ZsetonKezelo.zsetonokOsszege(jatekosokZsetonjai.get(jatekosSorszam));
     }
 
     public boolean isKartyaGrafikaElore() {
         return kartyaGrafikaElore;
+    }
+    
+    /*----------tesztelés---------------------*/    
+    public void setMikezeles(boolean nyithat, boolean emelhet, boolean megadhat, boolean passzolhat) {
+        boolean[] tomb = {nyithat, emelhet, megadhat, passzolhat};
+        System.out.println(nyithat + " " + emelhet + " " + megadhat + " " + passzolhat);
+        jatekterPanel.migombsoraktival(tomb);
+    }
+
+    public void allin() {
+        jatekVezerlo.allIn();
+    }
+
+    public void eldob() {
+        jatekVezerlo.bedobas();
+    }
+
+    public void megad(int osszeg) {
+        jatekVezerlo.megadas();
+    }
+
+    public void nyit(int osszeg) {
+        jatekVezerlo.nyitas(osszeg);
+    }
+
+    public void emel(int osszeg) {
+        jatekVezerlo.emeles(osszeg);
+    }
+
+    public void passzol() {
+        jatekVezerlo.passz();
+    }
+
+    public void setjatekosSorszam(byte jatekosSorszam) {       
+       jatekterPanel.setNevlabel(jatekosok.get(jatekosSorszam).getNev());
     }
 }

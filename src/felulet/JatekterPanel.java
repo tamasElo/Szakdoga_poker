@@ -5,12 +5,19 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.TextArea;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
@@ -71,6 +78,10 @@ public class JatekterPanel extends JPanel{
             public void mouseExited(MouseEvent me) {
             }
         });
+        
+        /*-----tesztelés*/
+         migombok();
+        /*--*/
     }  
     
     @Override
@@ -175,5 +186,100 @@ public class JatekterPanel extends JPanel{
     
     public void setSzalVezerlo(SzalVezerlo szalVezerlo) {
         this.szalVezerlo = szalVezerlo;
+    }
+    
+    /*------tesztelés----------------*/
+    int jx, jy;
+    int osszeg;
+    JLabel lblNev = new JLabel();
+    JLabel lblOsszeg = new JLabel();
+    JButton allin = new JButton("all");
+    JButton passzol = new JButton("passzol");
+    JButton emel = new JButton("emel");
+    JButton megad = new JButton("megad");
+    JButton nyit = new JButton("nyit");
+    JButton eldob = new JButton("eldob");
+    JButton plusz = new JButton("plusz");
+    JButton minusz = new JButton("minusz");  
+    List<JButton> gombLista = new ArrayList<>();
+
+    private void migombok() {        
+        this.add(allin);
+        this.add(passzol);
+        this.add(megad);
+        this.add(nyit);
+        this.add(emel);
+        this.add(plusz);
+        this.add(minusz);
+        this.add(eldob);
+        this.add(lblOsszeg);
+        this.add(lblNev);
+        
+        gombLista.add(nyit);        
+        gombLista.add(emel);      
+        gombLista.add(megad);        
+        gombLista.add(passzol);           
+        
+        allin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                szalVezerlo.allin();
+            }
+        });
+
+        passzol.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                szalVezerlo.passzol();
+            }
+        });
+        emel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                szalVezerlo.emel(osszeg);
+            }
+        });       
+        megad.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                szalVezerlo.megad(osszeg);
+            }
+        });
+        nyit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                szalVezerlo.nyit(osszeg);
+            }
+        });
+        eldob.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                szalVezerlo.eldob();
+            }
+        });
+        plusz.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                osszeg += 100;
+                lblOsszeg.setText(String.valueOf(osszeg));
+            }
+        });
+        minusz.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                osszeg -= 100;
+                lblOsszeg.setText(String.valueOf(osszeg));
+            }
+        });
+    }
+
+    public void migombsoraktival(boolean[] tomb) {
+        for (int i = 0; i < tomb.length; i++) {
+            gombLista.get(i).setEnabled(tomb[i]);
+        }
+    }
+
+    public void setNevlabel(String nev) {
+        lblNev.setText(nev);
     }
 }
