@@ -63,7 +63,7 @@ public class JatekVezerlo{
     }
     
     private void lehetosegekBeallit(){ 
-        if(ZsetonKezelo.zsetonokOsszege(aktJatekosZsetonjai) <= osszeg){
+        if(aktJatekosZsetonjai != null && ZsetonKezelo.zsetonokOsszege(aktJatekosZsetonjai) <= osszeg){
             nyithat = false;
             emelhet = false;
             megadhat = false;
