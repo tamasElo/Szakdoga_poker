@@ -107,7 +107,9 @@ public class JatekterPanel extends JPanel{
                 szalVezerlo.zsetonokRajzol(g2D);
             }
         }
-
+        
+        szalVezerlo.potRajzol(g2D);
+        
         if (gombok != null) {
             for (Gomb gomb : gombok) {
                 gomb.rajzol(g);
@@ -260,14 +262,14 @@ public class JatekterPanel extends JPanel{
         plusz.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                osszeg += 100;
+                osszeg += 10;
                 lblOsszeg.setText(String.valueOf(osszeg));
             }
         });
         minusz.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                osszeg -= 100;
+                osszeg -= 1;
                 lblOsszeg.setText(String.valueOf(osszeg));
             }
         });

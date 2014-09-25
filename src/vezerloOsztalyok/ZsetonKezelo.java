@@ -4,6 +4,7 @@ import alapOsztalyok.Zseton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.ImageIcon;
 
 public final class ZsetonKezelo {
@@ -18,7 +19,7 @@ public final class ZsetonKezelo {
      * @return 
      */
      public static List<Zseton> zsetonKioszt(int osszeg) {
-         zsetonLista = new ArrayList<>();         
+         zsetonLista = new CopyOnWriteArrayList<>();         
          byte[] zsetonErtekek = {100, 25, 10, 5, 1};
          int maradek;
          int hanyados;

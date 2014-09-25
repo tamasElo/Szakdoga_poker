@@ -35,6 +35,7 @@ public class KartyaMozgato extends Thread{
     private int lepes;
     private int ido;
     private byte jatekosokSzama;
+    private static double laptavolsagokOsszege;
 
     KartyaMozgato(SzalVezerlo szalVezerlo) {
         this.szalVezerlo = szalVezerlo;        
@@ -58,8 +59,7 @@ public class KartyaMozgato extends Thread{
                 minY = -szorasHatar.getY() - 1,
                 maxY = 2 * szorasHatar.getY() + 2;
         
-        List<Kartyalap> kartyalapok = PakliKezelo.kevertPakli();
-        pakliSzalbiztosit(kartyalapok);
+        kartyalapok = PakliKezelo.kevertPakli();
         
         for (Kartyalap kartyalap : kartyalapok) {
             kartyalap.setKartyaKepSzelesseg((int) (jatekterSzelesseg/22.857));
@@ -70,6 +70,7 @@ public class KartyaMozgato extends Thread{
             szorasok.add(aktSzoras);
         }
         szalVezerlo.setKartyalapok(kartyalapok);
+        laptavolsagokOsszege = 0;//minden új körben lenullázza mivel a lapleosztást elölről kell kezdeni.
     }
     
     /**
@@ -163,7 +164,6 @@ public class KartyaMozgato extends Thread{
                 szalVezerlo.frissit();
             }
         }  
-     
         szalVezerlo.setKartyaGrafikaElore(false);//A zsetonokat lesz elsőként kirajzolva a játékpanelre.                
         Map<Byte, List<Kartyalap>> jatekosokKartyalapjai = szalVezerlo.getJatekosokKartyalapjai();//Lekéri a szálvezérlőtől a játékosok kártyalapjait.
         
@@ -221,9 +221,16 @@ public class KartyaMozgato extends Thread{
         Kartyalap kartyalap;   
         int leosztandoKartyalapokSzama;
         double veletlenX, veletlenY;
-        double novekmeny = jatekterSzelesseg/2.5;        
+        double novekmeny;
+        kartyalapok = szalVezerlo.getKartyalapok();
         lepes = 3;
-        leosztandoKartyalapokSzama = (szalVezerlo.leosztottKartyalapokSzama() == 0) ? 3 : 1;
+        if(szalVezerlo.leosztottKartyalapokSzama() == 0){
+            leosztandoKartyalapokSzama = 3;
+            novekmeny = jatekterSzelesseg/2.5;
+        }else{
+            leosztandoKartyalapokSzama = 1;
+            novekmeny = laptavolsagokOsszege;//A növekményt beállítja a már leosztott lapoktól megfelelő távolság értékre.
+        }
         
         for (byte i = 0; i < leosztandoKartyalapokSzama; i++) {
             veletlenX = -jatekterSzelesseg/620 + Math.random() * jatekterSzelesseg/310;
@@ -258,6 +265,7 @@ public class KartyaMozgato extends Thread{
             }            
             kartyalap.setMutat(true); 
         }
+        laptavolsagokOsszege = novekmeny;
     }
     
     /**
@@ -279,13 +287,6 @@ public class KartyaMozgato extends Thread{
 
     public void setKartyalapokKiosztasa(boolean kartyalapokKiosztasa) {
         this.kartyalapokKiosztasa = kartyalapokKiosztasa;
-    }
-
-    private void pakliSzalbiztosit(List<Kartyalap> kartyalapok) {
-        this.kartyalapok = new CopyOnWriteArrayList<>();
-        for (Kartyalap kartyalap : kartyalapok) {
-            this.kartyalapok.add(kartyalap);
-        }
     }
 
     public void setDealer(byte dealer) {

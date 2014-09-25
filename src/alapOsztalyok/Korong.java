@@ -7,8 +7,8 @@ import java.awt.image.ImageObserver;
 
 public abstract class Korong {
     private Image korongKep;
-    private int kx;
-    private int ky;
+    private double kx;
+    private double ky;
     private int korongKepSzelesseg;
     private int korongKepMagassag;
     private double forgat;
@@ -24,21 +24,21 @@ public abstract class Korong {
             g2D.rotate(Math.toRadians(forgat), kx, ky);
         }
         
-        g2D.drawImage(korongKep, kx-korongKepSzelesseg/2, ky-korongKepMagassag/2, korongKepSzelesseg, korongKepMagassag, o);
+        g2D.drawImage(korongKep, (int)(kx-korongKepSzelesseg/2), (int) (ky-korongKepMagassag/2), korongKepSzelesseg, korongKepMagassag, o);
         
         if (forgat != 0) {
             g2D.setTransform(at);
         }
     }
-    
-    public void setKx(int kx) {
+
+    public void setKx(double kx) {
         this.kx = kx;
     }
 
-    public void setKy(int ky) {
+    public void setKy(double ky) {
         this.ky = ky;
     }
-
+    
     public void setKorongKepSzelesseg(int korongKepSzelesseg) {
         this.korongKepSzelesseg = korongKepSzelesseg;
     }
@@ -51,14 +51,14 @@ public abstract class Korong {
         this.forgat = forgat;
     }
 
-    public int getKx() {
+    public double getKx() {
         return kx;
     }
 
-    public int getKy() {
+    public double getKy() {
         return ky;
     }
-
+    
     public int getKorongKepSzelesseg() {
         return korongKepSzelesseg;
     }

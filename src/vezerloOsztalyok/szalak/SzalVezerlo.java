@@ -37,6 +37,8 @@ public class SzalVezerlo {
     private JatekVezerlo jatekVezerlo;
     private final Image keveresAnimacio;
     private boolean gombsorAktiv;
+    private ZsetonMozgato zsetonMozgato;
+    private KartyaMozgato kartyaMozgato;
 
     public SzalVezerlo() {
         keveresAnimacio = new ImageIcon(this.getClass().getResource("/adatFajlok/kartyaPakli/keveresAnimacio.gif")).getImage();
@@ -102,6 +104,14 @@ public class SzalVezerlo {
                 }
             }
         }
+    }    
+
+    public void potRajzol(Graphics2D g2D) {
+        if (pot != null) {
+            for (Zseton zseton : pot) {
+                zseton.rajzol(g2D, jatekterPanel);
+            }
+        }
     }
     
     public void korongokRajzol(Graphics2D g2D){
@@ -143,27 +153,32 @@ public class SzalVezerlo {
     }
     
     public void zsetonokKioszt(){
-        ZsetonMozgato zsetonMozgato = new ZsetonMozgato(this);
+        zsetonMozgato = new ZsetonMozgato(this);
         zsetonMozgato.zsetonokBetolt();
-        pot = new ArrayList<>();
+        pot = new CopyOnWriteArrayList<>();
     }
+    
     public void zsetonokPotba(byte jatekosSorszam, int osszeg){
-        List<Zseton> jatekosZsetonjai = jatekosokZsetonjai.get(jatekosSorszam);
-        pot.addAll(ZsetonKezelo.pot(jatekosZsetonjai, osszeg));
-        if(!jatekosZsetonjai.isEmpty() && jatekosZsetonjai.get(0).getKx() == 0){ 
-            ZsetonMozgato zsetonMozgato = new ZsetonMozgato(this);
-            zsetonMozgato.zsetonokUjratolt(jatekosSorszam, jatekosZsetonjai);
-        }
+        zsetonMozgato = new ZsetonMozgato(this);            
+        zsetonMozgato.setJatekosSorszam(jatekosSorszam);
+        zsetonMozgato.setJatekosTetOsszege(osszeg);
+        zsetonMozgato.setJatekosTetMozgatasa(true);
+        zsetonMozgato.start();
     }
     
     public void kartyalapokKiosztSzalIndit(byte dealer) {
-        KartyaMozgato kartyaMozgato = new KartyaMozgato(this);
+        kartyaMozgato = new KartyaMozgato(this);
         kartyaMozgato.setKartyalapokKiosztasa(true);
-        kartyaMozgato.setKartyalapLeosztas(true);
         kartyaMozgato.setDealer(dealer);
         kartyaMozgato.start();
     }
- 
+    
+    public void kartyalapokLeosztSzalIndit(){
+        kartyaMozgato = new KartyaMozgato(this);
+        kartyaMozgato.setKartyalapLeosztas(true);
+        kartyaMozgato.start();
+    }
+    
     public void korongokMozgatSzalIndit(byte dealer){
         KorongMozgato korongMozgato = new KorongMozgato(this);
         korongMozgato.setDealer(dealer);
@@ -201,8 +216,12 @@ public class SzalVezerlo {
             jatekosKartyalapok.add(kartyalap);
             jatekosokKartyalapjai.put(sorszam, jatekosKartyalapok);
         }
+    }    
+
+    public void pothozAd(List<Zseton> jatekosTetje) {
+        pot.addAll(jatekosTetje);
     }
-    
+
     public void gombSorAllapotvalt() {
         if (jatekVezerlo != null) {
             if (!jatekVezerlo.gepiJatekos() && !gombsorAktiv) {
@@ -283,7 +302,7 @@ public class SzalVezerlo {
     public void setKorongok(List<Korong> korongok) {
         this.korongok = korongok;
     }
-
+    
     public void setKartyaGrafikaElore(boolean kartyaGrafikaElore) {
         this.kartyaGrafikaElore = kartyaGrafikaElore;
     }
@@ -296,10 +315,18 @@ public class SzalVezerlo {
         return jatekosokKartyalapjai;
     }
 
+    public List<Kartyalap> getKartyalapok() {
+        return kartyalapok;
+    }
+
     public List<Jatekos> getJatekosok() {
         return jatekosok;
     }
 
+    public Map<Byte, List<Zseton>> getJatekosokZsetonjai() {
+        return jatekosokZsetonjai;
+    }    
+    
     public int getJatekosZsetonOsszeg(byte jatekosSorszam) {
         return ZsetonKezelo.zsetonokOsszege(jatekosokZsetonjai.get(jatekosSorszam));
     }
@@ -307,11 +334,14 @@ public class SzalVezerlo {
     public boolean isKartyaGrafikaElore() {
         return kartyaGrafikaElore;
     }
+
+    public List<Zseton> getPot() {
+        return pot;
+    }
     
     /*----------tesztelés---------------------*/    
     public void setMikezeles(boolean nyithat, boolean emelhet, boolean megadhat, boolean passzolhat) {
         boolean[] tomb = {nyithat, emelhet, megadhat, passzolhat};
-        System.out.println(nyithat + " " + emelhet + " " + megadhat + " " + passzolhat);
         jatekterPanel.migombsoraktival(tomb);
     }
 

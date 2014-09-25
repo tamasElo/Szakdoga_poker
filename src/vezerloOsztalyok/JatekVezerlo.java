@@ -7,7 +7,7 @@ public class JatekVezerlo{
     private SzalVezerlo szalVezerlo;
     private byte jatekosSorszam;
     private byte jatekosokSzama;
-    private boolean ujLeosztasInditva;
+    private boolean ujKorInditva;
     private int osszeg;
     private byte dealerJatekosSorszam;
     private byte licitkorSzamlalo;
@@ -25,18 +25,18 @@ public class JatekVezerlo{
         dealerJatekosSorszam = (byte) (Math.random()*jatekosokSzama);
         mi = new Mi();      
         szalVezerlo.zsetonokKioszt();
-        ujLeosztas();        
+        ujKor();        
     }   
 
-    private void ujLeosztas() { 
-            ujLeosztasInditva = false;
+    private void ujKor() { 
+            ujKorInditva = false;
             szalVezerlo.jatekosokAktival();
             dealerJatekosSorszamBeallit();
             lehetosegekBeallit();
             szalVezerlo.korongokMozgatSzalIndit(dealerJatekosSorszam);
             szalVezerlo.kartyalapokKiosztSzalIndit(dealerJatekosSorszam); 
             korokSzama++;
-            ujLeosztasInditva = true;
+            ujKorInditva = true;
     }
     
     private void dealerJatekosSorszamBeallit(){
@@ -66,7 +66,7 @@ public class JatekVezerlo{
             emelhet = false;
             megadhat = false;
             passzolhat = false;
-        } else if (osszegPotba || !ujLeosztasInditva) {
+        } else if (osszegPotba || !ujKorInditva) {
             nyithat = false;
             emelhet = true;
             megadhat = true;
@@ -140,6 +140,7 @@ public class JatekVezerlo{
     
     private void ujLicitkor(){
         smallBlindjatekosraBeallit();
+        szalVezerlo.kartyalapokLeosztSzalIndit();
         osszegPotba = false;
         licitkorSzamlalo = 0;
     }
