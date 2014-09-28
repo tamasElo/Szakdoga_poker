@@ -1,5 +1,6 @@
 package vezerloOsztalyok.szalak;
 
+import vezerloOsztalyok.SzalVezerlo;
 import alapOsztalyok.Dealer;
 import alapOsztalyok.Korong;
 import alapOsztalyok.Vak;

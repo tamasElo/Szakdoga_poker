@@ -1,15 +1,16 @@
 package vezerloOsztalyok;
 
-import vezerloOsztalyok.szalak.SzalVezerlo;
-
 public class JatekVezerlo{
     private byte korokSzama;
-    private SzalVezerlo szalVezerlo;
+    private SzalVezerlo szalVezerlo;    
+    private byte dealerJatekosSorszam;    
+    private byte kisVakJatekosSorszam;
+    private byte nagyVakJatekosSorszam;
     private byte jatekosSorszam;
     private byte jatekosokSzama;
     private boolean ujKorInditva;
     private int osszeg;
-    private byte dealerJatekosSorszam;
+    private int[] jatekosokTetje;
     private byte licitkorSzamlalo;
     private Mi mi;
     private boolean nyithat;
@@ -18,49 +19,66 @@ public class JatekVezerlo{
     private boolean emelhet;
     private boolean osszegPotba;
     private int aktJatekosZsetonOsszeg;
+    private int kisVakOsszeg;
+    private int nagyVakOsszeg;
+    private byte korOszto;
     
     public JatekVezerlo(SzalVezerlo szalVezerlo){
         this.szalVezerlo = szalVezerlo;
         this.jatekosokSzama = szalVezerlo.jatekosokSzama(); 
+        jatekosokTetje = new int[jatekosokSzama];
         dealerJatekosSorszam = (byte) (Math.random()*jatekosokSzama);
         mi = new Mi();      
+        kisVakOsszeg = 5;
+        nagyVakOsszeg = kisVakOsszeg * 2;
+        korOszto = 10;
         szalVezerlo.zsetonokKioszt();
         ujKor();        
     }   
 
     private void ujKor() { 
-            ujKorInditva = false;
+            ujKorInditva = false;            
+            korokSzama++;
             szalVezerlo.jatekosokAktival();
-            dealerJatekosSorszamBeallit();
+            jatekosSorszamokBeallit();
+            vakokOsszegeBeallit();
+            osszeg = nagyVakOsszeg;
             lehetosegekBeallit();
             szalVezerlo.korongokMozgatSzalIndit(dealerJatekosSorszam);
             szalVezerlo.kartyalapokKiosztSzalIndit(dealerJatekosSorszam); 
-            korokSzama++;
             ujKorInditva = true;
     }
     
-    private void dealerJatekosSorszamBeallit(){
-        byte eltolas = 3;
+    private void jatekosSorszamokBeallit(){
+        byte eltolas = 1;
+        
         if(++dealerJatekosSorszam == jatekosokSzama) dealerJatekosSorszam = 0;
-        if(dealerJatekosSorszam + eltolas == jatekosokSzama)jatekosSorszam = 0;
-        if(dealerJatekosSorszam + eltolas > jatekosokSzama)jatekosSorszam = (byte) ((dealerJatekosSorszam + eltolas)-jatekosokSzama);
-        if(dealerJatekosSorszam + eltolas < jatekosokSzama)jatekosSorszam = (byte) (dealerJatekosSorszam + eltolas);
+        
+        if(dealerJatekosSorszam + eltolas == jatekosokSzama)kisVakJatekosSorszam = 0;
+        else kisVakJatekosSorszam = (byte) (dealerJatekosSorszam + eltolas);          
+               
+        if(kisVakJatekosSorszam + eltolas == jatekosokSzama)nagyVakJatekosSorszam = 0;
+        else if(kisVakJatekosSorszam + eltolas > jatekosokSzama)nagyVakJatekosSorszam = (byte) ((kisVakJatekosSorszam + eltolas)-jatekosokSzama);
+        else nagyVakJatekosSorszam = (byte) (kisVakJatekosSorszam + eltolas);
+        
+        if(nagyVakJatekosSorszam + eltolas == jatekosokSzama)jatekosSorszam = 0;
+        else if(nagyVakJatekosSorszam + eltolas > jatekosokSzama)jatekosSorszam = (byte) ((nagyVakJatekosSorszam + eltolas)-jatekosokSzama);
+        else jatekosSorszam = (byte) (nagyVakJatekosSorszam + eltolas);              
     }
     
-    private void smallBlindjatekosraBeallit(){
-        jatekosSorszam = (byte) (dealerJatekosSorszam+1);        
-    }
-    
-    public void kovetkezoJatekos() {
-        jatekosSorszam++;
-        licitkorSzamlaloLeptet();
-        if(jatekosSorszam == jatekosokSzama) jatekosSorszam = 0;
-        aktJatekosZsetonOsszeg = szalVezerlo.getJatekosZsetonOsszeg(jatekosSorszam);
-        lehetosegekBeallit();
+    private void vakokOsszegeBeallit(){
+        if(korokSzama % korOszto == 0) {
+                kisVakOsszeg *= 2;
+                nagyVakOsszeg = kisVakOsszeg * 2; 
+            }
+        
+        szalVezerlo.zsetonokPotba(kisVakJatekosSorszam, kisVakOsszeg);
+        szalVezerlo.zsetonokPotba(nagyVakJatekosSorszam, nagyVakOsszeg);
     }
     
     private void lehetosegekBeallit(){ 
         aktJatekosZsetonOsszeg = szalVezerlo.getJatekosZsetonOsszeg(jatekosSorszam);
+        
         if (aktJatekosZsetonOsszeg <= osszeg) {
             nyithat = false;
             emelhet = false;
@@ -71,7 +89,7 @@ public class JatekVezerlo{
             emelhet = true;
             megadhat = true;
             passzolhat = false;
-        } else {
+        } else{
             nyithat = true;
             emelhet = false;
             megadhat = false;
@@ -81,6 +99,7 @@ public class JatekVezerlo{
         /*---tesztelés---*/
         szalVezerlo.setMikezeles(nyithat, emelhet, megadhat, passzolhat);
         szalVezerlo.setjatekosSorszam(jatekosSorszam);
+        szalVezerlo.setjatekosMegadandoOsszeg(osszeg);
         /*----------*/
 
         if (gepiJatekos()) {
@@ -88,6 +107,16 @@ public class JatekVezerlo{
             mi.setLehetosegek(nyithat, emelhet, megadhat, passzolhat);
         }
         szalVezerlo.gombSorAllapotvalt();
+    }
+        
+    public void kovetkezoJatekos() {
+        jatekosSorszam++;
+        licitkorSzamlaloLeptet();
+        
+        if(jatekosSorszam == jatekosokSzama) jatekosSorszam = 0;
+        
+        aktJatekosZsetonOsszeg = szalVezerlo.getJatekosZsetonOsszeg(jatekosSorszam);
+        lehetosegekBeallit();
     }
     
     public boolean gepiJatekos(){        
@@ -100,37 +129,48 @@ public class JatekVezerlo{
     }
     
     public void nyitas(int nyitoOsszeg){
-        this.osszeg = nyitoOsszeg;
+        osszeg = nyitoOsszeg;
+        jatekosokTetje[jatekosSorszam] = osszeg;
+        szalVezerlo.zsetonokPotba(jatekosSorszam, osszeg);     
         osszegPotba = true;
         licitkorSzamlalo = 0;
-        szalVezerlo.zsetonokPotba(jatekosSorszam, osszeg);
         kovetkezoJatekos();
     }
     
     public void emeles(int emeltOsszeg){        
-        this.osszeg = emeltOsszeg;
+        osszeg -= jatekosokTetje[jatekosSorszam];
+        osszeg += emeltOsszeg;
+        jatekosokTetje[jatekosSorszam] += osszeg;
+        szalVezerlo.zsetonokPotba(jatekosSorszam, osszeg);     
+        osszeg = jatekosokTetje[jatekosSorszam];
         osszegPotba = true;
         licitkorSzamlalo = 0;
-        szalVezerlo.zsetonokPotba(jatekosSorszam, osszeg);
         kovetkezoJatekos();
     }
     
     public void megadas(){
+        osszeg -= jatekosokTetje[jatekosSorszam];
+        jatekosokTetje[jatekosSorszam] += osszeg;
+        szalVezerlo.zsetonokPotba(jatekosSorszam, osszeg); 
+        osszeg = jatekosokTetje[jatekosSorszam];
         osszegPotba = true;
-        szalVezerlo.zsetonokPotba(jatekosSorszam, osszeg);
         kovetkezoJatekos();
     }
     
     public void allIn(){
-        osszegPotba = true;
-        osszeg = szalVezerlo.getJatekosZsetonOsszeg(jatekosSorszam);
+        int elozoOsszeg = osszeg;
+        osszeg = szalVezerlo.getJatekosZsetonOsszeg(jatekosSorszam);        
         szalVezerlo.zsetonokPotba(jatekosSorszam, osszeg);
+                
+        if(osszeg > elozoOsszeg) licitkorSzamlalo = 0;
+        else osszeg = elozoOsszeg;
+        
+        osszegPotba = true;
         kovetkezoJatekos();
     }
         
     public void bedobas(){
         szalVezerlo.jatekosDeaktival(jatekosSorszam);
-        licitkorSzamlaloLeptet();
         kovetkezoJatekos();
     }
     
@@ -139,8 +179,12 @@ public class JatekVezerlo{
     }
     
     private void ujLicitkor(){
-        smallBlindjatekosraBeallit();
+        jatekosSorszam = kisVakJatekosSorszam;
         szalVezerlo.kartyalapokLeosztSzalIndit();
+        for (int i = 0; i < jatekosokTetje.length; i++) {
+            jatekosokTetje[i] = 0;
+        }
+        osszeg = 0;
         osszegPotba = false;
         licitkorSzamlalo = 0;
     }
@@ -159,5 +203,9 @@ public class JatekVezerlo{
 
     public boolean isEmelhet() {
         return emelhet;
+    }
+
+    public int getOsszeg() {
+        return osszeg;
     }
 }

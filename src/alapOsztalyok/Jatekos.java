@@ -32,7 +32,7 @@ public class Jatekos {
         g2D.setFont(font);
         szovegSzelesseg = (int) g2D.getFontMetrics().getStringBounds(nev, g2D).getWidth();
         szovegMagassag = (int) g2D.getFontMetrics().getStringBounds(nev, g2D).getHeight();
-        g2D.drawString(nev, (int) x - szovegSzelesseg / 2, (int) y + szovegMagassag / 2);
+        g2D.drawString(nev, (int) (x - szovegSzelesseg / 2), (int) (y + szovegMagassag / 2));
     }
     
     public void setX(double x) {

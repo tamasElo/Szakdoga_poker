@@ -1,6 +1,5 @@
-package vezerloOsztalyok.szalak;
+package vezerloOsztalyok;
 
-import vezerloOsztalyok.JatekVezerlo;
 import alapOsztalyok.Dealer;
 import alapOsztalyok.Jatekos;
 import alapOsztalyok.Kartyalap;
@@ -8,6 +7,7 @@ import alapOsztalyok.Korong;
 import alapOsztalyok.Vak;
 import alapOsztalyok.Zseton;
 import felulet.JatekterPanel;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -18,8 +18,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.ImageIcon;
-import vezerloOsztalyok.SzogSzamito;
-import vezerloOsztalyok.ZsetonKezelo;
+import vezerloOsztalyok.szalak.KartyaMozgato;
+import vezerloOsztalyok.szalak.KorongMozgato;
+import vezerloOsztalyok.szalak.ZsetonMozgato;
 
 public class SzalVezerlo {
     private List<Kartyalap> kartyalapok;  
@@ -77,14 +78,21 @@ public class SzalVezerlo {
     }
 
     /**
-     * Kirajzolja a panelre a játékosok neveit.
+     * Kirajzolja a panelre a játékosok neveit és zsetonjaik összegét.
      *
      * @param g2D
      */
     public void jatekosokRajzol(Graphics2D g2D) {
         if (jatekosok != null) {
+            int szovegSzelesseg, szovegMagassag;
             for (Jatekos jatekos : jatekosok) {
                 jatekos.rajzol(g2D, jatekterPanel);
+                
+                String osszeg = String.valueOf(getJatekosZsetonOsszeg(jatekos.getSorszam())+"$");
+                szovegSzelesseg = (int) g2D.getFontMetrics().getStringBounds(osszeg, g2D).getWidth();
+                szovegMagassag = (int) g2D.getFontMetrics().getStringBounds(osszeg, g2D).getHeight();
+                g2D.setColor(Color.yellow);
+                g2D.drawString(osszeg, (int) (jatekos.getX() - szovegSzelesseg / 2), (int) ((jatekos.getY() + szovegMagassag / 2) + jatekterPanelMagassag()/60));
             }
         }
     }
@@ -344,7 +352,11 @@ public class SzalVezerlo {
         boolean[] tomb = {nyithat, emelhet, megadhat, passzolhat};
         jatekterPanel.migombsoraktival(tomb);
     }
-
+    
+    public int getOsszeg(){
+        return jatekVezerlo.getOsszeg();
+    }
+    
     public void allin() {
         jatekVezerlo.allIn();
     }
@@ -371,5 +383,9 @@ public class SzalVezerlo {
 
     public void setjatekosSorszam(byte jatekosSorszam) {       
        jatekterPanel.setNevlabel(jatekosok.get(jatekosSorszam).getNev());
+    }
+
+    public void setjatekosMegadandoOsszeg(int osszeg) {
+        jatekterPanel.setOsszeg(osszeg);
     }
 }

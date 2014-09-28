@@ -1,5 +1,6 @@
 package vezerloOsztalyok.szalak;
 
+import vezerloOsztalyok.SzalVezerlo;
 import alapOsztalyok.Zseton;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class ZsetonMozgato extends Thread {
     private List<Point> vegpontLista;
     private int jatekosTetOsszege;
 
-    ZsetonMozgato(SzalVezerlo szalVezerlo) {
+    public ZsetonMozgato(SzalVezerlo szalVezerlo) {
         this.szalVezerlo = szalVezerlo;
         jatekterSzelesseg = szalVezerlo.jatekterPanelSzelesseg();
         jatekterMagassag = szalVezerlo.jatekterPanelMagassag();
@@ -156,6 +157,7 @@ public class ZsetonMozgato extends Thread {
         szalVezerlo.frissit();
     }
     
+    @SuppressWarnings("SleepWhileInLoop")
     private void jatekosTetMozgat() {
         Point vegpont;
         double szog, elteres;
@@ -216,9 +218,9 @@ public class ZsetonMozgato extends Thread {
         }
         
         double vx, vy, kx, ky, aktx, akty, tavolsag; 
-        int aktTav = 1, szamlal = 0;
+        int aktTav = 0, zsetonokVegpontban = 0;
         
-        while(szamlal != jatekosTetje.size()){
+        while(zsetonokVegpontban != jatekosTetje.size()){
             for (int i = 0; i < jatekosTetje.size(); i++) {
                 kx = kezdoPontok.get(i).getX();
                 ky = kezdoPontok.get(i).getY();
@@ -229,14 +231,14 @@ public class ZsetonMozgato extends Thread {
                 aktx = kx + aktTav * Math.cos(szog);
                 akty = ky + aktTav * Math.sin(szog);
                 if (aktTav >= tavolsag) { 
-                    szamlal++;
+                    zsetonokVegpontban++;
                 } else {
-                    szamlal=0;
+                    zsetonokVegpontban=0;
                     jatekosTetje.get(i).setKx(aktx);
                     jatekosTetje.get(i).setKy(akty);
                 }
             }
-            aktTav++;
+            aktTav+=3;
             try {
                 sleep(5);
             } catch (InterruptedException ex) {

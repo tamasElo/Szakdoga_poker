@@ -21,7 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
-import vezerloOsztalyok.szalak.SzalVezerlo;
+import vezerloOsztalyok.SzalVezerlo;
 
 public class JatekterPanel extends JPanel{
 
@@ -98,6 +98,7 @@ public class JatekterPanel extends JPanel{
         if (szalVezerlo != null) {
             szalVezerlo.jatekosokRajzol(g2D);            
             szalVezerlo.korongokRajzol(g2D);
+            szalVezerlo.potRajzol(g2D);
             
             if (szalVezerlo.isKartyaGrafikaElore()) {
                 szalVezerlo.zsetonokRajzol(g2D);
@@ -106,9 +107,7 @@ public class JatekterPanel extends JPanel{
                 szalVezerlo.kartyalapokRajzol(g2D);
                 szalVezerlo.zsetonokRajzol(g2D);
             }
-        }
-        
-        szalVezerlo.potRajzol(g2D);
+        }        
         
         if (gombok != null) {
             for (Gomb gomb : gombok) {
@@ -263,13 +262,16 @@ public class JatekterPanel extends JPanel{
             @Override
             public void actionPerformed(ActionEvent ae) {
                 osszeg += 10;
+                if(!minusz.isEnabled())minusz.setEnabled(true);
                 lblOsszeg.setText(String.valueOf(osszeg));
             }
         });
         minusz.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                if(osszeg > szalVezerlo.getOsszeg())
                 osszeg -= 1;
+                else minusz.setEnabled(false);
                 lblOsszeg.setText(String.valueOf(osszeg));
             }
         });
@@ -283,5 +285,10 @@ public class JatekterPanel extends JPanel{
 
     public void setNevlabel(String nev) {
         lblNev.setText(nev);
+    }
+
+    public void setOsszeg(int osszeg) {
+        this.osszeg = osszeg;
+        lblOsszeg.setText(String.valueOf(osszeg));
     }
 }

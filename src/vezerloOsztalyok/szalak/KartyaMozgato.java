@@ -1,5 +1,6 @@
 package vezerloOsztalyok.szalak;
 
+import vezerloOsztalyok.SzalVezerlo;
 import alapOsztalyok.Kartyalap;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class KartyaMozgato extends Thread{
     private byte jatekosokSzama;
     private static double laptavolsagokOsszege;
 
-    KartyaMozgato(SzalVezerlo szalVezerlo) {
+    public KartyaMozgato(SzalVezerlo szalVezerlo) {
         this.szalVezerlo = szalVezerlo;        
         jatekterSzelesseg = szalVezerlo.jatekterPanelSzelesseg();
         jatekterMagassag = szalVezerlo.jatekterPanelMagassag();
