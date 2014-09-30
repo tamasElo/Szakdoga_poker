@@ -32,6 +32,7 @@ public class KartyaMozgato extends Thread{
     private double aktForgSzog;
     private boolean kartyalapokKiosztasa;
     private boolean kartyalapLeosztas;
+    private boolean osszesKartyalapLeosztas;
     private byte dealer;
     private int lepes;
     private int ido;
@@ -224,14 +225,19 @@ public class KartyaMozgato extends Thread{
         double veletlenX, veletlenY;
         double novekmeny;
         kartyalapok = szalVezerlo.getKartyalapok();
-        lepes = 3;
-        if(szalVezerlo.leosztottKartyalapokSzama() == 0){
+        lepes = 3;      
+
+        if (szalVezerlo.leosztottKartyalapokSzama() == 0) {
             leosztandoKartyalapokSzama = 3;
-            novekmeny = jatekterSzelesseg/2.5;
-        }else{
+            novekmeny = jatekterSzelesseg / 2.5;
+        } else {
             leosztandoKartyalapokSzama = 1;
             novekmeny = laptavolsagokOsszege;//A növekményt beállítja a már leosztott lapoktól megfelelő távolság értékre.
         }
+        
+        if (osszesKartyalapLeosztas) {
+            leosztandoKartyalapokSzama = 5 - szalVezerlo.leosztottKartyalapokSzama();
+        }        
         
         for (byte i = 0; i < leosztandoKartyalapokSzama; i++) {
             veletlenX = -jatekterSzelesseg/620 + Math.random() * jatekterSzelesseg/310;
@@ -284,6 +290,10 @@ public class KartyaMozgato extends Thread{
 
     public void setKartyalapLeosztas(boolean kartyalapLeosztas) {
         this.kartyalapLeosztas = kartyalapLeosztas;
+    }
+
+    public void setOsszesKartyalapLeosztas(boolean osszesKartyalapLeosztas) {
+        this.osszesKartyalapLeosztas = osszesKartyalapLeosztas;
     }
 
     public void setKartyalapokKiosztasa(boolean kartyalapokKiosztasa) {

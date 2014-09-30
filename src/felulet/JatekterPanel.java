@@ -98,14 +98,15 @@ public class JatekterPanel extends JPanel{
         if (szalVezerlo != null) {
             szalVezerlo.jatekosokRajzol(g2D);            
             szalVezerlo.korongokRajzol(g2D);
-            szalVezerlo.potRajzol(g2D);
             
             if (szalVezerlo.isKartyaGrafikaElore()) {
                 szalVezerlo.zsetonokRajzol(g2D);
+                szalVezerlo.potRajzol(g2D);
                 szalVezerlo.kartyalapokRajzol(g2D);
             } else {
                 szalVezerlo.kartyalapokRajzol(g2D);
                 szalVezerlo.zsetonokRajzol(g2D);
+                szalVezerlo.potRajzol(g2D);
             }
         }        
         

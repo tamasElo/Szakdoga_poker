@@ -295,7 +295,7 @@ public class SzalVezerlo {
         }
     }
     
-    public void jatekosDeaktival(byte jatekosSorszam){
+    public void jatekosPasszival(byte jatekosSorszam){
         jatekosok.get(jatekosSorszam).setAktiv(false);
     }
     
@@ -331,6 +331,10 @@ public class SzalVezerlo {
         return jatekosok;
     }
 
+    public boolean isJatekosAktiv(byte jatekosSorszam) {
+        return jatekosok.get(jatekosSorszam).isAktiv();
+    }
+    
     public Map<Byte, List<Zseton>> getJatekosokZsetonjai() {
         return jatekosokZsetonjai;
     }    
