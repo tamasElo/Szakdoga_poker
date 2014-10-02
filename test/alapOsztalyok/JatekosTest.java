@@ -17,22 +17,22 @@ public class JatekosTest {
     }
 
     /**
-     * A setX és getX metódus tesztelése.
+     * A setKx és getX metódus tesztelése.
      */
     @Test
     public void testSetX_GetX() {
         int x = 5;
-        jatekos.setX(x);
+        jatekos.setKx(x);
         assertTrue(x == jatekos.getX());
     }
 
     /**
-     * A setY és getY metódus tesztelése.
+     * A setKy és getY metódus tesztelése.
      */
     @Test
     public void testSetY_Gety() {
         int y = 10;
-        jatekos.setY(y);
+        jatekos.setKy(y);
         assertTrue(y == jatekos.getY());
     }
 

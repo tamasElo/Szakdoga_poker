@@ -26,7 +26,7 @@ public class JatekVezerlo{
         this.szalVezerlo = szalVezerlo;
         this.jatekosokSzama = szalVezerlo.jatekosokSzama(); 
         jatekosokTetje = new int[jatekosokSzama];
-        dealerJatekosSorszam = (byte) (Math.random()*jatekosokSzama);
+        dealerJatekosSorszam = 2;//(byte) (Math.random()*jatekosokSzama);
         mi = new Mi();     
         aktivJatekosokSzama = 5;
         kisVakOsszeg = 5;
@@ -135,33 +135,37 @@ public class JatekVezerlo{
         }
     }
     
-    public void passz(){
+    public void passzol(){        
+        szalVezerlo.felhoSzalIndit("Passzol", jatekosSorszam);
         kovetkezoJatekos();
     }
     
-    public void nyitas(int nyitoOsszeg){
+    public void nyit(int nyitoOsszeg){
         osszeg = nyitoOsszeg;
         jatekosokTetje[jatekosSorszam] = osszeg;
         szalVezerlo.zsetonokPotba(jatekosSorszam, osszeg);     
-        licitkorSzamlalo = 0;
+        licitkorSzamlalo = 0;        
+        szalVezerlo.felhoSzalIndit("Nyit", jatekosSorszam);
         kovetkezoJatekos();
     }
     
-    public void emeles(int emeltOsszeg){        
+    public void emel(int emeltOsszeg){        
         osszeg -= jatekosokTetje[jatekosSorszam];
         osszeg += emeltOsszeg;
         jatekosokTetje[jatekosSorszam] += osszeg;
         szalVezerlo.zsetonokPotba(jatekosSorszam, osszeg);     
         osszeg = jatekosokTetje[jatekosSorszam];
         licitkorSzamlalo = 0;
+        szalVezerlo.felhoSzalIndit("Emel", jatekosSorszam);
         kovetkezoJatekos();
     }
     
-    public void megadas(){
+    public void megad(){
         osszeg -= jatekosokTetje[jatekosSorszam];
         jatekosokTetje[jatekosSorszam] += osszeg;
         szalVezerlo.zsetonokPotba(jatekosSorszam, osszeg); 
         osszeg = jatekosokTetje[jatekosSorszam];
+        szalVezerlo.felhoSzalIndit("Megad", jatekosSorszam);
         kovetkezoJatekos();
     }
     
@@ -175,12 +179,14 @@ public class JatekVezerlo{
         
         szalVezerlo.jatekosPasszival(jatekosSorszam);
         aktivJatekosokSzama--;
+        szalVezerlo.felhoSzalIndit("All in", jatekosSorszam);
         kovetkezoJatekos();
     }
         
-    public void bedobas(){
+    public void bedob(){
         szalVezerlo.jatekosPasszival(jatekosSorszam);
         aktivJatekosokSzama--;
+        szalVezerlo.felhoSzalIndit("Bedob", jatekosSorszam);
         kovetkezoJatekos();
     }
     

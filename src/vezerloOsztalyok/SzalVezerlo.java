@@ -1,6 +1,7 @@
 package vezerloOsztalyok;
 
 import alapOsztalyok.Dealer;
+import alapOsztalyok.Felho;
 import alapOsztalyok.Jatekos;
 import alapOsztalyok.Kartyalap;
 import alapOsztalyok.Korong;
@@ -9,6 +10,7 @@ import alapOsztalyok.Zseton;
 import felulet.JatekterPanel;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -18,6 +20,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.ImageIcon;
+import vezerloOsztalyok.szalak.FelhoMozgato;
 import vezerloOsztalyok.szalak.KartyaMozgato;
 import vezerloOsztalyok.szalak.KorongMozgato;
 import vezerloOsztalyok.szalak.ZsetonMozgato;
@@ -40,6 +43,7 @@ public class SzalVezerlo {
     private boolean gombsorAktiv;
     private ZsetonMozgato zsetonMozgato;
     private KartyaMozgato kartyaMozgato;
+    private Felho felho;
 
     public SzalVezerlo() {
         keveresAnimacio = new ImageIcon(this.getClass().getResource("/adatFajlok/kartyaPakli/keveresAnimacio.gif")).getImage();
@@ -84,15 +88,14 @@ public class SzalVezerlo {
      */
     public void jatekosokRajzol(Graphics2D g2D) {
         if (jatekosok != null) {
-            int szovegSzelesseg, szovegMagassag;
+            double szovegSzelesseg, szovegMagassag;
             for (Jatekos jatekos : jatekosok) {
                 jatekos.rajzol(g2D, jatekterPanel);
-                
                 String osszeg = String.valueOf(getJatekosZsetonOsszeg(jatekos.getSorszam())+"$");
-                szovegSzelesseg = (int) g2D.getFontMetrics().getStringBounds(osszeg, g2D).getWidth();
-                szovegMagassag = (int) g2D.getFontMetrics().getStringBounds(osszeg, g2D).getHeight();
+                szovegSzelesseg = g2D.getFontMetrics().getStringBounds(osszeg, g2D).getWidth();
+                szovegMagassag = g2D.getFontMetrics().getStringBounds(osszeg, g2D).getHeight();
                 g2D.setColor(Color.yellow);
-                g2D.drawString(osszeg, (int) (jatekos.getX() - szovegSzelesseg / 2), (int) ((jatekos.getY() + szovegMagassag / 2) + jatekterPanelMagassag()/60));
+                g2D.drawString(osszeg, (int) (jatekos.getKx() - szovegSzelesseg / 2), (int) ((jatekos.getKy() + szovegMagassag / 2) + jatekterPanelMagassag()/60));
             }
         }
     }
@@ -130,6 +133,10 @@ public class SzalVezerlo {
         }
     }
     
+    public void felhoRajzol(Graphics g){
+        if(felho != null) felho.rajzol(g, jatekterPanel);
+    }
+    
     /**
      * Létrehozza a játékosokat és beállítja a neveik pozícióját, hogy az asztal szélétől azonos
      * távolságra legyenek.
@@ -149,8 +156,8 @@ public class SzalVezerlo {
         Point vegpont;
         for (Jatekos jatekos : jatekosok) {
             vegpont = vegpontLista.get(i++);
-            jatekos.setX(vegpont.getX() + jatekterPanelSzelesseg()/11.035 * Math.cos(Math.toRadians(SzogSzamito.szogSzamit(jatekterPanelSzelesseg(), jatekterPanelMagassag(), vegpont.getX(), vegpont.getY()))));
-            jatekos.setY(vegpont.getY() + jatekterPanelMagassag()/8.276 * Math.sin(Math.toRadians(SzogSzamito.szogSzamit(jatekterPanelSzelesseg(), jatekterPanelMagassag(), vegpont.getX(), vegpont.getY()))));
+            jatekos.setKx(vegpont.getX() + jatekterPanelSzelesseg()/11.035 * Math.cos(Math.toRadians(SzogSzamito.szogSzamit(jatekterPanelSzelesseg(), jatekterPanelMagassag(), vegpont.getX(), vegpont.getY()))));
+            jatekos.setKy(vegpont.getY() + jatekterPanelMagassag()/8.276 * Math.sin(Math.toRadians(SzogSzamito.szogSzamit(jatekterPanelSzelesseg(), jatekterPanelMagassag(), vegpont.getX(), vegpont.getY()))));
             jatekos.setFont(new Font("Arial", 1, jatekterPanelMagassag() / 60));
             jatekos.setAktiv(true);
         }
@@ -191,6 +198,20 @@ public class SzalVezerlo {
         KorongMozgato korongMozgato = new KorongMozgato(this);
         korongMozgato.setDealer(dealer);
         korongMozgato.start();
+    }
+    
+    public void felhoSzalIndit(String nev, byte jatekosSorszam){
+        Image felhoKep = new ImageIcon(this.getClass().getResource("/adatFajlok/felho/felho.png")).getImage();
+        Jatekos jatekos = getJatekosok().get(jatekosSorszam);        
+        double felhoKepSzelesseg = jatekterPanelSzelesseg() * 0.06875, felhoKepMagassag = jatekterPanelMagassag() * 0.0975;
+        double kx = jatekos.getKx(), ky = jatekos.getKy();  
+        felho = new Felho(felhoKep, nev);             
+        felho.setKx(kx);
+        felho.setKy(ky);
+        felho.setFelhoKepSzelesseg(felhoKepSzelesseg);
+        felho.setFelhoKepMagassag(felhoKepMagassag);
+        FelhoMozgato felhoMozgato = new FelhoMozgato(this);
+        felhoMozgato.start();
     }
     
     /**
@@ -240,7 +261,7 @@ public class SzalVezerlo {
                 }
                 
                 if (!jatekVezerlo.isEmelhet() && !jatekVezerlo.isNyithat()) {
-                    for (int i = 2; i < 5; i++) {
+                    for (byte i = 2; i < 5; i++) {
                         aktivalandoGombok[i] = false;
                     }
                 }
@@ -330,10 +351,6 @@ public class SzalVezerlo {
     public List<Jatekos> getJatekosok() {
         return jatekosok;
     }
-
-    public boolean isJatekosAktiv(byte jatekosSorszam) {
-        return jatekosok.get(jatekosSorszam).isAktiv();
-    }
     
     public Map<Byte, List<Zseton>> getJatekosokZsetonjai() {
         return jatekosokZsetonjai;
@@ -343,12 +360,20 @@ public class SzalVezerlo {
         return ZsetonKezelo.zsetonokOsszege(jatekosokZsetonjai.get(jatekosSorszam));
     }
 
-    public boolean isKartyaGrafikaElore() {
-        return kartyaGrafikaElore;
-    }
-
     public List<Zseton> getPot() {
         return pot;
+    }    
+
+    public Felho getFelho() {
+        return felho;
+    }
+
+    public boolean isJatekosAktiv(byte jatekosSorszam) {
+        return jatekosok.get(jatekosSorszam).isAktiv();
+    }
+    
+    public boolean isKartyaGrafikaElore() {
+        return kartyaGrafikaElore;
     }
     
     /*----------tesztelés---------------------*/    
@@ -366,23 +391,23 @@ public class SzalVezerlo {
     }
 
     public void eldob() {
-        jatekVezerlo.bedobas();
+        jatekVezerlo.bedob();
     }
 
     public void megad(int osszeg) {
-        jatekVezerlo.megadas();
+        jatekVezerlo.megad();
     }
 
     public void nyit(int osszeg) {
-        jatekVezerlo.nyitas(osszeg);
+        jatekVezerlo.nyit(osszeg);
     }
 
     public void emel(int osszeg) {
-        jatekVezerlo.emeles(osszeg);
+        jatekVezerlo.emel(osszeg);
     }
 
     public void passzol() {
-        jatekVezerlo.passz();
+        jatekVezerlo.passzol();
     }
 
     public void setjatekosSorszam(byte jatekosSorszam) {       

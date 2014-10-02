@@ -36,7 +36,7 @@ public class KorongMozgato extends Thread{
         int x;
         int y;
         double szog;
-        int elteres = 120;
+        int elteres = 100;
         double veletlenForgSzog;
         
         korongok.add(dealer);
@@ -54,7 +54,7 @@ public class KorongMozgato extends Thread{
             }
             x = vegpontLista.get(i).x;
             y = vegpontLista.get(i).y;
-            szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y) - 130; //Kiszámolja hogy az adott x,y pozícióban lévő pont hány fokos szöget zár be. Ehhez a szöghöz hozzá ad még kilencven fokot.
+            szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y) + 140; //Kiszámolja hogy az adott x,y pozícióban lévő pont hány fokos szöget zár be. Ehhez a szöghöz hozzá ad még 130 fokot.
             x += elteres * Math.cos(Math.toRadians(szog));//Az x koordináta pozícióját eltolja az elteres értékkel a megadott szög irányba.
             y += elteres * Math.sin(Math.toRadians(szog));
             korong.setKx(x);

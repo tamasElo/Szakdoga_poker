@@ -110,9 +110,11 @@ public class JatekterPanel extends JPanel{
             }
         }        
         
+        szalVezerlo.felhoRajzol(g);
+        
         if (gombok != null) {
             for (Gomb gomb : gombok) {
-                gomb.rajzol(g);
+                gomb.rajzol(g, this);
             }
         }
     }

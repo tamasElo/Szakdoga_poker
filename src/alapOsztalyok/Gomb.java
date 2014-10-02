@@ -2,6 +2,7 @@ package alapOsztalyok;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.ImageObserver;
 
 public class Gomb {
     private final String nev;
@@ -25,13 +26,13 @@ public class Gomb {
         this.magassag = magassag;
     }
     
-    public void rajzol(Graphics g){
+    public void rajzol(Graphics g, ImageObserver o){
         switch(megjSorszam){
-            case 1 : g.drawImage(alapHelyzet, x, y, szelesseg, magassag, null);
+            case 1 : g.drawImage(alapHelyzet, x, y, szelesseg, magassag, o);
                 break;
-            case 2 : g.drawImage(rakattintva, x, y, szelesseg, magassag, null);
+            case 2 : g.drawImage(rakattintva, x, y, szelesseg, magassag, o);
                 break;
-            case 3 : g.drawImage(letiltva, x, y, szelesseg, magassag, null);
+            case 3 : g.drawImage(letiltva, x, y, szelesseg, magassag, o);
                 break;
         }
     }

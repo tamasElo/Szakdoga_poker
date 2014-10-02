@@ -8,13 +8,13 @@ import java.util.List;
 
 public class Jatekos {
     private String nev;
+    private Font font;    
     private Color szin;
     private boolean aktiv;
     private static byte index;
     private byte sorszam;
-    private double x;
-    private double y;
-    private Font font;    
+    private double kx;
+    private double ky;
     private String pokerKezNev;
     private List<Kartyalap> pokerKezLapok;
     private List<Zseton> jatekosZsetonok;  
@@ -26,21 +26,20 @@ public class Jatekos {
     }
     
     public void rajzol(Graphics2D g2D, ImageObserver o){
-        int szovegSzelesseg;
-        int szovegMagassag;
+        double nevSzelesseg, nevMagassag;
         g2D.setColor(szin);
-        g2D.setFont(font);
-        szovegSzelesseg = (int) g2D.getFontMetrics().getStringBounds(nev, g2D).getWidth();
-        szovegMagassag = (int) g2D.getFontMetrics().getStringBounds(nev, g2D).getHeight();
-        g2D.drawString(nev, (int) (x - szovegSzelesseg / 2), (int) (y + szovegMagassag / 2));
+        g2D.setFont(font);        
+        nevSzelesseg = g2D.getFontMetrics().getStringBounds(nev, g2D).getWidth();
+        nevMagassag = g2D.getFontMetrics().getStringBounds(nev, g2D).getHeight();
+        g2D.drawString(nev, (int) (kx - nevSzelesseg / 2), (int) (ky + nevMagassag / 2));
     }
     
-    public void setX(double x) {
-        this.x = x;
+    public void setKx(double kx) {
+        this.kx = kx;
     }
 
-    public void setY(double y) {
-        this.y = y;
+    public void setKy(double ky) {
+        this.ky = ky;
     }
 
     public void setFont(Font font) {
@@ -71,14 +70,13 @@ public class Jatekos {
         return aktiv;
     }
 
-    public double getX() {
-        return x;
+    public double getKx() {
+        return kx;
     }
 
-    public double getY() {
-        return y;
+    public double getKy() {
+        return ky;
     }
-
     public byte getSorszam() {
         return sorszam;
     }
@@ -86,7 +84,7 @@ public class Jatekos {
     public Font getFont() {
         return font;
     }
-
+    
     public List<Zseton> getJatekosZsetonok() {
         return jatekosZsetonok;
     }
