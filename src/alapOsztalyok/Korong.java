@@ -9,8 +9,8 @@ public abstract class Korong {
     private Image korongKep;
     private double kx;
     private double ky;
-    private int korongKepSzelesseg;
-    private int korongKepMagassag;
+    private double korongKepSzelesseg;
+    private double korongKepMagassag;
     private double forgat;
     
     public Korong(Image korongKep){
@@ -24,7 +24,7 @@ public abstract class Korong {
             g2D.rotate(Math.toRadians(forgat), kx, ky);
         }
         
-        g2D.drawImage(korongKep, (int)(kx-korongKepSzelesseg/2), (int) (ky-korongKepMagassag/2), korongKepSzelesseg, korongKepMagassag, o);
+        g2D.drawImage(korongKep, (int)(kx-korongKepSzelesseg/2), (int) (ky-korongKepMagassag/2), (int)korongKepSzelesseg, (int)korongKepMagassag, o);
         
         if (forgat != 0) {
             g2D.setTransform(at);
@@ -38,12 +38,12 @@ public abstract class Korong {
     public void setKy(double ky) {
         this.ky = ky;
     }
-    
-    public void setKorongKepSzelesseg(int korongKepSzelesseg) {
+
+    public void setKorongKepSzelesseg(double korongKepSzelesseg) {
         this.korongKepSzelesseg = korongKepSzelesseg;
     }
 
-    public void setKorongKepMagassag(int korongKepMagassag) {
+    public void setKorongKepMagassag(double korongKepMagassag) {
         this.korongKepMagassag = korongKepMagassag;
     }
 
@@ -58,12 +58,12 @@ public abstract class Korong {
     public double getKy() {
         return ky;
     }
-    
-    public int getKorongKepSzelesseg() {
+
+    public double getKorongKepSzelesseg() {
         return korongKepSzelesseg;
     }
 
-    public int getKorongKepMagassag() {
+    public double getKorongKepMagassag() {
         return korongKepMagassag;
     }
 

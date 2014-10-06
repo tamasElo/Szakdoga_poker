@@ -31,12 +31,11 @@ public class KorongMozgato extends Thread{
         Dealer dealer = new Dealer(new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/dealer.png")).getImage());
         Vak kisVak = new Vak(new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/small_blind.png")).getImage());
         Vak nagyVak = new Vak(new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/big_blind.png")).getImage());
-        int meret;
+        double meret;
         int i = dealerJatekosSorszam;
-        int x;
-        int y;
+        double x, y;
         double szog;
-        int elteres = 100;
+        int elteres = szalVezerlo.jatekterPanelSzelesseg()/16;
         double veletlenForgSzog;
         
         korongok.add(dealer);
@@ -47,10 +46,10 @@ public class KorongMozgato extends Thread{
             veletlenForgSzog = Math.random()*360; //Létrehoz egy véletlen szöget 0 és 360 fok között. A létrehozott értéknek megfelelően fognak elfordulni a zsetonok.                
 
             if (korong instanceof Dealer) {
-                meret = 50;
+                meret = szalVezerlo.jatekterPanelSzelesseg()/32;
             } else {
                 if(++i == jatekosokSzama) i=0;
-                meret = 45;
+                meret = szalVezerlo.jatekterPanelSzelesseg()*0.028125;
             }
             x = vegpontLista.get(i).x;
             y = vegpontLista.get(i).y;

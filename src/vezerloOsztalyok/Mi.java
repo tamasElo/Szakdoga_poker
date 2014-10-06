@@ -1,8 +1,5 @@
 package vezerloOsztalyok;
 
-import alapOsztalyok.Jatekos;
-import java.util.List;
-
 public class Mi {
     private byte jatekosSorszam;
 

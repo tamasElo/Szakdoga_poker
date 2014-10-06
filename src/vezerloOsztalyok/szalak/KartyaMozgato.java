@@ -33,7 +33,7 @@ public class KartyaMozgato extends Thread{
     private boolean kartyalapLeosztas;
     private boolean osszesKartyalapLeosztas;
     private byte dealer;
-    private int lepes;
+    private double lepes;
     private int ido;
     private byte jatekosokSzama;
     private static double laptavolsagokOsszege;
@@ -43,7 +43,8 @@ public class KartyaMozgato extends Thread{
         jatekterSzelesseg = szalVezerlo.jatekterPanelSzelesseg();
         jatekterMagassag = szalVezerlo.jatekterPanelMagassag();
         jatekosokSzama = szalVezerlo.jatekosokSzama();
-        ido = 7 - jatekterSzelesseg/400;
+        ido = 3;
+        lepes = jatekterSzelesseg * 0.001875;
     }
     
      /**
@@ -55,10 +56,10 @@ public class KartyaMozgato extends Thread{
         ky = jatekterMagassag / 2;
         szorasok = new ArrayList();
         /*Beállítja a minimális és maximális szóráspontokat.*/
-        double minX = -szorasHatar.getX() - 1,
-                maxX = 2 * szorasHatar.getX() + 2,
-                minY = -szorasHatar.getY() - 1,
-                maxY = 2 * szorasHatar.getY() + 2;
+        double minX = -szorasHatar.getX() - jatekterSzelesseg * 0.000625,
+                maxX = jatekterSzelesseg * 0.00125 * szorasHatar.getX() + jatekterSzelesseg * 0.00125,
+                minY = -szorasHatar.getY() - jatekterMagassag / 1200,
+                maxY = jatekterMagassag / 600 * szorasHatar.getY() + jatekterMagassag / 600;
         
         kartyalapok = PakliKezelo.kevertPakli();
         
@@ -80,8 +81,7 @@ public class KartyaMozgato extends Thread{
     @SuppressWarnings("SleepWhileInLoop")
     private void kartyaPakliMozgat() {
         double vegSzog;        
-        aktTav = 0;        
-        lepes = 3;    
+        aktTav = 0;       
         aktForgSzog = 0;
         vegpontok = SzogSzamito.vegpontLista(jatekosokSzama, jatekterSzelesseg, jatekterMagassag);//Lekéri a végpontok listáját a játékosok száma alapján.
         vx = vegpontok.get(dealer).x;
@@ -128,7 +128,6 @@ public class KartyaMozgato extends Thread{
             byte j, k;
             byte jatekosSorszam = dealer;
             Kartyalap kartyalap;
-            lepes = 3;
             vegpontok.addAll(vegpontok);//Megduplázza a végpontokat. Mivel egy játékosnak két lapja van, ezért kétszer kell a ciklusban ugyanazzal a végponttal számolni.
             for (byte i = 0; i<vegpontok.size(); i++) {
                 jatekosSorszam++;//Megnöveli egyel az jatekosSorszam változót hogy a megfelelő játékoshoz kerüljön a kiosztott kártyalap.
@@ -176,7 +175,6 @@ public class KartyaMozgato extends Thread{
                     kartyalap = jatekosokKartyalapjai.get(k).get(j);//Beállítja a hivatkozást a k-ik játékos j-ik kártyalapját.
                     if(k==0)kartyalap.setMutat(true);//Megmutatja az ember játékos lapjait.
                     
-                    lepes = 3;
                     kx = kartyalap.getKx();
                     ky = kartyalap.getKy();
                     vx = vegpontok.get(i).x;
@@ -214,7 +212,6 @@ public class KartyaMozgato extends Thread{
         double veletlenX, veletlenY;
         double novekmeny;
         kartyalapok = szalVezerlo.getKartyalapok();
-        lepes = 3;      
 
         if (szalVezerlo.leosztottKartyalapokSzama() == 0) {
             leosztandoKartyalapokSzama = 3;
@@ -239,7 +236,7 @@ public class KartyaMozgato extends Thread{
             vx = novekmeny;
             vy = jatekterMagassag/2;
             aktForgSzog = 0;
-            vegForgSzog = -3 + Math.random()*6;
+            vegForgSzog = -3 + Math.random() * 6;
             foSzog = Math.atan2(vy - ky, vx - kx);
             tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
             novekmeny+=kartyalap.getKartyaKepSzelesseg()+jatekterSzelesseg/160;//A leosztott lapok közötti távolságot számolja ki

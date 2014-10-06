@@ -16,7 +16,6 @@ public class JatekVezerlo{
     private boolean passzolhat;
     private boolean megadhat;
     private boolean emelhet;
-    private int aktJatekosZsetonOsszeg;
     private int kisVakOsszeg;
     private int nagyVakOsszeg;
     private int aktivJatekosokSzama;
@@ -26,7 +25,7 @@ public class JatekVezerlo{
         this.szalVezerlo = szalVezerlo;
         this.jatekosokSzama = szalVezerlo.jatekosokSzama(); 
         jatekosokTetje = new int[jatekosokSzama];
-        dealerJatekosSorszam = 2;//(byte) (Math.random()*jatekosokSzama);
+        dealerJatekosSorszam = (byte) (Math.random()*jatekosokSzama);
         mi = new Mi();     
         aktivJatekosokSzama = 5;
         kisVakOsszeg = 5;
@@ -77,7 +76,8 @@ public class JatekVezerlo{
     }
     
     private void lehetosegekBeallit(){ 
-        aktJatekosZsetonOsszeg = szalVezerlo.getJatekosZsetonOsszeg(jatekosSorszam);
+        int aktJatekosZsetonOsszeg = szalVezerlo.getJatekosZsetonOsszeg(jatekosSorszam);
+        
         if (aktJatekosZsetonOsszeg <= osszeg) {
             nyithat = false;
             emelhet = false;
@@ -116,7 +116,6 @@ public class JatekVezerlo{
         
     public void kovetkezoJatekos() {
         jatekosAllapotEllenorzes();     
-        aktJatekosZsetonOsszeg = szalVezerlo.getJatekosZsetonOsszeg(jatekosSorszam);
         lehetosegekBeallit();
     }
     
@@ -216,6 +215,14 @@ public class JatekVezerlo{
 
     public boolean isEmelhet() {
         return emelhet;
+    }
+
+    public int getKisVakOsszeg() {
+        return kisVakOsszeg;
+    }
+
+    public int getNagyVakOsszeg() {
+        return nagyVakOsszeg;
     }
 
     public int getOsszeg() {

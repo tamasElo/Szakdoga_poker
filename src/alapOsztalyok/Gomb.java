@@ -9,13 +9,13 @@ public class Gomb {
     private final Image alapHelyzet;
     private final Image rakattintva;
     private final Image letiltva;
-    private int x;
-    private int y;
-    private int szelesseg;
-    private int magassag;
+    private double x;
+    private double y;
+    private double szelesseg;
+    private double magassag;
     private int megjSorszam;
 
-    public Gomb(String nev, Image alapHelyzet, Image rakattintva, Image letiltva, int x, int y, int szelesseg, int magassag) {
+    public Gomb(String nev, Image alapHelyzet, Image rakattintva, Image letiltva, double x, double y, double szelesseg, double magassag) {
         this.nev = nev;
         this.alapHelyzet = alapHelyzet;
         this.rakattintva = rakattintva;
@@ -28,28 +28,28 @@ public class Gomb {
     
     public void rajzol(Graphics g, ImageObserver o){
         switch(megjSorszam){
-            case 1 : g.drawImage(alapHelyzet, x, y, szelesseg, magassag, o);
+            case 1 : g.drawImage(alapHelyzet, (int)x, (int)(y+magassag/15), (int)szelesseg, (int)magassag, o);
                 break;
-            case 2 : g.drawImage(rakattintva, x, y, szelesseg, magassag, o);
+            case 2 : g.drawImage(rakattintva, (int)x, (int)y, (int)szelesseg, (int)magassag, o);
                 break;
-            case 3 : g.drawImage(letiltva, x, y, szelesseg, magassag, o);
+            case 3 : g.drawImage(letiltva, (int)x, (int)(y+magassag/15), (int)szelesseg, (int)magassag, o);
                 break;
         }
     }
 
-    public void setX(int x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public void setY(int y) {
+    public void setY(double y) {
         this.y = y;
     }
 
-    public void setSzelesseg(int szelesseg) {
+    public void setSzelesseg(double szelesseg) {
         this.szelesseg = szelesseg;
     }
 
-    public void setMagassag(int magassag) {
+    public void setMagassag(double magassag) {
         this.magassag = magassag;
     }
 
@@ -61,22 +61,21 @@ public class Gomb {
         return nev;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
-    public int getSzelesseg() {
+    public double getSzelesseg() {
         return szelesseg;
     }
 
-    public int getMagassag() {
+    public double getMagassag() {
         return magassag;
     }
-
     public int getMegjSorszam() {
         return megjSorszam;
     }

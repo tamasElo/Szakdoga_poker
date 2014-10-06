@@ -1,11 +1,9 @@
 package vezerloOsztalyok;
 
-import alapOsztalyok.Dealer;
 import alapOsztalyok.Felho;
 import alapOsztalyok.Jatekos;
 import alapOsztalyok.Kartyalap;
 import alapOsztalyok.Korong;
-import alapOsztalyok.Vak;
 import alapOsztalyok.Zseton;
 import felulet.JatekterPanel;
 import java.awt.Color;
@@ -34,9 +32,6 @@ public class SzalVezerlo {
     private Map<Byte, List<Zseton>> jatekosokZsetonjai;    
     private List<Zseton> pot;
     private boolean kartyaGrafikaElore;
-    private Dealer dealer;
-    private Vak kisVak;
-    private Vak nagyVak;
     private JatekterPanel jatekterPanel;
     private JatekVezerlo jatekVezerlo;
     private final Image keveresAnimacio;
@@ -61,7 +56,7 @@ public class SzalVezerlo {
                 kartyalap.rajzol(g2D, jatekterPanel);
             }
         } else {
-            g2D.drawImage(keveresAnimacio, (int)(jatekterPanelSzelesseg() / 2.286), (int)(jatekterPanelMagassag() / 2.143), jatekterPanelSzelesseg()/8, jatekterPanelMagassag()/16, jatekterPanel);
+            g2D.drawImage(keveresAnimacio, (int)aranytSzamol(2.286), (int)aranytSzamol(2.143, 'y'), (int)aranytSzamol(8), (int)aranytSzamol(16, 'y'), jatekterPanel);
         }
         
         if(jatekosokKartyalapjai != null){
@@ -89,9 +84,11 @@ public class SzalVezerlo {
     public void jatekosokRajzol(Graphics2D g2D) {
         if (jatekosok != null) {
             double szovegSzelesseg, szovegMagassag;
+            String osszeg;
+            
             for (Jatekos jatekos : jatekosok) {
                 jatekos.rajzol(g2D, jatekterPanel);
-                String osszeg = String.valueOf(getJatekosZsetonOsszeg(jatekos.getSorszam())+"$");
+                osszeg = String.valueOf(getJatekosZsetonOsszeg(jatekos.getSorszam())+"$");
                 szovegSzelesseg = g2D.getFontMetrics().getStringBounds(osszeg, g2D).getWidth();
                 szovegMagassag = g2D.getFontMetrics().getStringBounds(osszeg, g2D).getHeight();
                 g2D.setColor(Color.yellow);
@@ -144,11 +141,11 @@ public class SzalVezerlo {
     public void jatekosokBeallit() {
        /*tesztelés*/
         jatekosok = new ArrayList<>();
-        jatekosok.add(new Jatekos("Sanyai"));
-        jatekosok.add(new Jatekos("Pityua"));
-        jatekosok.add(new Jatekos("Tomias"));
-        jatekosok.add(new Jatekos("Gézaka"));
-        jatekosok.add(new Jatekos("Kndras"));
+        jatekosok.add(new Jatekos("Sanyi"));
+        jatekosok.add(new Jatekos("Pityu"));
+        jatekosok.add(new Jatekos("Tomi"));
+        jatekosok.add(new Jatekos("Géza"));
+        jatekosok.add(new Jatekos("András"));
        /*-----------------------------------*/
         
         int i = 0;
@@ -163,7 +160,7 @@ public class SzalVezerlo {
         }
     }
     
-    public void jatekvezerloIndit() {
+    public void jatekVezerloIndit() {
         jatekVezerlo = new JatekVezerlo(this);
     }
     
@@ -254,7 +251,7 @@ public class SzalVezerlo {
     public void gombSorAllapotvalt() {
         if (jatekVezerlo != null) {
             if (!jatekVezerlo.gepiJatekos() && !gombsorAktiv) {
-                boolean[] aktivalandoGombok = {true, true, true, true, true, true};
+                boolean[] aktivalandoGombok = {true, true, true, false, true, true};
 
                 if (!jatekVezerlo.isMegadhat() && !jatekVezerlo.isPasszolhat()) {
                     aktivalandoGombok[1] = false;
@@ -266,7 +263,12 @@ public class SzalVezerlo {
                     }
                 }
                 
-                jatekterPanel.gombsorAktival(aktivalandoGombok);
+                jatekterPanel.gombsorAktival(aktivalandoGombok);   
+                jatekterPanel.setMegadandoOsszeg(jatekVezerlo.getOsszeg());
+                jatekterPanel.setLepesKoz(jatekVezerlo.getKisVakOsszeg());
+                jatekterPanel.setEmelendoOsszeg(jatekVezerlo.getOsszeg() == 0 ? jatekVezerlo.getNagyVakOsszeg() : jatekVezerlo.getOsszeg());
+                jatekterPanel.setMinOsszeg(jatekVezerlo.getOsszeg() == 0 ? jatekVezerlo.getNagyVakOsszeg() : jatekVezerlo.getOsszeg());
+                jatekterPanel.setMaxOsszeg(getJatekosZsetonOsszeg((byte)0));
                 gombsorAktiv = true;
             }
 
@@ -275,6 +277,18 @@ public class SzalVezerlo {
                 gombsorAktiv = false;
             }
         }
+    }
+    
+    public double aranytSzamol(double ertek){
+        double osztando = 0;
+        if((double)Math.round(10 * jatekterPanelSzelesseg() / jatekterPanelMagassag()) / 10 == 1.3) osztando = jatekterPanelSzelesseg();
+        return osztando/ertek;
+    }
+    public double aranytSzamol(double ertek, char tengely){
+        double osztando = 0;
+        if((double)Math.round(10 * jatekterPanelSzelesseg() / jatekterPanelMagassag()) / 10 == 1.3) if(tengely == 'x')osztando = jatekterPanelSzelesseg();
+                else osztando = jatekterPanelMagassag();
+        return osztando/ertek;
     }
     
     /**
@@ -315,11 +329,35 @@ public class SzalVezerlo {
             }
         }
     }
-    
-    public void jatekosPasszival(byte jatekosSorszam){
+
+    public void jatekosPasszival(byte jatekosSorszam) {
         jatekosok.get(jatekosSorszam).setAktiv(false);
     }
-    
+
+    public void emberiJatekosPasszol() {
+        jatekVezerlo.passzol();
+    }
+
+    public void emberiJatekosNyit(int osszeg) {
+        jatekVezerlo.nyit(osszeg);
+    }
+
+    public void emberiJatekosEmel(int osszeg) {
+        jatekVezerlo.emel(osszeg);
+    }
+
+    public void emberiJatekosMegad(int osszeg) {
+        jatekVezerlo.megad();
+    }
+
+    public void emberiJatekosAllIn() {
+        jatekVezerlo.allIn();
+    }
+
+    public void emberiJatekosEldob() {
+        jatekVezerlo.bedob();
+    }
+
     public void setJatekTerPanel(JatekterPanel jatekTerPanel) {
         this.jatekterPanel = jatekTerPanel;
     }
@@ -386,30 +424,6 @@ public class SzalVezerlo {
         return jatekVezerlo.getOsszeg();
     }
     
-    public void allin() {
-        jatekVezerlo.allIn();
-    }
-
-    public void eldob() {
-        jatekVezerlo.bedob();
-    }
-
-    public void megad(int osszeg) {
-        jatekVezerlo.megad();
-    }
-
-    public void nyit(int osszeg) {
-        jatekVezerlo.nyit(osszeg);
-    }
-
-    public void emel(int osszeg) {
-        jatekVezerlo.emel(osszeg);
-    }
-
-    public void passzol() {
-        jatekVezerlo.passzol();
-    }
-
     public void setjatekosSorszam(byte jatekosSorszam) {       
        jatekterPanel.setNevlabel(jatekosok.get(jatekosSorszam).getNev());
     }

@@ -39,7 +39,7 @@ public class FelhoMozgato extends Thread {
             double tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
             double felhoHorizontalisLepes = felhoKepSzelesseg/tavolsag;
             double felhoVertikalisLepes = felhoKepMagassag/tavolsag;            
-            double szovegLepes = (felhoKepMagassag/9.75)/tavolsag;
+            double szovegLepes = (felhoKepMagassag/7.8)/tavolsag;
             felhoKepSzelesseg = 0;
             felhoKepMagassag = 0;                
             while (aktTav <= tavolsag) {
@@ -54,8 +54,8 @@ public class FelhoMozgato extends Thread {
                 felho.setKy(akty);
                 felho.setFelhoKepSzelesseg(felhoKepSzelesseg);
                 felho.setFelhoKepMagassag(felhoKepMagassag);
-                sleep(2);
                 szalVezerlo.frissit();
+                sleep(2);
             }
             sleep(IDO);
         } catch (InterruptedException ex) {
