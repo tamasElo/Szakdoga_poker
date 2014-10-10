@@ -270,7 +270,7 @@ public class JatekterPanel extends JPanel{
                 szalVezerlo.emberiJatekosAllIn();
                 break;
             case "call_check":
-                if(megadandoOsszeg > 0) szalVezerlo.emberiJatekosMegad(megadandoOsszeg);
+                if(megadandoOsszeg > 0) szalVezerlo.emberiJatekosMegad();
                 else szalVezerlo.emberiJatekosPasszol();
                 break;
             case "raise_bet":
@@ -361,7 +361,7 @@ public class JatekterPanel extends JPanel{
         megad.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                szalVezerlo.emberiJatekosMegad(osszeg);
+                szalVezerlo.emberiJatekosMegad();
             }
         });
         nyit.addActionListener(new ActionListener() {

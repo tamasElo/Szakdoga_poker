@@ -156,6 +156,9 @@ public class ZsetonMozgato extends Thread {
         szalVezerlo.frissit();
     }
     
+    /**
+     * A játékos tétjét mozgatja a megfelelő pozícióba.
+     */
     @SuppressWarnings("SleepWhileInLoop")
     private void jatekosTetMozgat() {
         Point vegpont;
@@ -166,11 +169,20 @@ public class ZsetonMozgato extends Thread {
         List<Zseton> jatekosZsetonjai = szalVezerlo.getJatekosokZsetonjai().get(jatekosSorszam);        
         List<Zseton> jatekosTetje = ZsetonKezelo.pot(jatekosZsetonjai, jatekosTetOsszege);
         szalVezerlo.pothozAd(jatekosTetje);
-        if(!jatekosZsetonjai.isEmpty() && jatekosZsetonjai.get(0).getKx() == 0){ //ezt még át kell nézni meg az alatta lévő if-et is
-            zsetonokUjratolt(jatekosZsetonjai);
-            zsetonokUjratolt(jatekosTetje);
+        
+        for (Zseton zseton : jatekosZsetonjai) {
+            if (zseton.getKx() == 0) {
+                zsetonokUjratolt(jatekosZsetonjai);
+                break;
+            }
         }
-        if(jatekosZsetonjai.isEmpty())zsetonokUjratolt(jatekosTetje);
+     
+        for (Zseton zseton : jatekosTetje) {
+            if (zseton.getKx() == 0) {
+                zsetonokUjratolt(jatekosTetje);
+                break;
+            }
+        }
         
         for (Zseton zseton : jatekosTetje) {         
             szoras = -jatekterSzelesseg / 800 + Math.random() * jatekterSzelesseg / 400;

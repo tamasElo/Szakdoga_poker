@@ -92,8 +92,8 @@ public class KartyaMozgato extends Thread{
         aktForgSzog = 0;
         elteres = 0.09375 * jatekterSzelesseg;
         vegpontok = SzogSzamito.vegpontLista(jatekosokSzama, jatekterSzelesseg, jatekterMagassag);//Lekéri a végpontok listáját a játékosok száma alapján.
-        vx = vegpontok.get(dealer).getX();
-        vy = vegpontok.get(dealer).getY();       
+        vx = vegpontok.get(dealer).x;
+        vy = vegpontok.get(dealer).y;       
         vegSzog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, vx, vy);//Kiszámítja a beállított végpontokhoz tartozó szöget.
         /*A végpontokból levon ellentétes szögirányba egy szélességgel és magassággal arányos értéket.*/
         vx += elteres * Math.cos(Math.toRadians(vegSzog+180));
@@ -146,8 +146,8 @@ public class KartyaMozgato extends Thread{
                 aktForgSzog = 0;
                 kx = kartyalap.getKx();
                 ky = kartyalap.getKy();
-                vx = vegpontok.get(jatekosSorszam).getX();
-                vy = vegpontok.get(jatekosSorszam).getY();
+                vx = vegpontok.get(jatekosSorszam).x;
+                vy = vegpontok.get(jatekosSorszam).y;
                 vegForgSzog = SzogSzamito.forgasSzogSzamit(jatekterSzelesseg, jatekterMagassag, vx, vy);
                 foSzog = Math.atan2(vy - ky, vx - kx);
                 tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
@@ -187,8 +187,8 @@ public class KartyaMozgato extends Thread{
                     
                     kx = kartyalap.getKx();
                     ky = kartyalap.getKy();
-                    vx = vegpontok.get(i).getX();
-                    vy = vegpontok.get(i).getY();
+                    vx = vegpontok.get(i).x;
+                    vy = vegpontok.get(i).y;
                     aktForgSzog = kartyalap.getForgat();
                     vegpontSzog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, vx, vy);//Kiszámítja a végponthoz tartozó szöget.
                     vegpontSzog -= 90 * elojel;//Elöjelnek megfelelöen az ehhez a szöghöz viszonyítottan +- 90 fokban hozzáad egy eltérési értéket. Ebböl jön ki a játékos egyik kártyájának végpontja.*/
@@ -226,8 +226,8 @@ public class KartyaMozgato extends Thread{
             for (Kartyalap kartyalap : jatekosKartyalapok) {
                 kx = kartyalap.getKx();
                 ky = kartyalap.getKy();
-                vx = vegpontok.get(jatekosSorszam).getX();
-                vy = vegpontok.get(jatekosSorszam).getY();
+                vx = vegpontok.get(jatekosSorszam).x;
+                vy = vegpontok.get(jatekosSorszam).y;
                 vegForgSzog = SzogSzamito.forgasSzogSzamit(jatekterSzelesseg, jatekterMagassag, vx, vy);
                 foSzog = Math.atan2(vy - ky, vx - kx);
                 tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));

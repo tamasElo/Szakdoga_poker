@@ -256,9 +256,7 @@ public class SzalVezerlo {
         pot.addAll(jatekosTetje);
     }
 
-    public void gombSorAllapotvalt() {
-        int osszeg;
-        
+    public void gombSorAllapotvalt() {        
         if (jatekVezerlo != null) {
             if (!jatekVezerlo.gepiJatekos() && !gombsorAktiv) {
                 boolean[] aktivalandoGombok = {true, true, true, false, true, true};
@@ -273,17 +271,12 @@ public class SzalVezerlo {
                     }
                 }
                 
-                jatekterPanel.gombsorAktival(aktivalandoGombok);  
-                
-                if(jatekVezerlo.getKisVakJatekosSorszam() == JatekVezerlo.EMBER_JATEKOS_SORSZAM) osszeg = jatekVezerlo.getOsszeg()-jatekVezerlo.getKisVakOsszeg();
-                else if(jatekVezerlo.getNagyVakJatekosSorszam() == JatekVezerlo.EMBER_JATEKOS_SORSZAM) osszeg = 0;
-                else osszeg = jatekVezerlo.getOsszeg();
-                
-                jatekterPanel.setMegadandoOsszeg(osszeg);
+                jatekterPanel.gombsorAktival(aktivalandoGombok);                  
+                jatekterPanel.setMegadandoOsszeg(jatekVezerlo.getOsszeg()-jatekVezerlo.getJatekosokTetje()[JatekVezerlo.EMBER_JATEKOS_SORSZAM]);
                 jatekterPanel.setLepesKoz(jatekVezerlo.getKisVakOsszeg());
                 jatekterPanel.setEmelendoOsszeg(jatekVezerlo.getOsszeg() == 0 ? jatekVezerlo.getNagyVakOsszeg() : jatekVezerlo.getOsszeg());
                 jatekterPanel.setMinOsszeg(jatekVezerlo.getOsszeg() == 0 ? jatekVezerlo.getNagyVakOsszeg() : jatekVezerlo.getOsszeg());
-                jatekterPanel.setMaxOsszeg(getJatekosZsetonOsszeg((byte)0));
+                jatekterPanel.setMaxOsszeg(getJatekosZsetonOsszeg(JatekVezerlo.EMBER_JATEKOS_SORSZAM));
                 gombsorAktiv = true;
             }
 
@@ -361,7 +354,7 @@ public class SzalVezerlo {
         jatekVezerlo.emel(osszeg);
     }
 
-    public void emberiJatekosMegad(int osszeg) {
+    public void emberiJatekosMegad() {
         jatekVezerlo.megad();
     }
 

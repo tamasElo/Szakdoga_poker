@@ -169,6 +169,7 @@ public class JatekVezerlo{
         osszeg -= jatekosokTetje[jatekosSorszam];
         jatekosokTetje[jatekosSorszam] += osszeg;
         szalVezerlo.zsetonokPotba(jatekosSorszam, osszeg);
+        osszeg = jatekosokTetje[jatekosSorszam];
         szalVezerlo.felhoSzalIndit("Megad", jatekosSorszam);
         kovetkezoJatekos();
     }
@@ -197,6 +198,7 @@ public class JatekVezerlo{
         aktivJatekosokSzama--;
         szalVezerlo.felhoSzalIndit("Bedob", jatekosSorszam);
         szalVezerlo.kartyalapokBedobSzalIndit(jatekosSorszam);
+        
         if (aktivJatekosokSzama > 1) {
             kovetkezoJatekos();
         } else {
@@ -254,11 +256,7 @@ public class JatekVezerlo{
         return jatekosSorszam;
     }
 
-    public byte getKisVakJatekosSorszam() {
-        return kisVakJatekosSorszam;
-    }
-
-    public byte getNagyVakJatekosSorszam() {
-        return nagyVakJatekosSorszam;
+    public int[] getJatekosokTetje() {
+        return jatekosokTetje;
     }
 }
