@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import vezerloOsztalyok.JatekVezerlo;
 import vezerloOsztalyok.PakliKezelo;
 import vezerloOsztalyok.SzogSzamito;
 
 public class KartyaMozgato extends Thread{    
     private SzalVezerlo szalVezerlo;
+    private Map<Byte, List<Kartyalap>> jatekosokKartyalapjai;
     private List<Kartyalap> kartyalapok;    
     private List<Point> szorasok;
     private List<Point> vegpontok;
@@ -25,17 +27,22 @@ public class KartyaMozgato extends Thread{
     private double aktx;
     private double akty;
     private double tavolsag;
-    private double aktTav;
-    private double foSzog;
+    private double aktTav;    
+    private double elteres;
+    private double foSzog;    
+    private double vegSzog;
     private double vegForgSzog;
     private double aktForgSzog;
     private boolean kartyalapokKiosztasa;
     private boolean kartyalapLeosztas;
+    private boolean kartyalapokBedobasa;
     private boolean osszesKartyalapLeosztas;
     private byte dealer;
     private double lepes;
     private int ido;
+    private byte elojel;
     private byte jatekosokSzama;
+    private byte jatekosSorszam;
     private static double laptavolsagokOsszege;
 
     public KartyaMozgato(SzalVezerlo szalVezerlo) {
@@ -46,11 +53,12 @@ public class KartyaMozgato extends Thread{
         ido = 3;
         lepes = jatekterSzelesseg * 0.001875;
     }
-    
-     /**
-      * A PakliKezelo osztálytól lekéri a kevert pakli listát és ezt átadja a szálvezérlönek.
-      */
-    private void pakliBetolt(){ 
+
+    /**
+     * A PakliKezelo osztálytól lekéri a kevert pakli listát és ezt átadja a
+     * szálvezérlönek.
+     */
+    private void pakliBetolt() { 
         Point aktSzoras, szorasHatar = new Point(jatekterSzelesseg / 400, jatekterMagassag / 600);            
         kx = jatekterSzelesseg / 2;//Beállítja a kezdöpontot középre, hogy onnan induljon az animácio.
         ky = jatekterMagassag / 2;
@@ -67,8 +75,8 @@ public class KartyaMozgato extends Thread{
             kartyalap.setKartyaKepSzelesseg((int) (jatekterSzelesseg/22.857));
             kartyalap.setKartyaKepMagassag((int) (jatekterMagassag/11.765));
             aktSzoras = new Point((int) (minX + Math.random() * maxX), (int) (minY + Math.random() * maxY));
-            kartyalap.setKx(kx+aktSzoras.x);
-            kartyalap.setKy(ky+aktSzoras.y);
+            kartyalap.setKx(kx+aktSzoras.getX());
+            kartyalap.setKy(ky+aktSzoras.getY());
             szorasok.add(aktSzoras);
         }
         szalVezerlo.setKartyalapok(kartyalapok);
@@ -79,17 +87,17 @@ public class KartyaMozgato extends Thread{
      * Az egész kártyapaklit mozgatja középről a megadott szögbe és irányba.
      */
     @SuppressWarnings("SleepWhileInLoop")
-    private void kartyaPakliMozgat() {
-        double vegSzog;        
+    private void kartyaPakliMozgat() {       
         aktTav = 0;       
         aktForgSzog = 0;
+        elteres = 0.09375 * jatekterSzelesseg;
         vegpontok = SzogSzamito.vegpontLista(jatekosokSzama, jatekterSzelesseg, jatekterMagassag);//Lekéri a végpontok listáját a játékosok száma alapján.
-        vx = vegpontok.get(dealer).x;
-        vy = vegpontok.get(dealer).y;       
+        vx = vegpontok.get(dealer).getX();
+        vy = vegpontok.get(dealer).getY();       
         vegSzog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, vx, vy);//Kiszámítja a beállított végpontokhoz tartozó szöget.
-        /*A végpontokból levon ellentétes szögirányba egy szélességgel vagy magassággal arányos értéket.*/
-        vx += 0.09375 * jatekterSzelesseg * Math.cos(Math.toRadians(vegSzog+180));
-        vy += 0.125 * jatekterMagassag * Math.sin(Math.toRadians(vegSzog+180));
+        /*A végpontokból levon ellentétes szögirányba egy szélességgel és magassággal arányos értéket.*/
+        vx += elteres * Math.cos(Math.toRadians(vegSzog+180));
+        vy += elteres * Math.sin(Math.toRadians(vegSzog+180));
         foSzog = Math.atan2(vy - ky, vx - kx);               
         vegForgSzog = SzogSzamito.forgasSzogSzamit(jatekterSzelesseg, jatekterMagassag, vx ,vy);//Kiszámítja hogy mennyivel kell elforgatni a lapokat az asztal lekerekitett szélébez viszonyítva.
         tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
@@ -123,13 +131,12 @@ public class KartyaMozgato extends Thread{
         try {
             szalVezerlo.setKartyaGrafikaElore(true);//A kártyalapok elsőként való kirajzolását teszi lehetővé a játéktéren.        
             double vegpontSzog;
-            int elteres = jatekterSzelesseg/80;//A játékos lapjai közötti távolság értékét adja meg.
-            int elojel;
+            elteres = jatekterSzelesseg/80;//A játékos lapjai közötti távolság értékét adja meg.
             byte j, k;
-            byte jatekosSorszam = dealer;
+            jatekosSorszam = dealer;
             Kartyalap kartyalap;
             vegpontok.addAll(vegpontok);//Megduplázza a végpontokat. Mivel egy játékosnak két lapja van, ezért kétszer kell a ciklusban ugyanazzal a végponttal számolni.
-            for (byte i = 0; i<vegpontok.size(); i++) {
+            for (byte i = 0; i < vegpontok.size(); i++) {
                 jatekosSorszam++;//Megnöveli egyel az jatekosSorszam változót hogy a megfelelő játékoshoz kerüljön a kiosztott kártyalap.
                 if(jatekosSorszam == jatekosokSzama) jatekosSorszam = 0;//Ha az jatekosSorszam eléri a játékosok számát akkor a számláló kinullázódik.
                 kartyalap = kartyalapok.remove(kartyalapok.size()-1);//A kártyalap hivatkozást ráállítja a kartyalapok lista utolsó elemére, törli a hivatkozást a listából és hozzá adja az aktuális játékos lapjaihoz a kártyát.
@@ -139,8 +146,8 @@ public class KartyaMozgato extends Thread{
                 aktForgSzog = 0;
                 kx = kartyalap.getKx();
                 ky = kartyalap.getKy();
-                vx = vegpontok.get(jatekosSorszam).x;
-                vy = vegpontok.get(jatekosSorszam).y;
+                vx = vegpontok.get(jatekosSorszam).getX();
+                vy = vegpontok.get(jatekosSorszam).getY();
                 vegForgSzog = SzogSzamito.forgasSzogSzamit(jatekterSzelesseg, jatekterMagassag, vx, vy);
                 foSzog = Math.atan2(vy - ky, vx - kx);
                 tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
@@ -157,7 +164,9 @@ public class KartyaMozgato extends Thread{
                     szalVezerlo.frissit();
                 }
             }   szalVezerlo.setKartyaGrafikaElore(false);//A zsetonokat lesz elsőként kirajzolva a játékpanelre.
-            Map<Byte, List<Kartyalap>> jatekosokKartyalapjai = szalVezerlo.getJatekosokKartyalapjai();//Lekéri a szálvezérlőtől a játékosok kártyalapjait.
+            
+            jatekosokKartyalapjai = szalVezerlo.getJatekosokKartyalapjai();//Lekéri a szálvezérlőtől a játékosok kártyalapjait.
+            
             while (lepes <= tavolsag) {
                 for (byte i = 0; i < vegpontok.size(); i++) {
                     /*A feltételnek megfelelöen előjelet vált. A j változó a játékos
@@ -173,12 +182,13 @@ public class KartyaMozgato extends Thread{
                     }
                     
                     kartyalap = jatekosokKartyalapjai.get(k).get(j);//Beállítja a hivatkozást a k-ik játékos j-ik kártyalapját.
-                    if(k==0)kartyalap.setMutat(true);//Megmutatja az ember játékos lapjait.
+                    
+                    if(k==JatekVezerlo.EMBER_JATEKOS_SORSZAM)kartyalap.setMutat(true);//Megmutatja az ember játékos lapjait.
                     
                     kx = kartyalap.getKx();
                     ky = kartyalap.getKy();
-                    vx = vegpontok.get(i).x;
-                    vy = vegpontok.get(i).y;
+                    vx = vegpontok.get(i).getX();
+                    vy = vegpontok.get(i).getY();
                     aktForgSzog = kartyalap.getForgat();
                     vegpontSzog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, vx, vy);//Kiszámítja a végponthoz tartozó szöget.
                     vegpontSzog -= 90 * elojel;//Elöjelnek megfelelöen az ehhez a szöghöz viszonyítottan +- 90 fokban hozzáad egy eltérési értéket. Ebböl jön ki a játékos egyik kártyájának végpontja.*/
@@ -199,6 +209,74 @@ public class KartyaMozgato extends Thread{
             szalVezerlo.gombSorAllapotvalt();
         } catch (InterruptedException ex) {
             Logger.getLogger(KartyaMozgato.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    /**
+     * A játékos bedobott lapjait elmozgatja az aszal közepe fele.
+     */
+    @SuppressWarnings("SleepWhileInLoop")
+    private void kartyalapokBedob(){
+        jatekosokKartyalapjai = szalVezerlo.getJatekosokKartyalapjai();
+        vegpontok = SzogSzamito.vegpontLista(jatekosokSzama, jatekterSzelesseg, jatekterMagassag);
+        List<Kartyalap> jatekosKartyalapok = jatekosokKartyalapjai.get(jatekosSorszam);    
+        
+        do {
+            elojel = 1;
+            for (Kartyalap kartyalap : jatekosKartyalapok) {
+                kx = kartyalap.getKx();
+                ky = kartyalap.getKy();
+                vx = vegpontok.get(jatekosSorszam).getX();
+                vy = vegpontok.get(jatekosSorszam).getY();
+                vegForgSzog = SzogSzamito.forgasSzogSzamit(jatekterSzelesseg, jatekterMagassag, vx, vy);
+                foSzog = Math.atan2(vy - ky, vx - kx);
+                tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
+                aktx = kx + lepes * Math.cos(foSzog);
+                akty = ky + lepes * Math.sin(foSzog);
+                aktForgSzog = kartyalap.getForgat() + 2 * elojel;
+                elojel *= -1;
+                if(kartyalap.isMutat())kartyalap.setMutat(false);
+                kartyalap.setKx(aktx);
+                kartyalap.setKy(akty);
+                kartyalap.setForgat(aktForgSzog);
+                try {
+                    sleep(ido);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(KartyaMozgato.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                szalVezerlo.frissit();
+            }
+        } while (lepes <= tavolsag);
+        
+        /*Az esetleges forgatási eltéréseket korrigálja*/
+        for (Kartyalap kartyalap : jatekosKartyalapok) {
+             kartyalap.setForgat(vegForgSzog);
+        }
+        
+        aktTav = 0;
+        elteres = jatekterSzelesseg / 64;
+        vegSzog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, vx, vy);
+        vx += elteres * Math.cos(Math.toRadians(vegSzog+180));
+        vy += elteres * Math.sin(Math.toRadians(vegSzog+180));
+        vegForgSzog = SzogSzamito.forgasSzogSzamit(jatekterSzelesseg, jatekterMagassag, vx, vy);
+        foSzog = Math.atan2(vy - ky, vx - kx);
+        tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
+        
+        while (aktTav <= tavolsag) {
+                aktTav += lepes;
+                aktx = kx + aktTav * Math.cos(foSzog);
+                akty = ky + aktTav * Math.sin(foSzog);
+            try {
+                sleep(ido);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(KartyaMozgato.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            for (Kartyalap kartyalap : jatekosKartyalapok) {                 
+                kartyalap.setKx(aktx);
+                kartyalap.setKy(akty);
+            }
+            szalVezerlo.frissit();
         }
     }
     
@@ -229,7 +307,7 @@ public class KartyaMozgato extends Thread{
             veletlenX = -jatekterSzelesseg/620 + Math.random() * jatekterSzelesseg/310;
             veletlenY = -jatekterMagassag/240 + Math.random() * jatekterMagassag/120;
             kartyalap = kartyalapok.remove(kartyalapok.size()-1);
-            szalVezerlo.leosztottKartyalapHozzaad(kartyalap);            
+            szalVezerlo.leosztottKartyalapokhozAd(kartyalap);            
             aktTav = 0;
             kx = kartyalap.getKx();
             ky = kartyalap.getKy();
@@ -272,6 +350,7 @@ public class KartyaMozgato extends Thread{
             kartyalapokKioszt();
         }
         if(kartyalapLeosztas)kartyalapLeosztas();
+        if(kartyalapokBedobasa)kartyalapokBedob();
     }    
 
     public void setKartyalapLeosztas(boolean kartyalapLeosztas) {
@@ -284,6 +363,14 @@ public class KartyaMozgato extends Thread{
 
     public void setKartyalapokKiosztasa(boolean kartyalapokKiosztasa) {
         this.kartyalapokKiosztasa = kartyalapokKiosztasa;
+    }
+
+    public void setKartyalapokBedobasa(boolean kartyalapokBedobasa) {
+        this.kartyalapokBedobasa = kartyalapokBedobasa;
+    }
+
+    public void setJatekosSorszam(byte jatekosSorszam) {
+        this.jatekosSorszam = jatekosSorszam;
     }
 
     public void setDealer(byte dealer) {

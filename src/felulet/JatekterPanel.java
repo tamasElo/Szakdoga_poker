@@ -14,6 +14,8 @@ import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -227,12 +229,12 @@ public class JatekterPanel extends JPanel{
     }
 
     private void jatekTermouseReleased(MouseEvent me) {
-        if (lenyomottGomb != null && lenyomottGomb.getMegjSorszam() == 1) {
-            lenyomottGomb.setMegjSorszam(2);         
-            osszegValtoztat();
-            lehetosegValaszt();
-        }
-        repaint();
+            if (lenyomottGomb != null && lenyomottGomb.getMegjSorszam() == 1) {
+                lenyomottGomb.setMegjSorszam(2);
+                osszegValtoztat();
+                lehetosegValaszt();
+            }
+            repaint();
     }
 
     private void osszegValtoztat() {

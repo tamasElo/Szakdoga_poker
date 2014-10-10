@@ -185,9 +185,17 @@ public class SzalVezerlo {
         kartyaMozgato.start();
     }
     
-    public void kartyalapokLeosztSzalIndit(){
+    public void kartyalapokLeosztSzalIndit(boolean osszesetLeoszt){
         kartyaMozgato = new KartyaMozgato(this);
         kartyaMozgato.setKartyalapLeosztas(true);
+        kartyaMozgato.setOsszesKartyalapLeosztas(osszesetLeoszt);
+        kartyaMozgato.start();
+    }
+    
+    public void kartyalapokBedobSzalIndit(byte jatekosSorszam){
+        kartyaMozgato = new KartyaMozgato(this);
+        kartyaMozgato.setJatekosSorszam(jatekosSorszam);
+        kartyaMozgato.setKartyalapokBedobasa(true);
         kartyaMozgato.start();
     }
     
@@ -216,7 +224,7 @@ public class SzalVezerlo {
      * null-ra hivatkozik akkor létrehoz egy új ArrayList-et.
      * @param kartyalap 
      */
-    public void leosztottKartyalapHozzaad(Kartyalap kartyalap){        
+    public void leosztottKartyalapokhozAd(Kartyalap kartyalap){        
         if(leosztottKartyalapok == null) leosztottKartyalapok = new ArrayList<>();
         leosztottKartyalapok.add(kartyalap);
     }    
@@ -249,6 +257,8 @@ public class SzalVezerlo {
     }
 
     public void gombSorAllapotvalt() {
+        int osszeg;
+        
         if (jatekVezerlo != null) {
             if (!jatekVezerlo.gepiJatekos() && !gombsorAktiv) {
                 boolean[] aktivalandoGombok = {true, true, true, false, true, true};
@@ -263,8 +273,13 @@ public class SzalVezerlo {
                     }
                 }
                 
-                jatekterPanel.gombsorAktival(aktivalandoGombok);   
-                jatekterPanel.setMegadandoOsszeg(jatekVezerlo.getOsszeg());
+                jatekterPanel.gombsorAktival(aktivalandoGombok);  
+                
+                if(jatekVezerlo.getKisVakJatekosSorszam() == JatekVezerlo.EMBER_JATEKOS_SORSZAM) osszeg = jatekVezerlo.getOsszeg()-jatekVezerlo.getKisVakOsszeg();
+                else if(jatekVezerlo.getNagyVakJatekosSorszam() == JatekVezerlo.EMBER_JATEKOS_SORSZAM) osszeg = 0;
+                else osszeg = jatekVezerlo.getOsszeg();
+                
+                jatekterPanel.setMegadandoOsszeg(osszeg);
                 jatekterPanel.setLepesKoz(jatekVezerlo.getKisVakOsszeg());
                 jatekterPanel.setEmelendoOsszeg(jatekVezerlo.getOsszeg() == 0 ? jatekVezerlo.getNagyVakOsszeg() : jatekVezerlo.getOsszeg());
                 jatekterPanel.setMinOsszeg(jatekVezerlo.getOsszeg() == 0 ? jatekVezerlo.getNagyVakOsszeg() : jatekVezerlo.getOsszeg());
