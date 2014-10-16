@@ -1,7 +1,6 @@
 package vezerloOsztalyok;
 
 import alapOsztalyok.Zseton;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -15,6 +14,7 @@ public final class ZsetonKezelo {
     
     /**
      * Egy aránynak megfelelően felbontja az összeget megfelelő értékű zsetonokra.
+     * 
      * @param osszeg
      * @return 
      */
@@ -71,13 +71,14 @@ public final class ZsetonKezelo {
     /**
      * Kiválogatja a játékos zsetonjai közül az összegnek megfelelő zsetonokat
      * és hozzáadja a pothoz.
+     * 
      * @param jatekosZsetonok
      * @param osszeg 
      * @return  
      */
     public static List<Zseton> pot(List<Zseton> jatekosZsetonok, int osszeg){
         int osszeg2;
-        List<Zseton> potZsetonok = new ArrayList<>();        
+        List<Zseton> potZsetonok = new CopyOnWriteArrayList<>();        
         aranySzamok = new byte[] {1, 1, 1, 1, 1};//Ez azért kell mert ennek az új arányosságnak megfelelően bontja fel a zsetonkioszt metódus az összeget.
         
         zsetonKioszt(osszeg);
@@ -117,6 +118,12 @@ public final class ZsetonKezelo {
         return potZsetonok;
     }
     
+    /**
+     * Visszaadja a játékos zsetonjainak összegét.
+     * 
+     * @param jatekosZsetonok
+     * @return 
+     */
     public synchronized static int zsetonokOsszege(List<Zseton> jatekosZsetonok){
         int osszeg = 0;
         for (Zseton zseton : jatekosZsetonok) {

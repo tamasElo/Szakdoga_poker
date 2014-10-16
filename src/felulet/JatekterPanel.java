@@ -14,8 +14,6 @@ import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -92,6 +90,11 @@ public class JatekterPanel extends JPanel{
         /*--*/
     }  
     
+    /**
+     * Kirajzolja a panelre a grafikát.
+     * 
+     * @param g 
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -146,6 +149,9 @@ public class JatekterPanel extends JPanel{
         }
     }
 
+    /**
+     * Létrehozza a gombsort.
+     */
     private void gombsorBeallit() {
         Image elsoKep, masodikKep, harmadikKep;
         String nev;
@@ -189,6 +195,11 @@ public class JatekterPanel extends JPanel{
         }
     }
     
+    /**
+     * A paraméterként átadott boolean tömb alapján aktiválja a gombokat.
+     * 
+     * @param aktivalandoGombok 
+     */
     public void gombsorAktival(boolean[] aktivalandoGombok){
         Gomb gomb;
         for (byte i = 0; i < gombok.size(); i++) {
@@ -199,12 +210,22 @@ public class JatekterPanel extends JPanel{
         }
     }
     
+    /**
+     * Passziválja a gombsort.
+     */
     public void gombsorPasszival() {
         for (Gomb gomb : gombok) {
             gomb.setMegjSorszam(3);
         }
     }
     
+    /**
+     * Amikor a panel hozzáadódik egy másik komponenshez, akkor beállítja
+     * a szélesség, magasság értékeket, meghívja a gombsorBeallit(), 
+     * jatekosokBeallit() és jatekVezerloIndit() metódusokat.
+     * 
+     * @param ae 
+     */
     private void jatekTerAncestorAdded(AncestorEvent ae){       
         szelesseg = this.getWidth();
         magassag = this.getHeight();       
@@ -215,6 +236,11 @@ public class JatekterPanel extends JPanel{
         repaint();
     }
     
+    /**
+     * Megvizsgálja hogy ráklikkelt-e a játékos valamelyik gombra.
+     * 
+     * @param me 
+     */
     private void jatekTerMousePressed(MouseEvent me) {
         for (Gomb gomb : gombok) {
             if(gomb.getMegjSorszam() == 2){
@@ -228,6 +254,12 @@ public class JatekterPanel extends JPanel{
         repaint();
     }
 
+    /**
+     * A lenyomott gomb felengedésekor meghívja az osszegValtoztat() és 
+     * lehetosegValazt() metódusokat.
+     * 
+     * @param me 
+     */
     private void jatekTermouseReleased(MouseEvent me) {
             if (lenyomottGomb != null && lenyomottGomb.getMegjSorszam() == 1) {
                 lenyomottGomb.setMegjSorszam(2);
@@ -237,6 +269,9 @@ public class JatekterPanel extends JPanel{
             repaint();
     }
 
+    /**
+     * A tét értékét változtatja.
+     */
     private void osszegValtoztat() {
         switch (lenyomottGomb.getNev()) {
             case "plus":
@@ -264,6 +299,9 @@ public class JatekterPanel extends JPanel{
         }
     }
 
+    /**
+     * A lenyomott gombhoz választja ki a megfelelő lehetőséget.
+     */
     private void lehetosegValaszt(){
         switch (lenyomottGomb.getNev()) {
             case "allin":
@@ -278,7 +316,7 @@ public class JatekterPanel extends JPanel{
                 else szalVezerlo.emberiJatekosEmel(emelendoOsszeg);
                 break;
             case "fold":
-                szalVezerlo.emberiJatekosEldob();
+                szalVezerlo.emberiJatekosBedob();
                 break;
         }
     }
@@ -373,7 +411,7 @@ public class JatekterPanel extends JPanel{
         eldob.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                szalVezerlo.emberiJatekosEldob();
+                szalVezerlo.emberiJatekosBedob();
             }
         });
         plussz.addActionListener(new ActionListener() {

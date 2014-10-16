@@ -45,6 +45,7 @@ public final class PakliKezelo {
     
     /**
      * Megkeveri a kártyapaklit és visszadja a lapokat tartalmazó ArrayList-et
+     * 
      * @return 
      */
     public static List<Kartyalap> kevertPakli() {

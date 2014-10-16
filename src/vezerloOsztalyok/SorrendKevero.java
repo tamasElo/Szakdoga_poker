@@ -16,6 +16,7 @@ public final class SorrendKevero {
 
     /**
      * Létrehoz egy véletlen számsorrendet és ezt a számsort egy ArrayListben visszadja
+     * 
      * @return 
      */
     public static List<Integer> kevertSorrend() {
@@ -71,7 +72,8 @@ public final class SorrendKevero {
     
     /**
      * Feltölti a kevert sorrend listát úgy hogy a megfelelő oldalról tesz be 
-     * a listába véletlenszerűen meghatározott számú elemet;
+     * a listába véletlenszerűen meghatározott számú elemet.
+     * 
      * @param sorrendOldal 
      */
     private static void kevertSorrendListaFeltolt(List<Integer> sorrendOldal) {

@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import vezerloOsztalyok.JatekVezerlo;
 import vezerloOsztalyok.PakliKezelo;
+import vezerloOsztalyok.PokerKezKiertekelo;
 import vezerloOsztalyok.SzogSzamito;
 
 public class KartyaMozgato extends Thread{    
@@ -183,7 +184,8 @@ public class KartyaMozgato extends Thread{
                     
                     kartyalap = jatekosokKartyalapjai.get(k).get(j);//Beállítja a hivatkozást a k-ik játékos j-ik kártyalapját.
                     
-                    if(k==JatekVezerlo.EMBER_JATEKOS_SORSZAM)kartyalap.setMutat(true);//Megmutatja az ember játékos lapjait.
+                 //   if(k==JatekVezerlo.EMBER_JATEKOS_SORSZAM)
+                        kartyalap.setMutat(true);//Megmutatja az ember játékos lapjait.
                     
                     kx = kartyalap.getKx();
                     ky = kartyalap.getKy();
@@ -300,7 +302,7 @@ public class KartyaMozgato extends Thread{
         }
         
         if (osszesKartyalapLeosztas) {
-            leosztandoKartyalapokSzama = 5 - szalVezerlo.leosztottKartyalapokSzama();
+            leosztandoKartyalapokSzama = JatekVezerlo.LEOSZTHATO_KARTYALAPOK_SZAMA - szalVezerlo.leosztottKartyalapokSzama();
         }        
         
         for (byte i = 0; i < leosztandoKartyalapokSzama; i++) {
@@ -337,6 +339,12 @@ public class KartyaMozgato extends Thread{
             kartyalap.setMutat(true); 
         }
         laptavolsagokOsszege = novekmeny;
+        
+        if (szalVezerlo.leosztottKartyalapokSzama() == JatekVezerlo.LEOSZTHATO_KARTYALAPOK_SZAMA) {
+            jatekosokKartyalapjai = szalVezerlo.getJatekosokKartyalapjai();
+            List<Kartyalap> leosztottKartyalapok = szalVezerlo.getLeosztottKartyalapok();
+            szalVezerlo.setNyertesPokerKezek(PokerKezKiertekelo.nyertesPokerKezKeres(jatekosokKartyalapjai, leosztottKartyalapok));
+        }
     }
     
     /**

@@ -1,8 +1,8 @@
 package vezerloOsztalyok;
 
-import alapOsztalyok.Jatekos;
 import alapOsztalyok.Kartyalap;
 import alapOsztalyok.KartyalapRendezSzinSzerint;
+import alapOsztalyok.PokerKez;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -11,8 +11,8 @@ import java.util.TreeSet;
 
 public final class Lapkombinaciok { //Azért final hogy ne lehessen belőle származtatni.
 
-    private static Jatekos jatekos;
     private static String pokerKezNev;
+    private static byte pokerKezErtek;
     private static boolean sor;
     private static boolean szin;
     private static boolean szinsor;
@@ -23,24 +23,24 @@ public final class Lapkombinaciok { //Azért final hogy ne lehessen belőle szá
     private static List<Kartyalap> leosztottKartyalapok;
     private static List<Kartyalap> jatekosKartyalapok;
     private static List<Kartyalap> szinKartyalapok;
-    private static  List<Kartyalap> rendezettKartyalapok;
-    private static List<Kartyalap> pokerKez;
+    private static List<Kartyalap> rendezettKartyalapok;
+    private static List<Kartyalap> pokerKezKartyalapok;
+    private static List<Kartyalap> kiseroKartyalapok;
     
-    private Lapkombinaciok(){}; //Azért privát hogy le lehessen példányosítani.
+    private Lapkombinaciok(){}; //Azért privát hogy ne lehessen példányosítani.
     
     /**
      * Megvizsgálja, hogy van-e a játékosnak sora.
      */
     private static void sorKeres() {
-        
+
         rendezettKartyalapok = new ArrayList<>();
         TreeSet<Kartyalap> rendezettKartyaHalmaz = new TreeSet<>(); //Kiveszi az ismétlődéseket és automatikusan rendezi.
         rendezettKartyaHalmaz.addAll(jatekosKartyalapok);
         rendezettKartyaHalmaz.addAll(leosztottKartyalapok);
 
-        byte[] legkisebbSor = {14, 2, 3, 4, 5};
+        byte[] legkisebbSor = {5, 4, 3, 2, 14};
         Kartyalap elozoKartyalap, kovetkezokaKartyalap, kartyalap;
-        sorHossz = 1;
 
         Iterator<Kartyalap> itr = rendezettKartyaHalmaz.iterator();
         while (itr.hasNext()) {
@@ -67,8 +67,8 @@ public final class Lapkombinaciok { //Azért final hogy ne lehessen belőle szá
 
         if (vegIndex != 0) {
             pokerKezNev = "Sor";
+            pokerKezErtek = 5;
             pokerKezListaba(rendezettKartyalapok);
-            jatekos.setPokerKezNev(pokerKezNev);
             sor = true;
         } else {
             /*Megvizsgálja hogy van e legkisebb sora a játékosnak*/
@@ -76,14 +76,13 @@ public final class Lapkombinaciok { //Azért final hogy ne lehessen belőle szá
                 for (byte j = 0; j < rendezettKartyalapok.size(); j++) {
                     kartyalap = rendezettKartyalapok.get(j);
                     if (legkisebbSor[i] == kartyalap.getKartyaErtek()) {
-                        pokerKez.add(kartyalap);
+                        pokerKezKartyalapok.add(kartyalap);
                     }
                 }
             }
-            if (pokerKez.size() == POKER_KEZ_KARTYALAPOK_SZAMA) {
+            if (pokerKezKartyalapok.size() == POKER_KEZ_KARTYALAPOK_SZAMA) {
                 pokerKezNev = "Sor";
-                jatekos.setPokerKezLapok(pokerKez);
-                jatekos.setPokerKezNev(pokerKezNev);
+                pokerKezErtek = 5;
                 sor = true;
             }
         }
@@ -109,6 +108,7 @@ public final class Lapkombinaciok { //Azért final hogy ne lehessen belőle szá
             if (szinSzamol == POKER_KEZ_KARTYALAPOK_SZAMA) {
                 kartyaSzin = kovetkezoKartyaSzin;
                 pokerKezNev = "Flöss";
+                pokerKezErtek = 6;
                 
                 for (Kartyalap kartyalap : rendezettKartyalapok) {
                     if (kartyalap.getKartyaSzin().equals(kartyaSzin)) {
@@ -119,7 +119,6 @@ public final class Lapkombinaciok { //Azért final hogy ne lehessen belőle szá
                 Collections.sort(szinKartyalapok);
                 vegIndex = szinKartyalapok.size()-1;
                 pokerKezListaba(szinKartyalapok);
-                jatekos.setPokerKezNev(pokerKezNev);
                 szin = true;
                 break;
             }
@@ -129,10 +128,7 @@ public final class Lapkombinaciok { //Azért final hogy ne lehessen belőle szá
     /**
      * Megvizsgálja, hogy van-e a játékosnak színsora.
      */
-    private static void szinsorKeres() {
-        
-        sorHossz = 1;
-        vegIndex = 0;
+    private static void szinsorKeres() {        
         
         for (byte i = 1; i < szinKartyalapok.size(); i++) {            
             Kartyalap elozoKartyalap = (Kartyalap)szinKartyalapok.get(i-1);
@@ -146,9 +142,15 @@ public final class Lapkombinaciok { //Azért final hogy ne lehessen belőle szá
         }
         
         if (vegIndex != 0) {
-            pokerKezNev = "Színsor";
+            
+            if (Collections.min(pokerKezKartyalapok).getKartyaErtek() == 10 && Collections.max(pokerKezKartyalapok).getKartyaErtek() == 14) {
+                pokerKezNev = "Royal flöss";
+                pokerKezErtek = 10;
+            } else {
+                pokerKezNev = "Színsor";
+                pokerKezErtek = 9;
+            }
             pokerKezListaba(szinKartyalapok);
-            jatekos.setPokerKezNev(pokerKezNev);
             szinsor = true;
         }
     }
@@ -157,8 +159,7 @@ public final class Lapkombinaciok { //Azért final hogy ne lehessen belőle szá
      * Kártyaegyezéseket keres és eldönti hogy ha van, akkor milyen
      * lapkombinációja van a játékosnak (póker, full, drill, párok).
      */
-    private static void azonossagKeres() {               
-        
+    private static void azonossagKeres() {          
         List<Byte> keresendoErtekek = new ArrayList<>();        
         List<Byte> par = new ArrayList<>(); 
         Kartyalap poker = null, drill = null;
@@ -199,59 +200,68 @@ public final class Lapkombinaciok { //Azért final hogy ne lehessen belőle szá
         if (poker != null) {
             keresendoErtekek.add(poker.getKartyaErtek());
             pokerKezNev = "Póker";
-        } else if (!par.isEmpty() && drill != null) {
+            pokerKezErtek = 8;
+        } else if (!par.isEmpty() && drill != null) {            
             keresendoErtekek.add(drill.getKartyaErtek());
             keresendoErtekek.add(par.get(par.size() - 1));
             pokerKezNev = "Full";
+            pokerKezErtek = 7;
         } else if (drill != null) {
             keresendoErtekek.add(drill.getKartyaErtek());
             pokerKezNev = "Drill";
+            pokerKezErtek = 4;
         } else if (par.size() >= 2) {
             keresendoErtekek.add(par.get(par.size() - 1));
             keresendoErtekek.add(par.get(par.size() - 2));
             pokerKezNev = "Két pár";
+            pokerKezErtek = 3;
         }else if (!par.isEmpty()){
             keresendoErtekek.add(par.get(0));
             pokerKezNev = "Pár";
+            pokerKezErtek = 2;
         }
         
         if(!keresendoErtekek.isEmpty()){
-            pokerKez.clear();
+            pokerKezKartyalapok.clear();
             for (Byte ertek : keresendoErtekek) {
                 for (Kartyalap kartyalap : rendezettKartyalapok) {
                     if (kartyalap.getKartyaErtek() == ertek) {
-                        pokerKez.add(kartyalap);
-                        if(pokerKez.size() == POKER_KEZ_KARTYALAPOK_SZAMA) break;
+                        pokerKezKartyalapok.add(kartyalap);
+                        if(pokerKezKartyalapok.size() == POKER_KEZ_KARTYALAPOK_SZAMA) break;
                     }
                 }
-            }            
-            while(pokerKez.size() != POKER_KEZ_KARTYALAPOK_SZAMA){
-                if(pokerKez.contains(Collections.max(rendezettKartyalapok)))
-                    rendezettKartyalapok.remove(rendezettKartyalapok.size()-1);
-                else pokerKez.add(rendezettKartyalapok.get(rendezettKartyalapok.size()-1));
+            }         
+            
+            while (pokerKezKartyalapok.size() + kiseroKartyalapok.size() != POKER_KEZ_KARTYALAPOK_SZAMA) {
+                if (pokerKezKartyalapok.contains(Collections.max(rendezettKartyalapok))) {
+                    rendezettKartyalapok.remove(rendezettKartyalapok.size() - 1);
+                } else {
+                    kiseroKartyalapok.add(rendezettKartyalapok.get(rendezettKartyalapok.size() - 1));
+                    rendezettKartyalapok.remove(rendezettKartyalapok.size() - 1);
+                }
             }
             
-            Collections.sort(pokerKez);
-            jatekos.setPokerKezLapok(pokerKez);
-            jatekos.setPokerKezNev(pokerKezNev);
             azonossag = true;
         }
     }
     
     /**
      * A sorKeres() metódusban feltöltött rendezettKartyalapok listából
-       Kiválasztja az öt legnagyobbat. Csak akkor fut le ha a többi 
+     * Kiválasztja az öt legnagyobbat. Csak akkor fut le ha a többi 
      * lapkombináció kereső metódus nem teljesül és kizárásos alapon a 
      * sorKeres() metódusban feltöltött listát tudja használni.
      */
-    private static void magasLapokKeres(){
-        
+    private static void magasLapokKeres(){        
         pokerKezNev = "Magas lap";
+        pokerKezErtek = 1;
         vegIndex = rendezettKartyalapok.size()-1;        
         pokerKezListaba(rendezettKartyalapok);
-        jatekos.setPokerKezNev(pokerKezNev);
     }
 
+    /**
+     * A játékos kártyalapjait és a leosztott kártyalapoket a 
+     * rendezettKartyalapok listába rakja.
+     */
     private static void kartyakListaba(){
         if(rendezettKartyalapok != null)rendezettKartyalapok.clear();
         rendezettKartyalapok.addAll(jatekosKartyalapok);
@@ -260,29 +270,35 @@ public final class Lapkombinaciok { //Azért final hogy ne lehessen belőle szá
     
     /**
      * A játékos lapkombinációját állítja be.
-     * @param Kartyalapok 
+     * 
+     * @param kartyalapok 
      */
-    private static void pokerKezListaba(List<Kartyalap> Kartyalapok) {
-        
-        pokerKez.clear();
+    private static void pokerKezListaba(List<Kartyalap> kartyalapok) {        
+        pokerKezKartyalapok.clear();
         for (int i = vegIndex; i > vegIndex - POKER_KEZ_KARTYALAPOK_SZAMA; i--) {
-            pokerKez.add(Kartyalapok.get(i));
+            pokerKezKartyalapok.add(kartyalapok.get(i));
         }
-        Collections.sort(pokerKez);
-        jatekos.setPokerKezLapok(pokerKez);
     }
 
     /**
      * Kiértékeli a játékos lapjait és eldönti hogy a játékosnak milyen 
      * lapkombinációja van.
-     * @param jatekos
+     *
+     * @param jatekosKartyalapok
      * @param leosztottKartyalapok 
+     * @return  
      */
-    public static void lapKombinacioKeres(Jatekos jatekos, List<Kartyalap> leosztottKartyalapok){
-        
-        pokerKez = new ArrayList<>();
-        Lapkombinaciok.jatekos = jatekos;
-       // jatekosKartyalapok = jatekos.getJatekosKartyalapok();
+    public static PokerKez lapKombinacioKeres(List<Kartyalap> jatekosKartyalapok, List<Kartyalap> leosztottKartyalapok){
+        sor = false;
+        szin = false;
+        szinsor = false;
+        azonossag = false;
+        vegIndex = 0;
+        sorHossz = 1;
+        pokerKezErtek = 0;
+        pokerKezKartyalapok = new ArrayList<>();
+        kiseroKartyalapok = new ArrayList<>();
+        Lapkombinaciok.jatekosKartyalapok = jatekosKartyalapok;
         Lapkombinaciok.leosztottKartyalapok = leosztottKartyalapok;
         
         sorKeres();
@@ -293,5 +309,7 @@ public final class Lapkombinaciok { //Azért final hogy ne lehessen belőle szá
         if(!sor && !szin && !szinsor) azonossagKeres();
         
         if(!sor && !szin && !szinsor && !azonossag) magasLapokKeres();
+        
+        return new PokerKez(pokerKezNev, pokerKezErtek, pokerKezKartyalapok, kiseroKartyalapok);
     }
 }

@@ -29,8 +29,8 @@ public class KorongMozgato extends Thread{
         List<Korong> korongok = new ArrayList<>();
         List<Point> vegpontLista = SzogSzamito.vegpontLista(jatekosokSzama, jatekterSzelesseg, jatekterMagassag);
         Dealer dealer = new Dealer(new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/dealer.png")).getImage());
-        Vak kisVak = new Vak(new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/small_blind.png")).getImage());
-        Vak nagyVak = new Vak(new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/big_blind.png")).getImage());
+        Vak kisVak = szalVezerlo.getKisVak();
+        Vak nagyVak = szalVezerlo.getNagyVak();
         double meret;
         int i = dealerJatekosSorszam;
         double x, y;
