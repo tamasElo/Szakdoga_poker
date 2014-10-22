@@ -6,8 +6,8 @@ public class Zseton extends Korong implements Comparable<Zseton>{
 
     private byte ertek;
 
-    public Zseton(byte ertek, Image korongKep) {
-        super(korongKep);
+    public Zseton(byte ertek, Image korongKep, Image elmosodottKorongKep) {
+        super(korongKep, elmosodottKorongKep);
         this.ertek = ertek;
     } 
     

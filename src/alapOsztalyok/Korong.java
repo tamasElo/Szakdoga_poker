@@ -7,24 +7,30 @@ import java.awt.image.ImageObserver;
 
 public abstract class Korong {
     private Image korongKep;
+    private Image elmosodottKorongKep;
     private double kx;
     private double ky;
     private double korongKepSzelesseg;
     private double korongKepMagassag;
     private double forgat;
-    
-    public Korong(Image korongKep){
-        this.korongKep = korongKep;        
-    }
+    private boolean elmosas;
+
+    public Korong(Image korongKep, Image elmosodottKorongKep) {
+        this.korongKep = korongKep;
+        this.elmosodottKorongKep = elmosodottKorongKep;
+    }   
 
     public void rajzol(Graphics2D g2D, ImageObserver o) {
         AffineTransform at = g2D.getTransform();
-
+        Image kep;
+        
+        kep = elmosas ? elmosodottKorongKep : korongKep;
+        
         if (forgat != 0) {
             g2D.rotate(Math.toRadians(forgat), kx, ky);
         }
         
-        g2D.drawImage(korongKep, (int)(kx-korongKepSzelesseg/2), (int) (ky-korongKepMagassag/2), (int)korongKepSzelesseg, (int)korongKepMagassag, o);
+        g2D.drawImage(kep, (int)(kx-korongKepSzelesseg/2), (int) (ky-korongKepMagassag/2), (int)korongKepSzelesseg, (int)korongKepMagassag, o);
         
         if (forgat != 0) {
             g2D.setTransform(at);
@@ -49,6 +55,10 @@ public abstract class Korong {
 
     public void setForgat(double forgat) {
         this.forgat = forgat;
+    }
+
+    public void setElmosas(boolean elmosas) {
+        this.elmosas = elmosas;
     }
 
     public double getKx() {

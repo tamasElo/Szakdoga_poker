@@ -14,6 +14,8 @@ import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -26,6 +28,7 @@ public class JatekterPanel extends JPanel{
 
     private SzalVezerlo szalVezerlo;
     private Image jatekTer;
+    private Image elmosottJatekTer;
     private int szelesseg;
     private int magassag;
     private int megadandoOsszeg; 
@@ -37,6 +40,7 @@ public class JatekterPanel extends JPanel{
     private Gomb lenyomottGomb;
     private Gomb plusz;
     private Gomb minusz;
+    private boolean elmosas;
 
     public JatekterPanel() {
         inicializal();
@@ -44,6 +48,7 @@ public class JatekterPanel extends JPanel{
 
     private void inicializal() {
         jatekTer = new ImageIcon(this.getClass().getResource("/adatFajlok/jatekTer/jatekTer_normal.png")).getImage();
+        elmosottJatekTer = new ImageIcon(this.getClass().getResource("/adatFajlok/jatekTer/jatekTer_normal_blur.png")).getImage();
         
         addAncestorListener(new AncestorListener() {
             @Override
@@ -98,13 +103,15 @@ public class JatekterPanel extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Image kep;
+        kep = elmosas ? elmosottJatekTer : jatekTer;
         Graphics2D g2D = (Graphics2D) g;
         g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
         g2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                 RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         
-        g2D.drawImage(jatekTer, 0, 0, this.getWidth(), this.getHeight(), this);
+        g2D.drawImage(kep, 0, 0, this.getWidth(), this.getHeight(), this);
         
         if (szalVezerlo != null) {
             szalVezerlo.jatekosokRajzol(g2D);            
@@ -213,7 +220,7 @@ public class JatekterPanel extends JPanel{
     /**
      * Passziválja a gombsort.
      */
-    public void gombsorPasszival() {
+    private void gombsorPasszival() {
         for (Gomb gomb : gombok) {
             gomb.setMegjSorszam(3);
         }
@@ -229,7 +236,6 @@ public class JatekterPanel extends JPanel{
     private void jatekTerAncestorAdded(AncestorEvent ae){       
         szelesseg = this.getWidth();
         magassag = this.getHeight();       
-        
         gombsorBeallit();
         szalVezerlo.jatekosokBeallit();
         szalVezerlo.jatekVezerloIndit();
@@ -306,23 +312,31 @@ public class JatekterPanel extends JPanel{
         switch (lenyomottGomb.getNev()) {
             case "allin":
                 szalVezerlo.emberiJatekosAllIn();
+                gombsorPasszival();
                 break;
             case "call_check":
                 if(megadandoOsszeg > 0) szalVezerlo.emberiJatekosMegad();
                 else szalVezerlo.emberiJatekosPasszol();
+                gombsorPasszival();
                 break;
             case "raise_bet":
                 if(megadandoOsszeg == 0) szalVezerlo.emberiJatekosNyit(emelendoOsszeg);
                 else szalVezerlo.emberiJatekosEmel(emelendoOsszeg);
+                gombsorPasszival();
                 break;
             case "fold":
                 szalVezerlo.emberiJatekosBedob();
+                gombsorPasszival();
                 break;
-        }
-    }
+        }   
+    }    
     
     public void setSzalVezerlo(SzalVezerlo szalVezerlo) {
         this.szalVezerlo = szalVezerlo;
+    }
+
+    public void setElmosas(boolean elmosas) {
+        this.elmosas = elmosas;
     }
 
     public void setMegadandoOsszeg(int megadandoOsszeg) {

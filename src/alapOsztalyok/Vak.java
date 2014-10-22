@@ -5,8 +5,8 @@ import java.awt.Image;
 public class Vak extends Korong{
     private int ertek;
 
-    public Vak(Image korongKep) {
-        super(korongKep);
+    public Vak(Image korongKep, Image elmosodottKorongKep) {
+        super(korongKep, elmosodottKorongKep);
     }
 
     public void setErtek(int ertek) {

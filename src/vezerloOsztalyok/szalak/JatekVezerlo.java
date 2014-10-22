@@ -1,6 +1,11 @@
-package vezerloOsztalyok;
+package vezerloOsztalyok.szalak;
 
-public class JatekVezerlo{
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import vezerloOsztalyok.Mi;
+import vezerloOsztalyok.SzalVezerlo;
+
+public class JatekVezerlo extends Thread{
     public static final byte EMBER_JATEKOS_SORSZAM = 0;
     public static final byte LEOSZTHATO_KARTYALAPOK_SZAMA = 5;
     private byte korokSzama;
@@ -18,11 +23,13 @@ public class JatekVezerlo{
     private boolean passzolhat;
     private boolean megadhat;
     private boolean emelhet;
+    private boolean ujkorIndit;
     private int kisVakErtek;
     private int nagyVakErtek;
     private int aktivJatekosokSzama;
     private int aktJatekosZsetonOsszeg;
     private byte korOszto;
+    private long ido;
     
     public JatekVezerlo(SzalVezerlo szalVezerlo){
         this.szalVezerlo = szalVezerlo;
@@ -30,12 +37,13 @@ public class JatekVezerlo{
         kisVakErtek = szalVezerlo.kisVakErtekVisszaad();
         nagyVakErtek = szalVezerlo.nagyVakErtekVisszaad();
         jatekosokTetje = new int[jatekosokSzama];
-        dealerJatekosSorszam = (byte) (Math.random()*jatekosokSzama);
+        dealerJatekosSorszam = 1;//(byte) (Math.random() * jatekosokSzama);
         mi = new Mi();     
         aktivJatekosokSzama = 5;
         korOszto = 10;
-        szalVezerlo.zsetonokKioszt();
-        ujKor();        
+        ido = 500;
+        ujkorIndit = true;
+        szalVezerlo.zsetonokKioszt();   
     }   
 
     /**
@@ -46,10 +54,17 @@ public class JatekVezerlo{
             szalVezerlo.jatekosokAktival();
             jatekosSorszamokBeallit();
             vakokErtekeBeallit();
-            osszeg = nagyVakErtek;
-            lehetosegekBeallit();
+            osszeg = nagyVakErtek;            
             szalVezerlo.korongokMozgatSzalIndit(dealerJatekosSorszam);
             szalVezerlo.kartyalapokKiosztSzalIndit(dealerJatekosSorszam); 
+            megallit();                    
+            try {
+                sleep(ido);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(JatekVezerlo.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            lehetosegekBeallit();
+            ujkorIndit = false;
     }
     
     /**
@@ -128,17 +143,20 @@ public class JatekVezerlo{
         if (gepiJatekos()) {
             mi.kovetkezoJatekos(jatekosSorszam);
             mi.setLehetosegek(nyithat, emelhet, megadhat, passzolhat);
-        }
-        
-        szalVezerlo.gombSorAllapotvalt();
+        } else szalVezerlo.gombSorAllapotvalt();
     }
         
     /**
      * A következő játékosra lép.
      */
-    public void kovetkezoJatekos() {
+    public void kovetkezoJatekos() {        
+            try {
+                sleep(ido);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(JatekVezerlo.class.getName()).log(Level.SEVERE, null, ex);
+            }
             jatekosAllapotEllenorzes();
-            lehetosegekBeallit();
+            lehetosegekBeallit();            
     }
     
     /**
@@ -164,8 +182,7 @@ public class JatekVezerlo{
         }
     }
     
-    private void korVege(){
-       // szalVezerlo.kartyalapokLeosztSzalIndit(true);      
+    private void korVege(){  
         szalVezerlo.nyertesJatekosKeres();
     }
     
@@ -174,7 +191,7 @@ public class JatekVezerlo{
      */
     public void passzol(){        
         szalVezerlo.felhoSzalIndit("Passzol", jatekosSorszam);
-        kovetkezoJatekos();
+        folytat();
     }
     
     /**
@@ -189,7 +206,7 @@ public class JatekVezerlo{
         szalVezerlo.zsetonokPotba(jatekosSorszam, osszeg);     
         licitSzamlalo = 0;        
         szalVezerlo.felhoSzalIndit("Nyit", jatekosSorszam);
-        kovetkezoJatekos();
+        folytat();
     }
     
     /**
@@ -206,7 +223,7 @@ public class JatekVezerlo{
         osszeg = jatekosokTetje[jatekosSorszam];
         licitSzamlalo = 0;
         szalVezerlo.felhoSzalIndit("Emel", jatekosSorszam);
-        kovetkezoJatekos();
+        folytat();
     }
     
     /**
@@ -220,7 +237,7 @@ public class JatekVezerlo{
         szalVezerlo.zsetonokPotba(jatekosSorszam, osszeg);
         osszeg = jatekosokTetje[jatekosSorszam];
         szalVezerlo.felhoSzalIndit("Megad", jatekosSorszam);
-        kovetkezoJatekos();
+        folytat();
     }
     
     /**
@@ -243,7 +260,7 @@ public class JatekVezerlo{
         szalVezerlo.felhoSzalIndit("All in", jatekosSorszam);
         
         if (aktivJatekosokSzama > 0) {
-            kovetkezoJatekos();
+            folytat();
         } else {
             korVege();
         }
@@ -261,7 +278,7 @@ public class JatekVezerlo{
         szalVezerlo.kartyalapokBedobSzalIndit(jatekosSorszam);
         
         if (aktivJatekosokSzama > 1) {
-            kovetkezoJatekos();
+            folytat();
         } else {
             korVege();
         }
@@ -283,7 +300,7 @@ public class JatekVezerlo{
         jatekosSorszam = kisVakJatekosSorszam;
         
         if (szalVezerlo.leosztottKartyalapokSzama() < LEOSZTHATO_KARTYALAPOK_SZAMA) {
-            szalVezerlo.kartyalapokLeosztSzalIndit(false);
+            szalVezerlo.kartyalapokLeosztSzalIndit();
         } else {
             korVege();
         }
@@ -291,6 +308,27 @@ public class JatekVezerlo{
         jatekosokTetje = new int[jatekosokSzama];
         osszeg = 0;
         licitSzamlalo = 0;
+    }
+    
+    private synchronized void megallit(){
+        try {
+            wait();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(JatekVezerlo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public synchronized void folytat(){
+        notify();
+    }
+    
+    @Override
+    public void run() {
+        while(true){
+            if(ujkorIndit)ujKor();
+            else kovetkezoJatekos();
+            megallit();
+        }        
     }
 
     public boolean isNyithat() {

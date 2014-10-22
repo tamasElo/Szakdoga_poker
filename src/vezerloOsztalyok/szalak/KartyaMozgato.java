@@ -2,18 +2,19 @@ package vezerloOsztalyok.szalak;
 
 import vezerloOsztalyok.SzalVezerlo;
 import alapOsztalyok.Kartyalap;
+import alapOsztalyok.PokerKez;
 import java.awt.Point;
+import static java.lang.Thread.sleep;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import vezerloOsztalyok.JatekVezerlo;
 import vezerloOsztalyok.PakliKezelo;
 import vezerloOsztalyok.PokerKezKiertekelo;
 import vezerloOsztalyok.SzogSzamito;
 
-public class KartyaMozgato extends Thread{    
+public class KartyaMozgato extends Thread implements Runnable{    
     private SzalVezerlo szalVezerlo;
     private Map<Byte, List<Kartyalap>> jatekosokKartyalapjai;
     private List<Kartyalap> kartyalapok;    
@@ -37,6 +38,7 @@ public class KartyaMozgato extends Thread{
     private boolean kartyalapokKiosztasa;
     private boolean kartyalapLeosztas;
     private boolean kartyalapokBedobasa;
+    private boolean kartyalapokKiertekelese;
     private boolean osszesKartyalapLeosztas;
     private byte dealer;
     private double lepes;
@@ -51,7 +53,7 @@ public class KartyaMozgato extends Thread{
         jatekterSzelesseg = szalVezerlo.jatekterPanelSzelesseg();
         jatekterMagassag = szalVezerlo.jatekterPanelMagassag();
         jatekosokSzama = szalVezerlo.jatekosokSzama();
-        ido = 3;
+        ido = 2;
         lepes = jatekterSzelesseg * 0.001875;
     }
 
@@ -73,8 +75,8 @@ public class KartyaMozgato extends Thread{
         kartyalapok = PakliKezelo.kevertPakli();
         
         for (Kartyalap kartyalap : kartyalapok) {
-            kartyalap.setKartyaKepSzelesseg((int) (jatekterSzelesseg/22.857));
-            kartyalap.setKartyaKepMagassag((int) (jatekterMagassag/11.765));
+            kartyalap.setKartyaKepSzelesseg(jatekterSzelesseg/22.857);
+            kartyalap.setKartyaKepMagassag(jatekterMagassag/11.765);    
             aktSzoras = new Point((int) (minX + Math.random() * maxX), (int) (minY + Math.random() * maxY));
             kartyalap.setKx(kx+aktSzoras.getX());
             kartyalap.setKy(ky+aktSzoras.getY());
@@ -184,7 +186,7 @@ public class KartyaMozgato extends Thread{
                     
                     kartyalap = jatekosokKartyalapjai.get(k).get(j);//Beállítja a hivatkozást a k-ik játékos j-ik kártyalapját.
                     
-                 //   if(k==JatekVezerlo.EMBER_JATEKOS_SORSZAM)
+                    if(k == JatekVezerlo.EMBER_JATEKOS_SORSZAM)
                         kartyalap.setMutat(true);//Megmutatja az ember játékos lapjait.
                     
                     kx = kartyalap.getKx();
@@ -208,7 +210,7 @@ public class KartyaMozgato extends Thread{
                     szalVezerlo.frissit();
                 }
             }
-            szalVezerlo.gombSorAllapotvalt();
+            szalVezerlo.jatekVezerlesFolytat();
         } catch (InterruptedException ex) {
             Logger.getLogger(KartyaMozgato.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -347,6 +349,117 @@ public class KartyaMozgato extends Thread{
         }
     }
     
+    @SuppressWarnings("SleepWhileInLoop")
+    private void kartyalapokNagyit(){
+        List<Kartyalap> leosztottKartyalapok = szalVezerlo.getLeosztottKartyalapok();
+        jatekosokKartyalapjai = szalVezerlo.getJatekosokKartyalapjai();
+        vegpontok = SzogSzamito.vegpontLista(jatekosokSzama, jatekterSzelesseg, jatekterMagassag);        
+        elteres = jatekterSzelesseg * 0.046875; 
+        ido = 12;
+        double kartyaKepSzelesseg, kartyaKepMagassag;
+        double arany = 0;
+        
+        szalVezerlo.grafikaElmosas(true);
+        szalVezerlo.setKartyaGrafikaElore(true);
+        
+        do {
+            for (Map.Entry<Byte, List<Kartyalap>> entrySet : jatekosokKartyalapjai.entrySet()) {
+                Byte sorszam = entrySet.getKey();
+                List<Kartyalap> jatekosKartyalapok = entrySet.getValue();
+                elojel = 1;
+
+                for (Kartyalap kartyalap : jatekosKartyalapok) {
+                    if(!kartyalap.isMutat())kartyalap.setMutat(true);
+                    
+                    kx = kartyalap.getKx();
+                    ky = kartyalap.getKy();
+                    vx = vegpontok.get(sorszam).x;
+                    vy = vegpontok.get(sorszam).y;
+                    vegSzog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, vx, vy);
+                    vx += elteres * Math.cos(Math.toRadians(vegSzog + 90 * elojel));
+                    vy += elteres * Math.sin(Math.toRadians(vegSzog + 90 * elojel));
+                    foSzog = Math.atan2(vy - ky, vx - kx);
+                    tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
+                    aktx = kx + lepes * Math.cos(foSzog);
+                    akty = ky + lepes * Math.sin(foSzog);
+                    elojel *= -1;
+                    kartyaKepSzelesseg = kartyalap.getKartyaKepSzelesseg();
+                    kartyaKepMagassag = kartyalap.getKartyaKepMagassag();
+                    arany = kartyaKepSzelesseg / kartyaKepMagassag;
+                    kartyaKepSzelesseg += lepes * arany;
+                    kartyaKepMagassag += lepes;
+                    kartyalap.setKx(aktx);
+                    kartyalap.setKy(akty);
+                    kartyalap.setKartyaKepSzelesseg(kartyaKepSzelesseg);
+                    kartyalap.setKartyaKepMagassag(kartyaKepMagassag);
+                    kartyalap.setForgat(kartyalap.getForgat() - 0.5 * elojel);                    
+                }
+            }
+            
+            byte szorzo = 2;
+            for (byte i = 0; i < leosztottKartyalapok.size(); i++) {
+                Kartyalap kartyalap = leosztottKartyalapok.get(i);
+                if (i < 2) {
+                    kartyalap.setKx(kartyalap.getKx() - lepes * arany * szorzo);
+                    szorzo--;
+                } else if (i > 2) {
+                    szorzo++;
+                    kartyalap.setKx(kartyalap.getKx() + lepes * arany * szorzo);
+                }
+                
+                kartyaKepSzelesseg = kartyalap.getKartyaKepSzelesseg();
+                kartyaKepMagassag = kartyalap.getKartyaKepMagassag();
+                arany = kartyaKepSzelesseg / kartyaKepMagassag;
+                kartyaKepSzelesseg += lepes * arany;
+                kartyaKepMagassag += lepes;
+                kartyalap.setKartyaKepSzelesseg(kartyaKepSzelesseg);
+                kartyalap.setKartyaKepMagassag(kartyaKepMagassag);
+            }
+
+            try {
+                sleep(ido);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(KartyaMozgato.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            szalVezerlo.frissit();
+        } while (lepes < tavolsag);
+    }
+    
+    @SuppressWarnings("SleepWhileInLoop")
+    private void keretAnimacio(){
+        Map<Byte, PokerKez> nyertesPokerKezek = szalVezerlo.getNyertesPokerKezek();
+        ido = 12;
+        double keretKepSzelesseg, keretKepMagassag;
+        double ertek = 0;
+                
+        for(int i = 0; i < 600; i++) {
+            ertek = ertek > 3 ? 0 : ertek + 0.1;
+ 
+            for (Map.Entry<Byte, PokerKez> entrySet : nyertesPokerKezek.entrySet()) {
+                PokerKez pokerKez = entrySet.getValue();
+                List<Kartyalap> jatekosPokerKezKartyalapok = pokerKez.getPokerKezKartyalapok();
+                
+                for (Kartyalap kartyalap : jatekosPokerKezKartyalapok) {
+                    if (!kartyalap.isKeretRajzol()) {
+                        kartyalap.setKeretRajzol(true);
+                    }
+
+                    keretKepSzelesseg = kartyalap.getKartyaKepSzelesseg() + Math.sin(ertek) * 25;
+                    keretKepMagassag = kartyalap.getKartyaKepMagassag() + Math.sin(ertek) * 25;
+                    kartyalap.setKeretKepSzelesseg(keretKepSzelesseg);
+                    kartyalap.setKeretKepMagassag(keretKepMagassag);
+                }
+
+                try {
+                    sleep(ido);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(KartyaMozgato.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
     /**
      * Ha valamelyik boolean változó igaz a metódusban, akkor meghívja a hozzá tartozó metódust.
      */
@@ -358,6 +471,10 @@ public class KartyaMozgato extends Thread{
             kartyalapokKioszt();
         }
         if(kartyalapLeosztas)kartyalapLeosztas();
+        if (kartyalapokKiertekelese) {
+            kartyalapokNagyit();
+            keretAnimacio();
+        }
         if(kartyalapokBedobasa)kartyalapokBedob();
     }    
 
@@ -375,6 +492,10 @@ public class KartyaMozgato extends Thread{
 
     public void setKartyalapokBedobasa(boolean kartyalapokBedobasa) {
         this.kartyalapokBedobasa = kartyalapokBedobasa;
+    }
+
+    public void setKartyalapokKiertekelese(boolean kartyalapokKiertekelese) {
+        this.kartyalapokKiertekelese = kartyalapokKiertekelese;
     }
 
     public void setJatekosSorszam(byte jatekosSorszam) {

@@ -48,7 +48,10 @@ public final class ZsetonKezelo {
                 for (int j = 0; j < hanyados; j++) {
                     zsetonLista.add(new Zseton(zsetonErtekek[i], new ImageIcon(ZsetonKezelo.class.
                             getResource("/adatFajlok/zsetonok/zseton"
-                                    + zsetonErtekek[i] + ".png")).getImage()));
+                                    + zsetonErtekek[i] + ".png")).getImage(), 
+                            new ImageIcon(ZsetonKezelo.class.
+                            getResource("/adatFajlok/zsetonok/zseton"
+                                    + zsetonErtekek[i] + "_blur.png")).getImage()));
                 }
             } else {
                 for (byte j = 0; j < zsetonErtekek.length; j++) {
@@ -59,7 +62,10 @@ public final class ZsetonKezelo {
                     for (int k = 0; k < hanyados; k++) {
                         zsetonLista.add(new Zseton(zsetonErtekek[j], new ImageIcon(ZsetonKezelo.class.
                                 getResource("/adatFajlok/zsetonok/zseton"
-                                        + zsetonErtekek[j] + ".png")).getImage()));
+                                        + zsetonErtekek[j] + ".png")).getImage(),
+                                new ImageIcon(ZsetonKezelo.class.
+                                getResource("/adatFajlok/zsetonok/zseton"
+                                        + zsetonErtekek[j] + "_blur.png")).getImage()));
                     }
                 }
             }
@@ -76,7 +82,7 @@ public final class ZsetonKezelo {
      * @param osszeg 
      * @return  
      */
-    public static List<Zseton> pot(List<Zseton> jatekosZsetonok, int osszeg){
+    public synchronized static List<Zseton> pot(List<Zseton> jatekosZsetonok, int osszeg){
         int osszeg2;
         List<Zseton> potZsetonok = new CopyOnWriteArrayList<>();        
         aranySzamok = new byte[] {1, 1, 1, 1, 1};//Ez azért kell mert ennek az új arányosságnak megfelelően bontja fel a zsetonkioszt metódus az összeget.

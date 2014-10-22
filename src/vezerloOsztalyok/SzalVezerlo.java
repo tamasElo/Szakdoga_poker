@@ -1,5 +1,6 @@
 package vezerloOsztalyok;
 
+import vezerloOsztalyok.szalak.JatekVezerlo;
 import alapOsztalyok.Felho;
 import alapOsztalyok.Jatekos;
 import alapOsztalyok.Kartyalap;
@@ -19,10 +20,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import vezerloOsztalyok.szalak.FelhoMozgato;
 import vezerloOsztalyok.szalak.KartyaMozgato;
@@ -44,17 +45,19 @@ public class SzalVezerlo {
     private Vak kisVak;
     private Vak nagyVak;
     private final Image keveresAnimacio;
-    private boolean gombsorAktiv;
     private ZsetonMozgato zsetonMozgato;
     private KartyaMozgato kartyaMozgato;
+    private FelhoMozgato felhoMozgato;
     private Felho felho;
 
     public SzalVezerlo() {
         keveresAnimacio = new ImageIcon(this.getClass().getResource("/adatFajlok/kartyaPakli/keveresAnimacio.gif")).getImage();
         /*A vakok értékét majd valamilyen beállított értékből fogja lekérni.*/
-        kisVak = new Vak(new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/small_blind.png")).getImage());
+        kisVak = new Vak(new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/small_blind.png")).getImage(), 
+                         new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/small_blind.png")).getImage());
         kisVak.setErtek(5);
-        nagyVak = new Vak(new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/big_blind.png")).getImage());
+        nagyVak = new Vak(new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/big_blind.png")).getImage(), 
+                          new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/big_blind.png")).getImage());
         nagyVak.setErtek(10);
     } 
 
@@ -160,7 +163,31 @@ public class SzalVezerlo {
      * @param g 
      */
     public void felhoRajzol(Graphics g){
-        if(felho != null) felho.rajzol(g, jatekterPanel);
+        if(felhoMozgato != null && felhoMozgato.isAlive()) felho.rajzol(g, jatekterPanel);
+    }
+    
+    public void grafikaElmosas(boolean elmosas){
+        jatekterPanel.setElmosas(elmosas);
+        
+        for (Kartyalap kartyalap : kartyalapok) {
+            kartyalap.setElmosas(elmosas);
+        }
+        
+        for (Map.Entry<Byte, List<Zseton>> entrySet : jatekosokZsetonjai.entrySet()) {
+            Byte key = entrySet.getKey();
+            List<Zseton> zsetonok = entrySet.getValue();
+            for (Zseton zseton : zsetonok) {
+                zseton.setElmosas(elmosas);
+            }
+        }
+        
+        for (Zseton zseton : pot) {
+            zseton.setElmosas(elmosas);
+        }
+        
+        for (Korong korong : korongok) {
+            korong.setElmosas(elmosas);
+        }
     }
     
     /**
@@ -194,6 +221,11 @@ public class SzalVezerlo {
      */
     public void jatekVezerloIndit() {
         jatekVezerlo = new JatekVezerlo(this);
+        jatekVezerlo.start();
+    }
+    
+    public void jatekVezerlesFolytat(){
+        jatekVezerlo.folytat();
     }
     
     /**
@@ -234,13 +266,10 @@ public class SzalVezerlo {
     
     /**
      * Leosztja a kártyalapokat.
-     * 
-     * @param osszesetLeoszt 
      */
-    public void kartyalapokLeosztSzalIndit(boolean osszesetLeoszt){
+    public void kartyalapokLeosztSzalIndit(){
         kartyaMozgato = new KartyaMozgato(this);
         kartyaMozgato.setKartyalapLeosztas(true);
-        kartyaMozgato.setOsszesKartyalapLeosztas(osszesetLeoszt);
         kartyaMozgato.start();
     }
     
@@ -283,7 +312,7 @@ public class SzalVezerlo {
         felho.setKy(ky);
         felho.setFelhoKepSzelesseg(felhoKepSzelesseg);
         felho.setFelhoKepMagassag(felhoKepMagassag);
-        FelhoMozgato felhoMozgato = new FelhoMozgato(this);
+        felhoMozgato = new FelhoMozgato(this);
         felhoMozgato.start();
     }
     
@@ -352,9 +381,7 @@ public class SzalVezerlo {
      * Ha gépi játékos van soron akkor passziválja a gombsort, ha emberi, akkor
      * aktiválja.
      */
-    public void gombSorAllapotvalt() {        
-        if (jatekVezerlo != null) {
-            if (!jatekVezerlo.gepiJatekos() && !gombsorAktiv) {
+    public void gombSorAllapotvalt() {    
                 boolean[] aktivalandoGombok = {true, true, true, false, true, true};
 
                 if (!jatekVezerlo.isMegadhat() && !jatekVezerlo.isPasszolhat()) {
@@ -373,14 +400,6 @@ public class SzalVezerlo {
                 jatekterPanel.setEmelendoOsszeg(jatekVezerlo.getOsszeg() == 0 ? nagyVakErtekVisszaad() : jatekVezerlo.getOsszeg());
                 jatekterPanel.setMinOsszeg(jatekVezerlo.getOsszeg() == 0 ? nagyVakErtekVisszaad() : jatekVezerlo.getOsszeg());
                 jatekterPanel.setMaxOsszeg(getJatekosZsetonOsszeg(JatekVezerlo.EMBER_JATEKOS_SORSZAM));
-                gombsorAktiv = true;
-            }
-
-            if (jatekVezerlo.gepiJatekos() && gombsorAktiv) {
-                jatekterPanel.gombsorPasszival();
-                gombsorAktiv = false;
-            }
-        }
     }
     
     public double aranytSzamol(double ertek){
@@ -395,9 +414,15 @@ public class SzalVezerlo {
         return osztando/ertek;
     }
     
-    public void nyertesJatekosKeres(){
-        jatekterPanel.gombsorPasszival();        
-        kartyalapokLeosztSzalIndit(true);
+    public void nyertesJatekosKeres(){ 
+        kartyaMozgato = new KartyaMozgato(this);
+        kartyaMozgato.setOsszesKartyalapLeosztas(true);
+        kartyaMozgato.setKartyalapLeosztas(true);
+        kartyaMozgato.setKartyalapokKiertekelese(true);
+        
+        ExecutorService executor = Executors.newFixedThreadPool(1);  
+        executor.submit(kartyaMozgato);
+        executor.shutdown();
     }
     
     /**
@@ -535,6 +560,10 @@ public class SzalVezerlo {
 
     public List<Kartyalap> getKartyalapok() {
         return kartyalapok;
+    }
+
+    public Map<Byte, PokerKez> getNyertesPokerKezek() {
+        return nyertesPokerKezek;
     }
 
     public List<Jatekos> getJatekosok() {
