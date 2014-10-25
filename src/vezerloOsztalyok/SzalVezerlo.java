@@ -173,8 +173,14 @@ public class SzalVezerlo {
             kartyalap.setElmosas(elmosas);
         }
         
+        for (Map.Entry<Byte, List<Kartyalap>> entrySet : jatekosokKartyalapjai.entrySet()) {
+            List<Kartyalap> jatekosKartyalapjai = entrySet.getValue();
+            for (Kartyalap kartyalap : jatekosKartyalapjai) {
+                kartyalap.setElmosas(elmosas);
+            }
+        }
+        
         for (Map.Entry<Byte, List<Zseton>> entrySet : jatekosokZsetonjai.entrySet()) {
-            Byte key = entrySet.getKey();
             List<Zseton> zsetonok = entrySet.getValue();
             for (Zseton zseton : zsetonok) {
                 zseton.setElmosas(elmosas);
@@ -378,8 +384,7 @@ public class SzalVezerlo {
     }
     
     /**
-     * Ha gépi játékos van soron akkor passziválja a gombsort, ha emberi, akkor
-     * aktiválja.
+     * Aktiválja a megfelelő gombokat a gombsorból.
      */
     public void gombSorAllapotvalt() {    
                 boolean[] aktivalandoGombok = {true, true, true, false, true, true};

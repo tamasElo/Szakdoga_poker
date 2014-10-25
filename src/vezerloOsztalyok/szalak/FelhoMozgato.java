@@ -58,9 +58,10 @@ public class FelhoMozgato extends Thread {
                 szalVezerlo.frissit();
                 sleep(ido);
             }
+            szalVezerlo.frissit();
             sleep(IDO);
         } catch (InterruptedException ex) {
             Logger.getLogger(FelhoMozgato.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }  
+    }
 }

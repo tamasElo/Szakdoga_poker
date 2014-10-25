@@ -43,20 +43,22 @@ public class Kartyalap implements Comparable<Kartyalap>{
         if (forgat != 0) {
             g2D.rotate(Math.toRadians(forgat), kx, ky);
         } 
-        if (!mutat) {          
-            g2D.drawImage(kep, (int) (kx - kartyaKepSzelesseg / 2), 
-                         (int) (ky - kartyaKepMagassag / 2), 
-                         (int) kartyaKepSzelesseg, (int) kartyaKepMagassag, o);
-        } else {            
-            if(keretRajzol){
-                g2D.drawImage(keret, (int) (kx - keretKepSzelesseg / 2), 
-                             (int) (ky - keretKepMagassag / 2), 
-                             (int) keretKepSzelesseg, (int) keretKepMagassag, o);
+        
+        if (mutat) {
+            if (keretRajzol) {
+                g2D.drawImage(keret, (int) (kx - keretKepSzelesseg / 2),
+                        (int) (ky - keretKepMagassag / 2),
+                        (int) keretKepSzelesseg, (int) keretKepMagassag, o);
             }
-            
-            g2D.drawImage(elolap, (int) (kx - kartyaKepSzelesseg / 2), 
-                         (int) (ky - kartyaKepMagassag / 2), 
-                         (int) kartyaKepSzelesseg, (int) kartyaKepMagassag, o);
+
+            g2D.drawImage(elolap, (int) (kx - kartyaKepSzelesseg / 2),
+                    (int) (ky - kartyaKepMagassag / 2),
+                    (int) kartyaKepSzelesseg, (int) kartyaKepMagassag, o);
+        } else {
+
+            g2D.drawImage(kep, (int) (kx - kartyaKepSzelesseg / 2),
+                    (int) (ky - kartyaKepMagassag / 2),
+                    (int) kartyaKepSzelesseg, (int) kartyaKepMagassag, o);
         }
 
         if (forgat != 0) {

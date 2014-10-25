@@ -14,7 +14,9 @@ public class JatekVezerlo extends Thread{
     private byte kisVakJatekosSorszam;
     private byte nagyVakJatekosSorszam;
     private byte jatekosSorszam;
-    private byte jatekosokSzama;
+    private byte jatekosokSzama;    
+    private byte aktivJatekosokSzama;
+    private byte allInSzamlalo;
     private int osszeg;
     private int[] jatekosokTetje;
     private byte licitSzamlalo;
@@ -24,9 +26,9 @@ public class JatekVezerlo extends Thread{
     private boolean megadhat;
     private boolean emelhet;
     private boolean ujkorIndit;
+    private boolean korVege;
     private int kisVakErtek;
     private int nagyVakErtek;
-    private int aktivJatekosokSzama;
     private int aktJatekosZsetonOsszeg;
     private byte korOszto;
     private long ido;
@@ -37,11 +39,11 @@ public class JatekVezerlo extends Thread{
         kisVakErtek = szalVezerlo.kisVakErtekVisszaad();
         nagyVakErtek = szalVezerlo.nagyVakErtekVisszaad();
         jatekosokTetje = new int[jatekosokSzama];
-        dealerJatekosSorszam = 1;//(byte) (Math.random() * jatekosokSzama);
+        dealerJatekosSorszam = (byte) (Math.random() * jatekosokSzama);
         mi = new Mi();     
         aktivJatekosokSzama = 5;
         korOszto = 10;
-        ido = 500;
+        ido = 1000;
         ujkorIndit = true;
         szalVezerlo.zsetonokKioszt();   
     }   
@@ -54,7 +56,8 @@ public class JatekVezerlo extends Thread{
             szalVezerlo.jatekosokAktival();
             jatekosSorszamokBeallit();
             vakokErtekeBeallit();
-            osszeg = nagyVakErtek;            
+            osszeg = nagyVakErtek;  
+            allInSzamlalo = 0;
             szalVezerlo.korongokMozgatSzalIndit(dealerJatekosSorszam);
             szalVezerlo.kartyalapokKiosztSzalIndit(dealerJatekosSorszam); 
             megallit();                    
@@ -149,14 +152,18 @@ public class JatekVezerlo extends Thread{
     /**
      * A következő játékosra lép.
      */
-    public void kovetkezoJatekos() {        
-            try {
-                sleep(ido);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(JatekVezerlo.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            jatekosAllapotEllenorzes();
-            lehetosegekBeallit();            
+    public void kovetkezoJatekos() {
+        try {
+            sleep(ido);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(JatekVezerlo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        jatekosAllapotEllenorzes();
+
+        if (!korVege) {
+            lehetosegekBeallit();
+        }        
     }
     
     /**
@@ -174,16 +181,19 @@ public class JatekVezerlo extends Thread{
     private void jatekosAllapotEllenorzes(){
         jatekosSorszam++;         
         licitSzamlaloLeptet();   
-        
-        if(jatekosSorszam == jatekosokSzama) jatekosSorszam = 0;
-        
+
+        if (jatekosSorszam == jatekosokSzama) {
+            jatekosSorszam = 0;
+        }
+
         if (!szalVezerlo.isJatekosAktiv(jatekosSorszam)) { //Ha az adott sorszámú játékos nem aktív akkor a metódus meghívja önmagát.
             jatekosAllapotEllenorzes();
         }
     }
     
-    private void korVege(){  
+    private void korVege(){ 
         szalVezerlo.nyertesJatekosKeres();
+        korVege = true;
     }
     
     /**
@@ -257,6 +267,7 @@ public class JatekVezerlo extends Thread{
         
         szalVezerlo.jatekosPasszival(jatekosSorszam);
         aktivJatekosokSzama--;
+        allInSzamlalo++;
         szalVezerlo.felhoSzalIndit("All in", jatekosSorszam);
         
         if (aktivJatekosokSzama > 0) {
@@ -278,6 +289,8 @@ public class JatekVezerlo extends Thread{
         szalVezerlo.kartyalapokBedobSzalIndit(jatekosSorszam);
         
         if (aktivJatekosokSzama > 1) {
+            folytat();
+        } else if (aktivJatekosokSzama > 0 && allInSzamlalo > 0){
             folytat();
         } else {
             korVege();
@@ -301,6 +314,7 @@ public class JatekVezerlo extends Thread{
         
         if (szalVezerlo.leosztottKartyalapokSzama() < LEOSZTHATO_KARTYALAPOK_SZAMA) {
             szalVezerlo.kartyalapokLeosztSzalIndit();
+            megallit();
         } else {
             korVege();
         }
@@ -310,6 +324,9 @@ public class JatekVezerlo extends Thread{
         licitSzamlalo = 0;
     }
     
+    /**
+     * Várakozó állapotba állítja a szálat.
+     */
     private synchronized void megallit(){
         try {
             wait();
@@ -318,6 +335,9 @@ public class JatekVezerlo extends Thread{
         }
     }
     
+    /**
+     * Felébreszti a szálat.
+     */
     public synchronized void folytat(){
         notify();
     }

@@ -31,17 +31,17 @@ public class PokerKezKiertekelo {
         aktPokerKezErtek = 0;
                 
         for (Map.Entry<Byte, List<Kartyalap>> entry : jatekosokKartyalapjai.entrySet()) {
-            Byte key = entry.getKey();
-            List<Kartyalap> value = entry.getValue();            
-            pokerKez = Lapkombinaciok.lapKombinacioKeres(value, leosztottKartyalapok);
-            jatekosokPokerKeze.put(key, pokerKez);
+            Byte jatekosSorszam = entry.getKey();
+            List<Kartyalap> jatekosKartyalapjai = entry.getValue();            
+            pokerKez = Lapkombinaciok.lapKombinacioKeres(jatekosKartyalapjai, leosztottKartyalapok);
+            jatekosokPokerKeze.put(jatekosSorszam, pokerKez);
         }
         
         for (Map.Entry<Byte, PokerKez> entrySet : jatekosokPokerKeze.entrySet()) {
-            Byte key = entrySet.getKey();
-            PokerKez value = entrySet.getValue();
-            aktPokerKezErtek = value.getPokerKezErtek();
-            pokerKezErtekVizsgal(key);
+            Byte jatekosSorszam = entrySet.getKey();
+            pokerKez = entrySet.getValue();
+            aktPokerKezErtek = pokerKez.getPokerKezErtek();
+            pokerKezErtekVizsgal(jatekosSorszam);
         }
         
         for (Byte jatekosSorszam : nyertesJatekosokSorszama) {

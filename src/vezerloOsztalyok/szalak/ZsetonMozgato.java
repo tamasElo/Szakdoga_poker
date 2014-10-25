@@ -164,7 +164,6 @@ public class ZsetonMozgato extends Thread {
         Point vegpont;
         double szog, elteres;
         double x, y, szoras;        
-        List<Point> kezdoPontok = new ArrayList<>();
         List<Point> vegPontok = new ArrayList<>();        
         List<Zseton> jatekosZsetonjai = szalVezerlo.getJatekosokZsetonjai().get(jatekosSorszam);        
         List<Zseton> jatekosTetje = ZsetonKezelo.pot(jatekosZsetonjai, jatekosTetOsszege);
@@ -223,26 +222,25 @@ public class ZsetonMozgato extends Thread {
             x += elteres * Math.cos(Math.toRadians(szog)) + szoras;
             y += elteres * Math.sin(Math.toRadians(szog)) + szoras;
             
-            kezdoPontok.add(new Point((int)zseton.getKx(), (int)zseton.getKy()));
             vegPontok.add(new Point((int)x, (int)y));
         }
         
         double vx, vy, kx, ky, aktx, akty, tavolsag; 
-        double aktTav = 0, zsetonokVegpontban = 0;
+        double zsetonokVegpontban = 0;
         double lepes = jatekterMagassag*0.0025;
         long ido = 5;
         
         while(zsetonokVegpontban != jatekosTetje.size()){
             for (int i = 0; i < jatekosTetje.size(); i++) {
-                kx = kezdoPontok.get(i).getX();
-                ky = kezdoPontok.get(i).getY();
+                kx = jatekosTetje.get(i).getKx();
+                ky = jatekosTetje.get(i).getKy();
                 vx = vegPontok.get(i).getX();
                 vy = vegPontok.get(i).getY();
                 tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
                 szog = Math.atan2(vy - ky, vx - kx);
-                aktx = kx + aktTav * Math.cos(szog);
-                akty = ky + aktTav * Math.sin(szog);
-                if (aktTav >= tavolsag) {
+                aktx = kx + lepes * Math.cos(szog);
+                akty = ky + lepes * Math.sin(szog);
+                if (lepes >= tavolsag) {
                     zsetonokVegpontban++;
                 } else {
                     zsetonokVegpontban = 0;
@@ -250,13 +248,14 @@ public class ZsetonMozgato extends Thread {
                     jatekosTetje.get(i).setKy(akty);
                 }
             }
-            aktTav += lepes;
+            
+            szalVezerlo.frissit();
+            
             try {
                 sleep(ido);
             } catch (InterruptedException ex) {
                 Logger.getLogger(ZsetonMozgato.class.getName()).log(Level.SEVERE, null, ex);
             }
-            szalVezerlo.frissit();
         }
     }
     
