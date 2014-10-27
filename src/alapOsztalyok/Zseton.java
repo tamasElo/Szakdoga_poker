@@ -10,6 +10,24 @@ public class Zseton extends Korong implements Comparable<Zseton>{
         super(korongKep, elmosodottKorongKep);
         this.ertek = ertek;
     } 
+
+    @Override
+    public boolean equals(Object o) {
+        Zseton zseton = (Zseton) o;
+        
+        if (this.ertek == zseton.getErtek()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 29 * hash + this.ertek;
+        return hash;
+    }
     
     @Override
     public int compareTo(Zseton t) {

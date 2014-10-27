@@ -35,11 +35,11 @@ public class Tester {
         lapok5.add(new Kartyalap(null, "3", "diamond", (byte) 5));
         lapok5.add(new Kartyalap(null, "3", "club", (byte) 12));
 
-        leosztas.add(new Kartyalap(null, "2", "diamond", (byte) 13));
+        leosztas.add(new Kartyalap(null, "2", "diamond", (byte) 3));
         leosztas.add(new Kartyalap(null, "3", "spades", (byte) 4));
         leosztas.add(new Kartyalap(null, "4", "club", (byte) 2));
         leosztas.add(new Kartyalap(null, "5", "hearts", (byte) 5));
-        leosztas.add(new Kartyalap(null, "6", "spades", (byte) 10));        
+        leosztas.add(new Kartyalap(null, "6", "spades", (byte) 14));        
         
         Map<Byte, List<Kartyalap>> jatekosokKartyalapjai = new HashMap<>();
 
@@ -53,7 +53,11 @@ public class Tester {
         for (Map.Entry<Byte, PokerKez> entrySet : nyertesek.entrySet()) {
             Byte key = entrySet.getKey();
             PokerKez value = entrySet.getValue();
-            System.out.println(key + " " + value.getPokerKezNev());
+            System.out.print(key + " " + value.getPokerKezNev() + " ");
+            for (Kartyalap kartyalap : value.getPokerKezKartyalapok()) {
+                System.out.print(kartyalap.getKartyaErtek() + " " + kartyalap.getKartyaSzin() + ", ");
+            }
+            System.out.println("");
         }
     }
 }

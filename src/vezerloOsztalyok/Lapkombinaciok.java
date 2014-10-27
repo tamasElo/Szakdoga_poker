@@ -36,8 +36,8 @@ public final class Lapkombinaciok { //Azért final hogy ne lehessen belőle szá
 
         rendezettKartyalapok = new ArrayList<>();
         TreeSet<Kartyalap> rendezettKartyaHalmaz = new TreeSet<>(); //Kiveszi az ismétlődéseket és automatikusan rendezi.
-        rendezettKartyaHalmaz.addAll(jatekosKartyalapok);
         rendezettKartyaHalmaz.addAll(leosztottKartyalapok);
+        rendezettKartyaHalmaz.addAll(jatekosKartyalapok);
 
         byte[] legkisebbSor = {5, 4, 3, 2, 14};
         Kartyalap elozoKartyalap, kovetkezokaKartyalap, kartyalap;
@@ -264,8 +264,8 @@ public final class Lapkombinaciok { //Azért final hogy ne lehessen belőle szá
      */
     private static void kartyakListaba(){
         if(rendezettKartyalapok != null)rendezettKartyalapok.clear();
-        rendezettKartyalapok.addAll(jatekosKartyalapok);
         rendezettKartyalapok.addAll(leosztottKartyalapok);
+        rendezettKartyalapok.addAll(jatekosKartyalapok);
     }
     
     /**

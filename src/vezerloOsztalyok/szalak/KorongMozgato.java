@@ -27,11 +27,7 @@ public class KorongMozgato extends Thread{
 
     private void korongokBetolt() {
         List<Korong> korongok = new ArrayList<>();
-        List<Point> vegpontLista = SzogSzamito.vegpontLista(jatekosokSzama, jatekterSzelesseg, jatekterMagassag);
-        Dealer dealer = new Dealer(new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/dealer.png")).getImage(), 
-                                   new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/dealer.png")).getImage());
-        Vak kisVak = szalVezerlo.getKisVak();
-        Vak nagyVak = szalVezerlo.getNagyVak();
+        List<Point> vegpontLista = SzogSzamito.vegpontLista(jatekosokSzama, jatekterSzelesseg, jatekterMagassag);        
         double meret;
         int i = dealerJatekosSorszam;
         double x, y;
@@ -39,9 +35,9 @@ public class KorongMozgato extends Thread{
         int elteres = szalVezerlo.jatekterPanelSzelesseg()/16;
         double veletlenForgSzog;
         
-        korongok.add(dealer);
-        korongok.add(kisVak);
-        korongok.add(nagyVak);
+        korongok.add(szalVezerlo.getDealer());
+        korongok.add(szalVezerlo.getKisVak());
+        korongok.add(szalVezerlo.getNagyVak());
         
         for (Korong korong : korongok) {
             veletlenForgSzog = Math.random()*360; //Létrehoz egy véletlen szöget 0 és 360 fok között. A létrehozott értéknek megfelelően fognak elfordulni a zsetonok.                

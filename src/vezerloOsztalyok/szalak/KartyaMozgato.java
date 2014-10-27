@@ -4,23 +4,24 @@ import vezerloOsztalyok.SzalVezerlo;
 import alapOsztalyok.Kartyalap;
 import alapOsztalyok.PokerKez;
 import java.awt.Point;
-import static java.lang.Thread.sleep;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import vezerloOsztalyok.PakliKezelo;
 import vezerloOsztalyok.PokerKezKiertekelo;
 import vezerloOsztalyok.SzogSzamito;
 
-public class KartyaMozgato extends Thread implements Runnable{    
+public class KartyaMozgato extends Thread{    
     private SzalVezerlo szalVezerlo;
     private Map<Byte, List<Kartyalap>> jatekosokKartyalapjai;
+    private Map<Byte, List<Kartyalap>> kiszalltJatekosokKartyalapjai;
     private List<Kartyalap> leosztottKartyalapok;
     private List<Kartyalap> kartyalapok;    
+    private List<Point> vegpontok;
     private static List<Point> szorasok;
-    private static List<Point> vegpontok;
     private int jatekterSzelesseg;
     private int jatekterMagassag;    
     private double aktKartyaKepSzelesseg;
@@ -39,10 +40,10 @@ public class KartyaMozgato extends Thread implements Runnable{
     private double vegForgSzog;
     private double aktForgSzog;
     private boolean kartyalapokKiosztasa;
-    private boolean kartyalapLeosztas;
+    private boolean kartyalapLeosztasa;
     private boolean kartyalapokBedobasa;
     private boolean kartyalapokKiertekelese;
-    private boolean osszesKartyalapLeosztas;
+    private boolean osszesKartyalapLeosztasa;
     private byte dealer;
     private double lepes;
     private int ido;
@@ -56,6 +57,7 @@ public class KartyaMozgato extends Thread implements Runnable{
         jatekterSzelesseg = szalVezerlo.jatekterPanelSzelesseg();
         jatekterMagassag = szalVezerlo.jatekterPanelMagassag();
         jatekosokSzama = szalVezerlo.jatekosokSzama();
+        vegpontok = SzogSzamito.vegpontLista(jatekosokSzama, jatekterSzelesseg, jatekterMagassag);//Lekéri a végpontok listáját a játékosok száma alapján.
         lepes = jatekterSzelesseg * 0.001875;
     }
 
@@ -66,8 +68,7 @@ public class KartyaMozgato extends Thread implements Runnable{
     private void pakliBetolt() { 
         Point aktSzoras, szorasHatar = new Point(jatekterSzelesseg / 400, jatekterMagassag / 600);            
         kx = jatekterSzelesseg / 2;//Beállítja a kezdöpontot középre, hogy onnan induljon az animácio.
-        ky = jatekterMagassag / 2;
-        vegpontok = SzogSzamito.vegpontLista(jatekosokSzama, jatekterSzelesseg, jatekterMagassag);//Lekéri a végpontok listáját a játékosok száma alapján.
+        ky = jatekterMagassag / 2;        
         szorasok = new ArrayList();
         /*Beállítja a minimális és maximális szóráspontokat.*/
         double minX = -szorasHatar.getX() - jatekterSzelesseg * 0.000625,
@@ -94,7 +95,7 @@ public class KartyaMozgato extends Thread implements Runnable{
      * Az egész kártyapaklit mozgatja középről a megadott szögbe és irányba.
      */
     @SuppressWarnings("SleepWhileInLoop")
-    private void kartyaPakliMozgat() {  
+    private void pakliMozgat() {  
         ido = 3;
         aktTav = 0;       
         aktForgSzog = 0;
@@ -163,10 +164,10 @@ public class KartyaMozgato extends Thread implements Runnable{
             duplazottVegpontok.addAll(duplazottVegpontok);//Megduplázza a végpontokat. Mivel egy játékosnak két lapja van, ezért kétszer kell a ciklusban ugyanazzal a végponttal számolni.
             for (byte i = 0; i < duplazottVegpontok.size(); i++) {
                 jatekosSorszam++;//Megnöveli egyel az jatekosSorszam változót hogy a megfelelő játékoshoz kerüljön a kiosztott kártyalap.
-                if(jatekosSorszam == jatekosokSzama) jatekosSorszam = 0;//Ha az jatekosSorszam eléri a játékosok számát akkor a számláló kinullázódik.
-                kartyalap = kartyalapok.remove(kartyalapok.size()-1);//A kártyalap hivatkozást ráállítja a kartyalapok lista utolsó elemére, törli a hivatkozást a listából és hozzá adja az aktuális játékos lapjaihoz a kártyát.
-                szalVezerlo.jatekosKartyalapokhozAd(jatekosSorszam, kartyalap);
                 
+                if(jatekosSorszam == jatekosokSzama) jatekosSorszam = 0;//Ha az jatekosSorszam eléri a játékosok számát akkor a számláló kinullázódik.
+                
+                kartyalap = kartyalapok.remove(kartyalapok.size()-1);//A kártyalap hivatkozást ráállítja a kartyalapok lista utolsó elemére, törli a hivatkozást a listából.      
                 aktTav = 0;
                 aktForgSzog = 0;
                 kx = kartyalap.getKx();
@@ -176,6 +177,7 @@ public class KartyaMozgato extends Thread implements Runnable{
                 vegForgSzog = SzogSzamito.forgasSzogSzamit(jatekterSzelesseg, jatekterMagassag, vx, vy);
                 foSzog = Math.atan2(vy - ky, vx - kx);
                 tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
+                szalVezerlo.jatekosKartyalapokhozAd(jatekosSorszam, kartyalap);//Hozzá adja az aktuális játékos lapjaihoz a kártyát.         
                 
                 while (aktTav <= tavolsag) {
                     aktTav += lepes;
@@ -244,8 +246,8 @@ public class KartyaMozgato extends Thread implements Runnable{
     @SuppressWarnings("SleepWhileInLoop")
     private void kartyalapokBedob(){        
         ido = 2;
-        jatekosokKartyalapjai = szalVezerlo.getJatekosokKartyalapjai();        
-        List<Kartyalap> jatekosKartyalapok = jatekosokKartyalapjai.get(jatekosSorszam);    
+        kiszalltJatekosokKartyalapjai = szalVezerlo.getKiszalltJatekosokKartyalapjai();        
+        List<Kartyalap> jatekosKartyalapok = kiszalltJatekosokKartyalapjai.get(jatekosSorszam);    
         
         do {
             elojel = 1;
@@ -328,7 +330,7 @@ public class KartyaMozgato extends Thread implements Runnable{
             novekmeny = laptavolsagokOsszege;//A növekményt beállítja a már leosztott lapoktól megfelelő távolság értékre.
         }
 
-        if (osszesKartyalapLeosztas) {
+        if (osszesKartyalapLeosztasa) {
             leosztandoKartyalapokSzama = JatekVezerlo.LEOSZTHATO_KARTYALAPOK_SZAMA - szalVezerlo.leosztottKartyalapokSzama();
         } else {
             szalVezerlo.jatekVezerlesFolytat();
@@ -383,8 +385,7 @@ public class KartyaMozgato extends Thread implements Runnable{
      * Felnagyítja a leosztott kártyalapokat és a játékosok kártyalapjait.
      */
     @SuppressWarnings("SleepWhileInLoop")
-    private void kartyalapokNagyit(){
-        jatekosokKartyalapjai = szalVezerlo.getJatekosokKartyalapjai();     
+    private void kartyalapokNagyit(){   
         elteres = jatekterSzelesseg * 0.046875; 
         ido = 12;
         double arany = 0;
@@ -500,22 +501,32 @@ public class KartyaMozgato extends Thread implements Runnable{
     @SuppressWarnings("SleepWhileInLoop")
     private void kartyalapokPakliba(){
         szalVezerlo.grafikaElmosas(false);
-        List<Kartyalap> nagyitottKartyalapok = leosztottKartyalapok;         
+        List<Kartyalap> mozgatandoKartyalapok = new CopyOnWriteArrayList<>();  
+        List<Kartyalap> nagyitottKartyalapok = new CopyOnWriteArrayList<>();
+        kiszalltJatekosokKartyalapjai = szalVezerlo.getKiszalltJatekosokKartyalapjai();
         byte kartyalapokVegpontban = 0;
         double arany;
         ido = 3;
         
+        mozgatandoKartyalapok.addAll(leosztottKartyalapok);
+        nagyitottKartyalapok.addAll(leosztottKartyalapok);        
+        
         for (Map.Entry<Byte, List<Kartyalap>> entrySet : jatekosokKartyalapjai.entrySet()) {
             List<Kartyalap> jatekosKartyalapok = entrySet.getValue();
+            mozgatandoKartyalapok.addAll(jatekosKartyalapok);
+            nagyitottKartyalapok.addAll(jatekosKartyalapok);
+        }       
 
-            for (Kartyalap kartyalap : jatekosKartyalapok) {
-                nagyitottKartyalapok.add(kartyalap);
-            }
+        if (kiszalltJatekosokKartyalapjai != null) {
+            for (Map.Entry<Byte, List<Kartyalap>> entrySet : kiszalltJatekosokKartyalapjai.entrySet()) {
+                List<Kartyalap> jatekosKartyalapok = entrySet.getValue();
+                mozgatandoKartyalapok.addAll(jatekosKartyalapok);
+            }            
         }
         
-        try {
-            while (kartyalapokVegpontban != nagyitottKartyalapok.size()) {
-                for (Kartyalap kartyalap : leosztottKartyalapok) {
+        try {           
+            while (kartyalapokVegpontban != mozgatandoKartyalapok.size()) {
+                for (Kartyalap kartyalap : mozgatandoKartyalapok) {
                     if (kartyalap.isMutat()) {
                         kartyalap.setMutat(false);
                     }
@@ -555,8 +566,8 @@ public class KartyaMozgato extends Thread implements Runnable{
                 szalVezerlo.frissit();
                 sleep(ido);
             }
-
-            kartyaPakliMozgat();
+            
+            pakliMozgat();
             
             do {
                 for (Kartyalap kartyalap : nagyitottKartyalapok) {
@@ -571,7 +582,7 @@ public class KartyaMozgato extends Thread implements Runnable{
 
                 sleep(ido);
                 szalVezerlo.frissit();
-            } while (aktKartyaKepSzelesseg > jatekterSzelesseg/22.857);
+            } while (aktKartyaKepSzelesseg > jatekterSzelesseg / 22.857);   
         } catch (InterruptedException ex) {
             Logger.getLogger(KartyaMozgato.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -584,27 +595,27 @@ public class KartyaMozgato extends Thread implements Runnable{
     public void run() {
         if (kartyalapokKiosztasa) {
             pakliBetolt();
-            kartyaPakliMozgat();
+            pakliMozgat();
             kartyalapokKioszt();
         }
         
-        if(kartyalapLeosztas)kartyalapLeosztas();
+        if(kartyalapLeosztasa)kartyalapLeosztas();
         
         if (kartyalapokKiertekelese) {
             kartyalapokNagyit();
             keretAnimacio();
-            kartyalapokPakliba();
+            kartyalapokPakliba();    
         }
         
         if(kartyalapokBedobasa)kartyalapokBedob();
     }    
 
-    public void setKartyalapLeosztas(boolean kartyalapLeosztas) {
-        this.kartyalapLeosztas = kartyalapLeosztas;
+    public void setKartyalapLeosztasa(boolean kartyalapLeosztasa) {
+        this.kartyalapLeosztasa = kartyalapLeosztasa;
     }
 
-    public void setOsszesKartyalapLeosztas(boolean osszesKartyalapLeosztas) {
-        this.osszesKartyalapLeosztas = osszesKartyalapLeosztas;
+    public void setOsszesKartyalapLeosztasa(boolean osszesKartyalapLeosztasa) {
+        this.osszesKartyalapLeosztasa = osszesKartyalapLeosztasa;
     }
 
     public void setKartyalapokKiosztasa(boolean kartyalapokKiosztasa) {

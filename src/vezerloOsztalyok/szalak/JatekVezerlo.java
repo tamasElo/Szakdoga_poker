@@ -286,6 +286,7 @@ public class JatekVezerlo extends Thread{
         szalVezerlo.jatekosPasszival(jatekosSorszam);
         aktivJatekosokSzama--;
         szalVezerlo.felhoSzalIndit("Bedob", jatekosSorszam);
+        szalVezerlo.jatekosKiszall(jatekosSorszam);
         szalVezerlo.kartyalapokBedobSzalIndit(jatekosSorszam);
         
         if (aktivJatekosokSzama > 1) {

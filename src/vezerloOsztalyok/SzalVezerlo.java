@@ -1,5 +1,6 @@
 package vezerloOsztalyok;
 
+import alapOsztalyok.Dealer;
 import vezerloOsztalyok.szalak.JatekVezerlo;
 import alapOsztalyok.Felho;
 import alapOsztalyok.Jatekos;
@@ -22,8 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import vezerloOsztalyok.szalak.FelhoMozgato;
 import vezerloOsztalyok.szalak.KartyaMozgato;
@@ -36,6 +35,7 @@ public class SzalVezerlo {
     private List<Jatekos> jatekosok;
     private List<Korong> korongok;
     private Map<Byte, List<Kartyalap>> jatekosokKartyalapjai;
+    private Map<Byte, List<Kartyalap>> kiszalltJatekosokKartyalapjai;
     private Map<Byte, List<Zseton>> jatekosokZsetonjai;    
     private Map<Byte, PokerKez> nyertesPokerKezek;
     private List<Zseton> pot;
@@ -44,6 +44,7 @@ public class SzalVezerlo {
     private JatekVezerlo jatekVezerlo;
     private Vak kisVak;
     private Vak nagyVak;
+    private Dealer dealer;
     private final Image keveresAnimacio;
     private ZsetonMozgato zsetonMozgato;
     private KartyaMozgato kartyaMozgato;
@@ -54,11 +55,13 @@ public class SzalVezerlo {
         keveresAnimacio = new ImageIcon(this.getClass().getResource("/adatFajlok/kartyaPakli/keveresAnimacio.gif")).getImage();
         /*A vakok értékét majd valamilyen beállított értékből fogja lekérni.*/
         kisVak = new Vak(new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/small_blind.png")).getImage(), 
-                         new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/small_blind.png")).getImage());
+                         new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/small_blind_blur.png")).getImage());
         kisVak.setErtek(5);
         nagyVak = new Vak(new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/big_blind.png")).getImage(), 
-                          new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/big_blind.png")).getImage());
+                          new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/big_blind_blur.png")).getImage());
         nagyVak.setErtek(10);
+        dealer = new Dealer(new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/dealer.png")).getImage(), 
+                            new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/dealer_blur.png")).getImage());
     } 
 
     /**
@@ -73,12 +76,24 @@ public class SzalVezerlo {
                 kartyalap.rajzol(g2D, jatekterPanel);
             }
         } else {
-            g2D.drawImage(keveresAnimacio, (int)aranytSzamol(2.286), (int)aranytSzamol(2.143, 'y'), (int)aranytSzamol(8), (int)aranytSzamol(16, 'y'), jatekterPanel);
+            g2D.drawImage(keveresAnimacio, (int) aranytSzamol(2.286), (int) aranytSzamol(2.143, 'y'), (int) aranytSzamol(8), (int) aranytSzamol(16, 'y'), jatekterPanel);
         }
-        
-        if(jatekosokKartyalapjai != null){
+
+        if (jatekosokKartyalapjai != null) {
             List<Kartyalap> jatekosKartyalapok;
+            
             for (Map.Entry<Byte, List<Kartyalap>> entry : jatekosokKartyalapjai.entrySet()) {
+                jatekosKartyalapok = entry.getValue();
+                for (Kartyalap kartyalap : jatekosKartyalapok) {
+                    kartyalap.rajzol(g2D, jatekterPanel);
+                }
+            }
+        }
+
+        if (kiszalltJatekosokKartyalapjai != null) {
+            List<Kartyalap> jatekosKartyalapok;
+            
+            for (Map.Entry<Byte, List<Kartyalap>> entry : kiszalltJatekosokKartyalapjai.entrySet()) {
                 jatekosKartyalapok = entry.getValue();
                 for (Kartyalap kartyalap : jatekosKartyalapok) {
                     kartyalap.rajzol(g2D, jatekterPanel);
@@ -175,13 +190,25 @@ public class SzalVezerlo {
         
         for (Map.Entry<Byte, List<Kartyalap>> entrySet : jatekosokKartyalapjai.entrySet()) {
             List<Kartyalap> jatekosKartyalapjai = entrySet.getValue();
+
             for (Kartyalap kartyalap : jatekosKartyalapjai) {
                 kartyalap.setElmosas(elmosas);
             }
         }
         
+        if (kiszalltJatekosokKartyalapjai != null) {
+            for (Map.Entry<Byte, List<Kartyalap>> entrySet : kiszalltJatekosokKartyalapjai.entrySet()) {
+                List<Kartyalap> jatekosKartyalapjai = entrySet.getValue();
+
+                for (Kartyalap kartyalap : jatekosKartyalapjai) {
+                    kartyalap.setElmosas(elmosas);
+                }
+            }
+        }
+
         for (Map.Entry<Byte, List<Zseton>> entrySet : jatekosokZsetonjai.entrySet()) {
             List<Zseton> zsetonok = entrySet.getValue();
+
             for (Zseton zseton : zsetonok) {
                 zseton.setElmosas(elmosas);
             }
@@ -275,7 +302,7 @@ public class SzalVezerlo {
      */
     public void kartyalapokLeosztSzalIndit(){
         kartyaMozgato = new KartyaMozgato(this);
-        kartyaMozgato.setKartyalapLeosztas(true);
+        kartyaMozgato.setKartyalapLeosztasa(true);
         kartyaMozgato.start();
     }
     
@@ -320,6 +347,24 @@ public class SzalVezerlo {
         felho.setFelhoKepMagassag(felhoKepMagassag);
         felhoMozgato = new FelhoMozgato(this);
         felhoMozgato.start();
+    }    
+    
+    /**
+     * Megkeresi a nyertes játékosokat és elindítja az ehez tartozó animációkat.
+     */
+    public void nyertesJatekosKeres(){ 
+        kartyaMozgato = new KartyaMozgato(this);
+        kartyaMozgato.setOsszesKartyalapLeosztasa(true);
+        kartyaMozgato.setKartyalapLeosztasa(true);
+        kartyaMozgato.setKartyalapokKiertekelese(true);
+        
+        zsetonMozgato = new ZsetonMozgato(this);
+        zsetonMozgato.setPotMozgatasa(true);               
+        
+        ExecutorService executor = Executors.newFixedThreadPool(1);  
+        executor.submit(kartyaMozgato);
+        executor.submit(zsetonMozgato);
+        executor.shutdown();
     }
     
     /**
@@ -351,7 +396,9 @@ public class SzalVezerlo {
      * @param kartyalap 
      */
     public void jatekosKartyalapokhozAd(byte sorszam, Kartyalap kartyalap) {        
-        if(jatekosokKartyalapjai == null) jatekosokKartyalapjai = new ConcurrentHashMap<>();
+        if (jatekosokKartyalapjai == null) {
+            jatekosokKartyalapjai = new ConcurrentHashMap<>();
+        }
         if (jatekosokKartyalapjai.containsKey(sorszam)) {
             jatekosokKartyalapjai.get(sorszam).add(kartyalap);
         } else {
@@ -369,7 +416,15 @@ public class SzalVezerlo {
     public void pothozAd(List<Zseton> jatekosTetje) {
         pot.addAll(jatekosTetje);
     }
-
+    
+    public void jatekosKiszall(byte jatekosSorszam){
+        if (kiszalltJatekosokKartyalapjai == null) {
+            kiszalltJatekosokKartyalapjai = new ConcurrentHashMap<>();
+        }
+        
+        kiszalltJatekosokKartyalapjai.put(jatekosSorszam, jatekosokKartyalapjai.remove(jatekosSorszam));
+    }
+    
     public void vakokErtekeBeallit(int kisVakErtek, int nagyVakErtek){
         kisVak.setErtek(kisVakErtek);
         nagyVak.setErtek(nagyVakErtek);
@@ -417,17 +472,6 @@ public class SzalVezerlo {
         if((double)Math.round(10 * jatekterPanelSzelesseg() / jatekterPanelMagassag()) / 10 == 1.3) if(tengely == 'x')osztando = jatekterPanelSzelesseg();
                 else osztando = jatekterPanelMagassag();
         return osztando/ertek;
-    }
-    
-    public void nyertesJatekosKeres(){ 
-        kartyaMozgato = new KartyaMozgato(this);
-        kartyaMozgato.setOsszesKartyalapLeosztas(true);
-        kartyaMozgato.setKartyalapLeosztas(true);
-        kartyaMozgato.setKartyalapokKiertekelese(true);
-        
-        ExecutorService executor = Executors.newFixedThreadPool(1);  
-        executor.submit(kartyaMozgato);
-        executor.shutdown();
     }
     
     /**
@@ -559,6 +603,10 @@ public class SzalVezerlo {
         return jatekosokKartyalapjai;
     }
 
+    public Map<Byte, List<Kartyalap>> getKiszalltJatekosokKartyalapjai() {
+        return kiszalltJatekosokKartyalapjai;
+    }
+
     public List<Kartyalap> getLeosztottKartyalapok() {
         return leosztottKartyalapok;
     }
@@ -600,6 +648,10 @@ public class SzalVezerlo {
 
     public Vak getNagyVak() {
         return nagyVak;
+    }
+
+    public Dealer getDealer() {
+        return dealer;
     }
 
     public Felho getFelho() {

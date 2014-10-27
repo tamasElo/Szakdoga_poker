@@ -114,15 +114,16 @@ public class JatekterPanel extends JPanel{
         g2D.drawImage(kep, 0, 0, this.getWidth(), this.getHeight(), this);
         
         if (szalVezerlo != null) {
-            szalVezerlo.jatekosokRajzol(g2D);            
-            szalVezerlo.korongokRajzol(g2D);
+            szalVezerlo.jatekosokRajzol(g2D);    
             
             if (szalVezerlo.isKartyaGrafikaElore()) {
+                szalVezerlo.korongokRajzol(g2D);
                 szalVezerlo.zsetonokRajzol(g2D);
                 szalVezerlo.potRajzol(g2D);
                 szalVezerlo.kartyalapokRajzol(g2D);
             } else {
                 szalVezerlo.kartyalapokRajzol(g2D);
+                szalVezerlo.korongokRajzol(g2D);
                 szalVezerlo.zsetonokRajzol(g2D);
                 szalVezerlo.potRajzol(g2D);
             }
