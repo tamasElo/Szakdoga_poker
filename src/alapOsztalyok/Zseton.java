@@ -13,13 +13,8 @@ public class Zseton extends Korong implements Comparable<Zseton>{
 
     @Override
     public boolean equals(Object o) {
-        Zseton zseton = (Zseton) o;
-        
-        if (this.ertek == zseton.getErtek()) {
-            return true;
-        } else {
-            return false;
-        }
+        Zseton zseton = (Zseton) o;        
+        return o instanceof Zseton && this.ertek == zseton.getErtek();
     }
 
     @Override

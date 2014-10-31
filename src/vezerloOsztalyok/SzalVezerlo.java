@@ -359,7 +359,7 @@ public class SzalVezerlo {
         kartyaMozgato.setKartyalapokKiertekelese(true);
         
         zsetonMozgato = new ZsetonMozgato(this);
-        zsetonMozgato.setPotMozgatasa(true);               
+        zsetonMozgato.setPotNyertesekhezMozgatasa(true);               
         
         ExecutorService executor = Executors.newFixedThreadPool(1);  
         executor.submit(kartyaMozgato);

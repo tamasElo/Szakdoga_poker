@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 public final class ZsetonKezelo {
     private static byte[] aranySzamok;
     private static List<Zseton> zsetonLista;
+    private static final byte[] zsetonErtekek = {100, 25, 10, 5, 1};
     
     private ZsetonKezelo(){};
     
@@ -19,8 +20,7 @@ public final class ZsetonKezelo {
      * @return 
      */
      public static List<Zseton> zsetonKioszt(int osszeg) {
-         zsetonLista = new CopyOnWriteArrayList<>();         
-         byte[] zsetonErtekek = {100, 25, 10, 5, 1};
+         zsetonLista = new CopyOnWriteArrayList<>();        
          int maradek;
          int hanyados;
          int arany;
@@ -124,15 +124,17 @@ public final class ZsetonKezelo {
         return potZsetonok;
     }
     
+    
+    
     /**
-     * Visszaadja a játékos zsetonjainak összegét.
+     * Visszaadja a zsetonok összegét.
      * 
-     * @param jatekosZsetonok
+     * @param zsetonok
      * @return 
      */
-    public synchronized static int zsetonokOsszege(List<Zseton> jatekosZsetonok){
+    public synchronized static int zsetonokOsszege(List<Zseton> zsetonok){
         int osszeg = 0;
-        for (Zseton zseton : jatekosZsetonok) {
+        for (Zseton zseton : zsetonok) {
             osszeg += zseton.getErtek();
         }
         return osszeg;

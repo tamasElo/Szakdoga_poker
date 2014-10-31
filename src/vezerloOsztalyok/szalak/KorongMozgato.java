@@ -3,11 +3,9 @@ package vezerloOsztalyok.szalak;
 import vezerloOsztalyok.SzalVezerlo;
 import alapOsztalyok.Dealer;
 import alapOsztalyok.Korong;
-import alapOsztalyok.Vak;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.ImageIcon;
 import vezerloOsztalyok.SzogSzamito;
 
 public class KorongMozgato extends Thread{

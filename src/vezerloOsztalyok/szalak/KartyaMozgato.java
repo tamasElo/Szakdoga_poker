@@ -389,6 +389,7 @@ public class KartyaMozgato extends Thread{
         elteres = jatekterSzelesseg * 0.046875; 
         ido = 12;
         double arany = 0;
+        Kartyalap leosztottKartyalap;
         
         szalVezerlo.grafikaElmosas(true);
         szalVezerlo.setKartyaGrafikaElore(true);
@@ -430,22 +431,22 @@ public class KartyaMozgato extends Thread{
             byte szorzo = 2;
             
             for (byte i = 0; i < leosztottKartyalapok.size(); i++) {
-                Kartyalap kartyalap = leosztottKartyalapok.get(i);
+                leosztottKartyalap = leosztottKartyalapok.get(i);
                 if (i < 2) {
-                    kartyalap.setKx(kartyalap.getKx() - lepes * arany * szorzo);
+                    leosztottKartyalap.setKx(leosztottKartyalap.getKx() - lepes * arany * szorzo);
                     szorzo--;
                 } else if (i > 2) {
                     szorzo++;
-                    kartyalap.setKx(kartyalap.getKx() + lepes * arany * szorzo);
+                    leosztottKartyalap.setKx(leosztottKartyalap.getKx() + lepes * arany * szorzo);
                 }
                 
-                aktKartyaKepSzelesseg = kartyalap.getKartyaKepSzelesseg();
-                aktKartyaKepMagassag = kartyalap.getKartyaKepMagassag();
+                aktKartyaKepSzelesseg = leosztottKartyalap.getKartyaKepSzelesseg();
+                aktKartyaKepMagassag = leosztottKartyalap.getKartyaKepMagassag();
                 arany = aktKartyaKepSzelesseg / aktKartyaKepMagassag;
                 aktKartyaKepSzelesseg += lepes * arany;
                 aktKartyaKepMagassag += lepes;
-                kartyalap.setKartyaKepSzelesseg(aktKartyaKepSzelesseg);
-                kartyalap.setKartyaKepMagassag(aktKartyaKepMagassag);
+                leosztottKartyalap.setKartyaKepSzelesseg(aktKartyaKepSzelesseg);
+                leosztottKartyalap.setKartyaKepMagassag(aktKartyaKepMagassag);
             }
 
             szalVezerlo.frissit();
@@ -526,6 +527,8 @@ public class KartyaMozgato extends Thread{
         
         try {           
             while (kartyalapokVegpontban != mozgatandoKartyalapok.size()) {
+                kartyalapokVegpontban = 0;
+                
                 for (Kartyalap kartyalap : mozgatandoKartyalapok) {
                     if (kartyalap.isMutat()) {
                         kartyalap.setMutat(false);
@@ -543,7 +546,6 @@ public class KartyaMozgato extends Thread{
                     if (lepes >= tavolsag) {
                         kartyalapokVegpontban++;
                     } else {
-                        kartyalapokVegpontban = 0;
                         kartyalap.setKx(aktx);
                         kartyalap.setKy(akty);
                     }
@@ -604,7 +606,7 @@ public class KartyaMozgato extends Thread{
         if (kartyalapokKiertekelese) {
             kartyalapokNagyit();
             keretAnimacio();
-            kartyalapokPakliba();    
+            kartyalapokPakliba();
         }
         
         if(kartyalapokBedobasa)kartyalapokBedob();
