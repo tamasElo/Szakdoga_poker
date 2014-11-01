@@ -6,8 +6,11 @@ import alapOsztalyok.Zseton;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -147,8 +150,8 @@ public class ZsetonMozgato extends Thread {
         
         for (Zseton zseton : jatekosTetje) { 
             szoras = -jatekterSzelesseg / 800 + Math.random() * jatekterSzelesseg / 400;
-            x = 950;
-            y = 750;      
+            x = jatekterSzelesseg * 0.59375;
+            y = jatekterSzelesseg * 0.46875;      
             potZsetonPoziciok(zseton.getErtek());
             x += elteres * Math.cos(Math.toRadians(szog)) + szoras;
             y += elteres * Math.sin(Math.toRadians(szog)) + szoras;
@@ -196,82 +199,96 @@ public class ZsetonMozgato extends Thread {
      */
     @SuppressWarnings("SleepWhileInLoop")
     private void potNyertesekhezMozgat() {
-        jatekosSorszam = 1;
-        List<Point> vegPontok = new ArrayList<>();               
+        List<Point> vegPontok = new ArrayList<>();
         List<Zseton> pot = szalVezerlo.getPot();
-        List<Zseton> jatekosZsetonjai = szalVezerlo.getJatekosokZsetonjai().get(jatekosSorszam);
-        List<Byte> jatekosSorszamok = new ArrayList<>();
+        List<Zseton> jatekosZsetonjai;
         Map<Byte, PokerKez> nyertesek = szalVezerlo.getNyertesPokerKezek();
-        
-        for (Map.Entry<Byte, PokerKez> entrySet : nyertesek.entrySet()) {
-            Byte key = entrySet.getKey();
-            jatekosSorszamok.add(key);            
-        }
-                
-        for (Zseton zseton : pot) { 
-            szoras = -jatekterSzelesseg / 800 + Math.random() * jatekterSzelesseg / 400;
-            x = vegpontLista.get(jatekosSorszam).x;
-            y = vegpontLista.get(jatekosSorszam).y;
-            szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y) + 90;
-            elteres = jatekterMagassag / 8;
-            x += elteres * Math.cos(Math.toRadians(szog));
-            y += elteres * Math.sin(Math.toRadians(szog));
-            vegpont = SzogSzamito.vegpontSzamit(SzogSzamito.foSzogSzamit(jatekterSzelesseg, jatekterMagassag, x, y), jatekterSzelesseg, jatekterMagassag);//kiszámolja az új végontot.
-            elteres = jatekterMagassag / 30;
-            x = vegpont.x + elteres * Math.cos(Math.toRadians(SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y)));
-            y = vegpont.y + elteres * Math.sin(Math.toRadians(SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y)));
-            szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y);            
-            jatekosZsetonPoziciok(zseton.getErtek());            
-            x += elteres * Math.cos(Math.toRadians(szog)) + szoras;
-            y += elteres * Math.sin(Math.toRadians(szog)) + szoras;
-            vegPontok.add(new Point((int)x, (int)y));
+        List<Byte> nyertesJatekosSroszamok = new ArrayList<>(nyertesek.keySet());
+        Map<Byte, List<Zseton>> szetvalogatottZsetonok = ZsetonKezelo.potSzetvalogat((byte) nyertesJatekosSroszamok.size(), pot);
+
+        if (nyertesek.size() < szetvalogatottZsetonok.size()) {
+            byte utolsoJatekosSorszam = nyertesJatekosSroszamok.get(nyertesJatekosSroszamok.size() - 1);
+            byte potNyertesJatekosSorszam;
+            boolean nyertesTalalat = false;
+            Set<Byte> korbenLevoJatekosSorszamok = szalVezerlo.getJatekosokKartyalapjai().keySet();
+
+            while (!nyertesTalalat) {
+                potNyertesJatekosSorszam = ++utolsoJatekosSorszam == jatekosokSzama ? 0 : utolsoJatekosSorszam;
+
+                for (Byte sorszam : korbenLevoJatekosSorszamok) {
+                    if (sorszam == potNyertesJatekosSorszam) {
+                        nyertesJatekosSroszamok.add(potNyertesJatekosSorszam);
+                        nyertesTalalat = true;
+                    }
+                }
+            }
         }
         
-        long ido = 5;
-        Zseton zseton;
-        int lastIndex;
-        
-        while(!pot.isEmpty()){
-            for (int i = 0; i < pot.size(); i++) {
-                zseton = pot.get(i);
-                kx = zseton.getKx();
-                ky = zseton.getKy();
-                vx = vegPontok.get(i).getX();
-                vy = vegPontok.get(i).getY();
-                tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
-                szog = Math.atan2(vy - ky, vx - kx);
-                aktx = kx + lepes * Math.cos(szog);
-                akty = ky + lepes * Math.sin(szog);
-                
-                if (lepes >= tavolsag) {
-                    
-                    
+        for (Byte sorszam : nyertesJatekosSroszamok) {
+            jatekosZsetonjai = szalVezerlo.getJatekosokZsetonjai().get(sorszam);
+            for (Zseton zseton : pot) {
+                szoras = -jatekterSzelesseg / 800 + Math.random() * jatekterSzelesseg / 400;
+                x = vegpontLista.get(sorszam).x;
+                y = vegpontLista.get(sorszam).y;
+                szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y) + 90;
+                elteres = jatekterMagassag / 8;
+                x += elteres * Math.cos(Math.toRadians(szog));
+                y += elteres * Math.sin(Math.toRadians(szog));
+                vegpont = SzogSzamito.vegpontSzamit(SzogSzamito.foSzogSzamit(jatekterSzelesseg, jatekterMagassag, x, y), jatekterSzelesseg, jatekterMagassag);//kiszámolja az új végontot.
+                elteres = jatekterMagassag / 30;
+                x = vegpont.x + elteres * Math.cos(Math.toRadians(SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y)));
+                y = vegpont.y + elteres * Math.sin(Math.toRadians(SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y)));
+                szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y);
+                jatekosZsetonPoziciok(zseton.getErtek());
+                x += elteres * Math.cos(Math.toRadians(szog)) + szoras;
+                y += elteres * Math.sin(Math.toRadians(szog)) + szoras;
+                vegPontok.add(new Point((int) x, (int) y));
+            }
+
+            long ido = 3;
+            Zseton zseton;
+            int lastIndex;
+
+            while (!pot.isEmpty()) {
+                for (int i = 0; i < pot.size(); i++) {
+                    zseton = pot.get(i);
+                    kx = zseton.getKx();
+                    ky = zseton.getKy();
+                    vx = vegPontok.get(i).getX();
+                    vy = vegPontok.get(i).getY();
+                    tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
+                    szog = Math.atan2(vy - ky, vx - kx);
+                    aktx = kx + lepes * Math.cos(szog);
+                    akty = ky + lepes * Math.sin(szog);
+
+                    if (lepes >= tavolsag) {
+
                         lastIndex = jatekosZsetonjai.lastIndexOf(zseton);
                         vegPontok.remove(i);
-                        
+
                         if (lastIndex != -1) {
                             jatekosZsetonjai.add(lastIndex, pot.remove(i));
                         } else {
                             jatekosZsetonjai.add(pot.remove(i));
                         }
-                        
+
                         i--;
-                    
-                } else {
-                    zseton.setKx(aktx);
-                    zseton.setKy(akty);
+                    } else {
+                        zseton.setKx(aktx);
+                        zseton.setKy(akty);
+                    }
+                }
+
+                szalVezerlo.frissit();
+
+                try {
+                    sleep(ido);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(ZsetonMozgato.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            
-            szalVezerlo.frissit();
-            
-            try {
-                sleep(ido);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ZsetonMozgato.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
-    }    
+    }
     
     /**
      * Beállítja a játékosokhoz tartozó zsetonok elhelyezkedését.
@@ -311,11 +328,11 @@ public class ZsetonMozgato extends Thread {
     private void potZsetonPoziciok(byte zsetonErtek) {
         switch (zsetonErtek) {
             case 1:
-                elteres = 40;
+                elteres = jatekterSzelesseg/40;
                 szog = 225;
                 break;
             case 5:
-                elteres = 40;
+                elteres = jatekterSzelesseg/40;
                 szog = 135;
                 break;
             case 10:
@@ -323,11 +340,11 @@ public class ZsetonMozgato extends Thread {
                 szog = 0;
                 break;
             case 25:
-                elteres = 40;
+                elteres = jatekterSzelesseg/40;
                 szog = 45;
                 break;
             case 100:
-                elteres = 40;
+                elteres = jatekterSzelesseg/40;
                 szog = 315;
         }
     }

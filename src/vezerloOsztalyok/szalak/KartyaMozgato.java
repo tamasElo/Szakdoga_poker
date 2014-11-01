@@ -481,8 +481,8 @@ public class KartyaMozgato extends Thread{
                         kartyalap.setKeretRajzol(true);
                     }
 
-                    keretKepSzelesseg = kartyalap.getKartyaKepSzelesseg() + Math.sin(ertek) * 25;
-                    keretKepMagassag = kartyalap.getKartyaKepMagassag() + Math.sin(ertek) * 25;
+                    keretKepSzelesseg = kartyalap.getKartyaKepSzelesseg() + Math.sin(ertek) * jatekterSzelesseg/64;
+                    keretKepMagassag = kartyalap.getKartyaKepMagassag() + Math.sin(ertek) * jatekterSzelesseg/64;
                     kartyalap.setKeretKepSzelesseg(keretKepSzelesseg);
                     kartyalap.setKeretKepMagassag(keretKepMagassag);
                 }

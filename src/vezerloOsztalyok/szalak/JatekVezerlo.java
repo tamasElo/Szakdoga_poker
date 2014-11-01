@@ -60,12 +60,7 @@ public class JatekVezerlo extends Thread{
             allInSzamlalo = 0;
             szalVezerlo.korongokMozgatSzalIndit(dealerJatekosSorszam);
             szalVezerlo.kartyalapokKiosztSzalIndit(dealerJatekosSorszam); 
-            megallit();                    
-            try {
-                sleep(ido);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(JatekVezerlo.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            megallit();            
             lehetosegekBeallit();
             ujkorIndit = false;
     }
@@ -153,17 +148,8 @@ public class JatekVezerlo extends Thread{
      * A következő játékosra lép.
      */
     public void kovetkezoJatekos() {
-        try {
-            sleep(ido);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(JatekVezerlo.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
         jatekosAllapotEllenorzes();
-
-        if (!korVege) {
-            lehetosegekBeallit();
-        }        
+        lehetosegekBeallit();
     }
     
     /**
@@ -270,11 +256,11 @@ public class JatekVezerlo extends Thread{
         allInSzamlalo++;
         szalVezerlo.felhoSzalIndit("All in", jatekosSorszam);
         
-        if (aktivJatekosokSzama > 0) {
-            folytat();
-        } else {
-            korVege();
+        if (aktivJatekosokSzama == 0) {               
+            korVege = true;
         }
+        
+        folytat();
     }
         
     /**
@@ -289,13 +275,13 @@ public class JatekVezerlo extends Thread{
         szalVezerlo.jatekosKiszall(jatekosSorszam);
         szalVezerlo.kartyalapokBedobSzalIndit(jatekosSorszam);
         
-        if (aktivJatekosokSzama > 1) {
-            folytat();
-        } else if (aktivJatekosokSzama > 0 && allInSzamlalo > 0){
-            folytat();
-        } else {
-            korVege();
+        if (aktivJatekosokSzama == 1 && allInSzamlalo == 0) {
+            korVege = true;
+        } else if (aktivJatekosokSzama == 0) {
+            korVege = true;
         }
+
+        folytat();
     }
     
     /**
@@ -303,14 +289,14 @@ public class JatekVezerlo extends Thread{
      * számával akkor az ujLicitkor() metódust hívja meg.
      */
     private void licitSzamlaloLeptet(){
-        if(++licitSzamlalo == jatekosokSzama) ujLicitkor();
+        if (++licitSzamlalo == jatekosokSzama) ujLicitkor();
     }
     
     /**
      * Elindít egy új licit kört. Ha a leosztott kártyalapok száma 5 akkor
      * meghívja a korVege() metódust.
      */
-    private void ujLicitkor(){
+    private void ujLicitkor(){              
         jatekosSorszam = kisVakJatekosSorszam;
         
         if (szalVezerlo.leosztottKartyalapokSzama() < LEOSZTHATO_KARTYALAPOK_SZAMA) {
@@ -340,15 +326,22 @@ public class JatekVezerlo extends Thread{
      * Felébreszti a szálat.
      */
     public synchronized void folytat(){
-        notify();
+        notify();     
     }
     
     @Override
     public void run() {
         while(true){
             if(ujkorIndit)ujKor();
+            else if(korVege) korVege();
             else kovetkezoJatekos();
-            megallit();
+            megallit();{
+            try {
+                sleep(ido);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(JatekVezerlo.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         }        
     }
 

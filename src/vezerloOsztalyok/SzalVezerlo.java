@@ -17,12 +17,15 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import vezerloOsztalyok.szalak.FelhoMozgato;
 import vezerloOsztalyok.szalak.KartyaMozgato;
@@ -359,7 +362,7 @@ public class SzalVezerlo {
         kartyaMozgato.setKartyalapokKiertekelese(true);
         
         zsetonMozgato = new ZsetonMozgato(this);
-        zsetonMozgato.setPotNyertesekhezMozgatasa(true);               
+        zsetonMozgato.setPotNyertesekhezMozgatasa(true); 
         
         ExecutorService executor = Executors.newFixedThreadPool(1);  
         executor.submit(kartyaMozgato);
@@ -415,6 +418,7 @@ public class SzalVezerlo {
      */
     public void pothozAd(List<Zseton> jatekosTetje) {
         pot.addAll(jatekosTetje);
+        Collections.sort(pot);
     }
     
     public void jatekosKiszall(byte jatekosSorszam){

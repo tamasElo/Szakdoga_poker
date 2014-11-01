@@ -1,8 +1,11 @@
 package vezerloOsztalyok;
 
 import alapOsztalyok.Zseton;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.ImageIcon;
 
@@ -70,6 +73,7 @@ public final class ZsetonKezelo {
                 }
             }
         }
+        
         Collections.sort(zsetonLista);
         return zsetonLista;
     }
@@ -84,7 +88,8 @@ public final class ZsetonKezelo {
      */
     public synchronized static List<Zseton> pot(List<Zseton> jatekosZsetonok, int osszeg){
         int osszeg2;
-        List<Zseton> potZsetonok = new CopyOnWriteArrayList<>();        
+        List<Zseton> potZsetonok = new CopyOnWriteArrayList<>();  
+        List<Zseton> maradek = new CopyOnWriteArrayList<>();
         aranySzamok = new byte[] {1, 1, 1, 1, 1};//Ez azért kell mert ennek az új arányosságnak megfelelően bontja fel a zsetonkioszt metódus az összeget.
         
         zsetonKioszt(osszeg);
@@ -124,7 +129,69 @@ public final class ZsetonKezelo {
         return potZsetonok;
     }
     
-    
+    /**
+     * Szétosztja a potban lévő zsetonokat a nyertes játékosok között.
+     * 
+     * @param nyertesekSzama
+     * @param pot
+     * @return 
+     */
+    public static Map<Byte, List<Zseton>> potSzetvalogat(byte nyertesekSzama, List<Zseton> pot){ 
+        Map<Byte, List<Zseton>> szetvalogatottZsetonok = new HashMap<>();
+        List<Zseton> egyformaZsetonok = new CopyOnWriteArrayList<>();   
+        List<Zseton> maradekZsetonok = new CopyOnWriteArrayList<>();
+        Zseton keresendoZseton;
+        Zseton zseton;     
+        byte zsetonErtek;     
+        int osszegek[] = new int[nyertesekSzama];      
+        zsetonLista = new ArrayList<>(pot);
+        
+        for (int i = 0; i < nyertesekSzama; i++) {
+            osszegek[i] = zsetonokOsszege(zsetonLista) / nyertesekSzama; //felosztja a pot összegét arányos értékekre.
+        }        
+
+        while (!zsetonLista.isEmpty()) {            
+            keresendoZseton = zsetonLista.get(zsetonLista.size()-1); //A zsetonlista utolsó elemét beállítja keresendő zsetonnak.
+            zsetonErtek = keresendoZseton.getErtek();
+            
+            for (int i = 0; i < zsetonLista.size(); i++) {
+                zseton = zsetonLista.get(i);
+                if (zseton.equals(keresendoZseton)) {
+                    egyformaZsetonok.add(zseton);
+                }
+            }
+            
+            zsetonLista.removeAll(egyformaZsetonok); //Kitörli a zsetonlistából az aktuálisan megkeresett értékű egyforma zsetonokat.
+
+            for (int i = 0; i < egyformaZsetonok.size(); i++) {
+                for (byte j = 0; j < nyertesekSzama; j++) {                    
+                    if (osszegek[j] / zsetonErtek != 0 && !egyformaZsetonok.isEmpty()) {
+                        if (szetvalogatottZsetonok.containsKey(j)) {
+                            szetvalogatottZsetonok.get(j).add(egyformaZsetonok.remove(0));
+                        } else {
+                            List<Zseton> jatekosZsetonok = new CopyOnWriteArrayList<>();
+                            jatekosZsetonok.add(egyformaZsetonok.remove(0));
+                            szetvalogatottZsetonok.put(j, jatekosZsetonok);
+                        }
+                        
+                        osszegek[j] -= zsetonErtek;
+                        i = -1;
+                    }
+                }          
+            }
+            
+            if (!egyformaZsetonok.isEmpty()) {
+                maradekZsetonok.addAll(egyformaZsetonok);
+                egyformaZsetonok.clear();
+            }
+        }
+        
+        if (!maradekZsetonok.isEmpty()) {
+            szetvalogatottZsetonok.put(++nyertesekSzama, maradekZsetonok);
+        }
+        
+        return szetvalogatottZsetonok;
+    }
     
     /**
      * Visszaadja a zsetonok összegét.
