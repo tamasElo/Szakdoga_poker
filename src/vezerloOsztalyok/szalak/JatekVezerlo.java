@@ -41,7 +41,6 @@ public class JatekVezerlo extends Thread{
         jatekosokTetje = new int[jatekosokSzama];
         dealerJatekosSorszam = (byte) (Math.random() * jatekosokSzama);
         mi = new Mi();     
-        aktivJatekosokSzama = 5;
         korOszto = 10;
         ido = 1000;
         ujkorIndit = true;
@@ -51,39 +50,34 @@ public class JatekVezerlo extends Thread{
     /**
      * Elindít egy új kört.
      */
-    private void ujKor() {      
+    private void ujKor() {  
             korokSzama++;
-            szalVezerlo.jatekosokAktival();
-            jatekosSorszamokBeallit();
-            vakokErtekeBeallit();
+            szalVezerlo.jatekosokAktival();     
+            aktivJatekosokSzama = szalVezerlo.aktivJatekosokKeres();
+            jatekosSorszamokBeallit();           
             osszeg = nagyVakErtek;  
             allInSzamlalo = 0;
+            licitSzamlalo = 0;
             szalVezerlo.korongokMozgatSzalIndit(dealerJatekosSorszam);
             szalVezerlo.kartyalapokKiosztSzalIndit(dealerJatekosSorszam); 
-            megallit();            
+            szalVezerlo.ujPot();
+            megallit();     
+            vakokErtekeBeallit();
             lehetosegekBeallit();
             ujkorIndit = false;
     }
     
     /**
-     * Beállítja a kisvak, nagyvak, dealer és az aktuális játékos sorszámát
-     * az új kör indításakor.
+     * Beállítja a kisvak, nagyvak, dealer és az aktuális aktív játékos sorszámát
+     * rekurzió segítségével az új kör indításakor.
      */
     private void jatekosSorszamokBeallit(){
         byte eltolas = 1;
-        
-        if(++dealerJatekosSorszam == jatekosokSzama) dealerJatekosSorszam = 0;
-        
-        if(dealerJatekosSorszam + eltolas == jatekosokSzama)kisVakJatekosSorszam = 0;
-        else kisVakJatekosSorszam = (byte) (dealerJatekosSorszam + eltolas);          
-               
-        if(kisVakJatekosSorszam + eltolas == jatekosokSzama)nagyVakJatekosSorszam = 0;
-        else if(kisVakJatekosSorszam + eltolas > jatekosokSzama)nagyVakJatekosSorszam = (byte) ((kisVakJatekosSorszam + eltolas)-jatekosokSzama);
-        else nagyVakJatekosSorszam = (byte) (kisVakJatekosSorszam + eltolas);
-        
-        if(nagyVakJatekosSorszam + eltolas == jatekosokSzama)jatekosSorszam = 0;
-        else if(nagyVakJatekosSorszam + eltolas > jatekosokSzama)jatekosSorszam = (byte) ((nagyVakJatekosSorszam + eltolas)-jatekosokSzama);
-        else jatekosSorszam = (byte) (nagyVakJatekosSorszam + eltolas);              
+        dealerJatekosSorszam += eltolas;
+        dealerJatekosSorszam = szalVezerlo.aktivJatekosSorszamKeres(dealerJatekosSorszam);
+        kisVakJatekosSorszam = szalVezerlo.aktivJatekosSorszamKeres((byte) (dealerJatekosSorszam + eltolas));
+        nagyVakJatekosSorszam = szalVezerlo.aktivJatekosSorszamKeres((byte) (kisVakJatekosSorszam + eltolas));
+        jatekosSorszam = szalVezerlo.aktivJatekosSorszamKeres((byte) (nagyVakJatekosSorszam + eltolas));        
     }
     
     /**
@@ -179,7 +173,8 @@ public class JatekVezerlo extends Thread{
     
     private void korVege(){ 
         szalVezerlo.nyertesJatekosKeres();
-        korVege = true;
+        korVege = false;
+        ujkorIndit = true;
     }
     
     /**
@@ -331,18 +326,25 @@ public class JatekVezerlo extends Thread{
     
     @Override
     public void run() {
-        while(true){
-            if(ujkorIndit)ujKor();
-            else if(korVege) korVege();
-            else kovetkezoJatekos();
-            megallit();{
-            try {
-                sleep(ido);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(JatekVezerlo.class.getName()).log(Level.SEVERE, null, ex);
+        while (true) {
+            if (ujkorIndit) {
+                ujKor();
+            } else if (korVege) {
+                korVege();
+            } else {
+                kovetkezoJatekos();
+            }
+            
+            megallit();
+            
+            {
+                try {
+                    sleep(ido);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(JatekVezerlo.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
-        }        
     }
 
     public boolean isNyithat() {

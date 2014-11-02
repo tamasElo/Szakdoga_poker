@@ -223,13 +223,21 @@ public class ZsetonMozgato extends Thread {
                 }
             }
         }
-        
-        for (Byte sorszam : nyertesJatekosSroszamok) {
-            jatekosZsetonjai = szalVezerlo.getJatekosokZsetonjai().get(sorszam);
-            for (Zseton zseton : pot) {
+
+        long ido = 3;
+        Zseton aktZseton;
+        int lastIndex;
+        List<Zseton> jatekosZsetonNyeremeny;
+
+        for (byte i = 0; i < nyertesJatekosSroszamok.size(); i++) {
+            jatekosSorszam = nyertesJatekosSroszamok.get(i);
+            jatekosZsetonjai = szalVezerlo.getJatekosokZsetonjai().get(jatekosSorszam);
+            jatekosZsetonNyeremeny = szetvalogatottZsetonok.get(i);
+
+            for (Zseton zseton : jatekosZsetonNyeremeny) {
                 szoras = -jatekterSzelesseg / 800 + Math.random() * jatekterSzelesseg / 400;
-                x = vegpontLista.get(sorszam).x;
-                y = vegpontLista.get(sorszam).y;
+                x = vegpontLista.get(jatekosSorszam).x;
+                y = vegpontLista.get(jatekosSorszam).y;
                 szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y) + 90;
                 elteres = jatekterMagassag / 8;
                 x += elteres * Math.cos(Math.toRadians(szog));
@@ -245,17 +253,13 @@ public class ZsetonMozgato extends Thread {
                 vegPontok.add(new Point((int) x, (int) y));
             }
 
-            long ido = 3;
-            Zseton zseton;
-            int lastIndex;
-
-            while (!pot.isEmpty()) {
-                for (int i = 0; i < pot.size(); i++) {
-                    zseton = pot.get(i);
-                    kx = zseton.getKx();
-                    ky = zseton.getKy();
-                    vx = vegPontok.get(i).getX();
-                    vy = vegPontok.get(i).getY();
+            while (!jatekosZsetonNyeremeny.isEmpty()) {
+                for (int j = 0; j < jatekosZsetonNyeremeny.size(); j++) {
+                    aktZseton = jatekosZsetonNyeremeny.get(j);
+                    kx = aktZseton.getKx();
+                    ky = aktZseton.getKy();
+                    vx = vegPontok.get(j).getX();
+                    vy = vegPontok.get(j).getY();
                     tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
                     szog = Math.atan2(vy - ky, vx - kx);
                     aktx = kx + lepes * Math.cos(szog);
@@ -263,19 +267,19 @@ public class ZsetonMozgato extends Thread {
 
                     if (lepes >= tavolsag) {
 
-                        lastIndex = jatekosZsetonjai.lastIndexOf(zseton);
-                        vegPontok.remove(i);
+                        lastIndex = jatekosZsetonjai.lastIndexOf(aktZseton);
+                        vegPontok.remove(j);
 
                         if (lastIndex != -1) {
-                            jatekosZsetonjai.add(lastIndex, pot.remove(i));
+                            jatekosZsetonjai.add(lastIndex, jatekosZsetonNyeremeny.remove(j));
                         } else {
-                            jatekosZsetonjai.add(pot.remove(i));
+                            jatekosZsetonjai.add(jatekosZsetonNyeremeny.remove(j));
                         }
 
-                        i--;
+                        j--;
                     } else {
-                        zseton.setKx(aktx);
-                        zseton.setKy(akty);
+                        aktZseton.setKx(aktx);
+                        aktZseton.setKy(akty);
                     }
                 }
 
@@ -288,6 +292,8 @@ public class ZsetonMozgato extends Thread {
                 }
             }
         }
+        
+        szalVezerlo.jatekVezerlesFolytat();
     }
     
     /**

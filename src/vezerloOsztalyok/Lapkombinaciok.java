@@ -19,7 +19,8 @@ public final class Lapkombinaciok { //Azért final hogy ne lehessen belőle szá
     private static boolean azonossag;
     private static byte sorHossz;
     private static int vegIndex;
-    private static final int POKER_KEZ_KARTYALAPOK_SZAMA = 5;
+    private static final byte POKER_KEZ_KARTYALAPOK_SZAMA = 5;
+    private static int maxKartyalapokSzama;
     private static List<Kartyalap> leosztottKartyalapok;
     private static List<Kartyalap> jatekosKartyalapok;
     private static List<Kartyalap> szinKartyalapok;
@@ -232,7 +233,7 @@ public final class Lapkombinaciok { //Azért final hogy ne lehessen belőle szá
                 }
             }         
             
-            while (pokerKezKartyalapok.size() + kiseroKartyalapok.size() != POKER_KEZ_KARTYALAPOK_SZAMA) {
+            while (pokerKezKartyalapok.size() + kiseroKartyalapok.size() != maxKartyalapokSzama) {
                 if (pokerKezKartyalapok.contains(Collections.max(rendezettKartyalapok))) {
                     rendezettKartyalapok.remove(rendezettKartyalapok.size() - 1);
                 } else {
@@ -274,8 +275,9 @@ public final class Lapkombinaciok { //Azért final hogy ne lehessen belőle szá
      * @param kartyalapok 
      */
     private static void pokerKezListaba(List<Kartyalap> kartyalapok) {        
-        pokerKezKartyalapok.clear();
-        for (int i = vegIndex; i > vegIndex - POKER_KEZ_KARTYALAPOK_SZAMA; i--) {
+        pokerKezKartyalapok.clear();     
+        
+        for (int i = vegIndex; i > vegIndex - maxKartyalapokSzama; i--) {
             pokerKezKartyalapok.add(kartyalapok.get(i));
         }
     }
@@ -300,7 +302,9 @@ public final class Lapkombinaciok { //Azért final hogy ne lehessen belőle szá
         kiseroKartyalapok = new ArrayList<>();
         Lapkombinaciok.jatekosKartyalapok = jatekosKartyalapok;
         Lapkombinaciok.leosztottKartyalapok = leosztottKartyalapok;
-        
+        maxKartyalapokSzama = jatekosKartyalapok.size()+leosztottKartyalapok.size() < 5 ? 
+                              jatekosKartyalapok.size()+leosztottKartyalapok.size() : POKER_KEZ_KARTYALAPOK_SZAMA;
+         
         sorKeres();
         szinKeres();
         

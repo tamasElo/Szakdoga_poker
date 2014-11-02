@@ -6,14 +6,20 @@ import alapOsztalyok.Korong;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import vezerloOsztalyok.SzogSzamito;
 
 public class KorongMozgato extends Thread{
+    private static List<Point> vegpontLista;
     private static boolean korongokBetoltve;
+    private List<Korong> korongok;
     private byte dealerJatekosSorszam;    
     private int jatekterSzelesseg;
     private int jatekterMagassag;      
     private byte jatekosokSzama;
+    private double szog;
+    private double elteres;
     private SzalVezerlo szalVezerlo;
     
     public KorongMozgato(SzalVezerlo szalVezerlo){
@@ -24,13 +30,12 @@ public class KorongMozgato extends Thread{
     }
 
     private void korongokBetolt() {
-        List<Korong> korongok = new ArrayList<>();
-        List<Point> vegpontLista = SzogSzamito.vegpontLista(jatekosokSzama, jatekterSzelesseg, jatekterMagassag);        
+        korongok = new ArrayList<>();
+        vegpontLista = SzogSzamito.vegpontLista(jatekosokSzama, jatekterSzelesseg, jatekterMagassag);        
         double meret;
-        int i = dealerJatekosSorszam;
+        byte i = dealerJatekosSorszam;
         double x, y;
-        double szog;
-        int elteres = szalVezerlo.jatekterPanelSzelesseg()/16;
+        elteres = szalVezerlo.jatekterPanelSzelesseg()/16;
         double veletlenForgSzog;
         
         korongok.add(szalVezerlo.getDealer());
@@ -48,7 +53,7 @@ public class KorongMozgato extends Thread{
             }
             x = vegpontLista.get(i).x;
             y = vegpontLista.get(i).y;
-            szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y) + 140; //Kiszámolja hogy az adott x,y pozícióban lévő pont hány fokos szöget zár be. Ehhez a szöghöz hozzá ad még 130 fokot.
+            szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y) + 140; //Kiszámolja hogy az adott x,y pozícióban lévő pont hány fokos szöget zár be. Ehhez a szöghöz hozzá ad még 140 fokot.
             x += elteres * Math.cos(Math.toRadians(szog));//Az x koordináta pozícióját eltolja az elteres értékkel a megadott szög irányba.
             y += elteres * Math.sin(Math.toRadians(szog));
             korong.setKx(x);
@@ -57,13 +62,64 @@ public class KorongMozgato extends Thread{
             korong.setKorongKepSzelesseg(meret);
             korong.setForgat(veletlenForgSzog);
         }
+        
         szalVezerlo.setKorongok(korongok);
+        korongokBetoltve = true;
+    }
+
+    @SuppressWarnings("SleepWhileInLoop")
+    private void korongokMozgat() {
+        korongok = szalVezerlo.getKorongok();
+        elteres = szalVezerlo.jatekterPanelSzelesseg()/16;
+        double kx, ky, vx, vy, aktx, akty;
+        byte sorszam;
+        double foSzog;
+        double tavolsag;
+        double lepes = jatekterMagassag * 0.0025;
+        long ido = 3;        
+        byte korongokVegpontban = 0;
+        
+        while (korongokVegpontban != korongok.size()) {
+            korongokVegpontban = 0;
+            sorszam = dealerJatekosSorszam;
+            
+            for (Korong korong : korongok) {
+                kx = korong.getKx();
+                ky = korong.getKy();                
+                vx = vegpontLista.get(sorszam).getX();
+                vy = vegpontLista.get(sorszam).getY();                
+                sorszam = szalVezerlo.aktivJatekosSorszamKeres(++sorszam);                
+                szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, vx, vy) + 140;
+                vx += elteres * Math.cos(Math.toRadians(szog));
+                vy += elteres * Math.sin(Math.toRadians(szog));
+                tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
+                foSzog = Math.atan2(vy - ky, vx - kx);
+                aktx = kx + lepes * Math.cos(foSzog);
+                akty = ky + lepes * Math.sin(foSzog);
+                if (lepes >= tavolsag) {
+                    korongokVegpontban++;
+                } else {
+                    korong.setKx(aktx);
+                    korong.setKy(akty);
+                }
+            }
+      
+            try {
+                sleep(ido);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(KorongMozgato.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            szalVezerlo.frissit();
+        }
     }
 
     @Override
     public void run() {
         if (!korongokBetoltve) {
             korongokBetolt();
+        }else{
+            korongokMozgat();
         }
     }
 

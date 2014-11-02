@@ -140,28 +140,28 @@ public final class ZsetonKezelo {
         Map<Byte, List<Zseton>> szetvalogatottZsetonok = new HashMap<>();
         List<Zseton> egyformaZsetonok = new CopyOnWriteArrayList<>();   
         List<Zseton> maradekZsetonok = new CopyOnWriteArrayList<>();
+        List<Zseton> potMasolat = new ArrayList<>(pot);
         Zseton keresendoZseton;
         Zseton zseton;     
         byte zsetonErtek;     
-        int osszegek[] = new int[nyertesekSzama];      
-        zsetonLista = new ArrayList<>(pot);
+        int osszegek[] = new int[nyertesekSzama];    
         
         for (int i = 0; i < nyertesekSzama; i++) {
-            osszegek[i] = zsetonokOsszege(zsetonLista) / nyertesekSzama; //felosztja a pot összegét arányos értékekre.
+            osszegek[i] = zsetonokOsszege(potMasolat) / nyertesekSzama; //felosztja a pot összegét arányos értékekre.
         }        
 
-        while (!zsetonLista.isEmpty()) {            
-            keresendoZseton = zsetonLista.get(zsetonLista.size()-1); //A zsetonlista utolsó elemét beállítja keresendő zsetonnak.
+        while (!potMasolat.isEmpty()) {            
+            keresendoZseton = potMasolat.get(potMasolat.size()-1); //A zsetonlista utolsó elemét beállítja keresendő zsetonnak.
             zsetonErtek = keresendoZseton.getErtek();
             
-            for (int i = 0; i < zsetonLista.size(); i++) {
-                zseton = zsetonLista.get(i);
+            for (int i = 0; i < potMasolat.size(); i++) {
+                zseton = potMasolat.get(i);
                 if (zseton.equals(keresendoZseton)) {
                     egyformaZsetonok.add(zseton);
                 }
             }
             
-            zsetonLista.removeAll(egyformaZsetonok); //Kitörli a zsetonlistából az aktuálisan megkeresett értékű egyforma zsetonokat.
+            potMasolat.removeAll(egyformaZsetonok); //Kitörli a zsetonlistából az aktuálisan megkeresett értékű egyforma zsetonokat.
 
             for (int i = 0; i < egyformaZsetonok.size(); i++) {
                 for (byte j = 0; j < nyertesekSzama; j++) {                    
@@ -187,7 +187,7 @@ public final class ZsetonKezelo {
         }
         
         if (!maradekZsetonok.isEmpty()) {
-            szetvalogatottZsetonok.put(++nyertesekSzama, maradekZsetonok);
+            szetvalogatottZsetonok.put(nyertesekSzama, maradekZsetonok);
         }
         
         return szetvalogatottZsetonok;

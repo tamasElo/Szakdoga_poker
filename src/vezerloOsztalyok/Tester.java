@@ -3,6 +3,7 @@ package vezerloOsztalyok;
 import alapOsztalyok.Jatekos;
 import alapOsztalyok.Kartyalap;
 import alapOsztalyok.PokerKez;
+import alapOsztalyok.Zseton;
 import vezerloOsztalyok.ZsetonKezelo;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,19 +36,19 @@ public class Tester {
         lapok5.add(new Kartyalap(null, "3", "diamond", (byte) 5));
         lapok5.add(new Kartyalap(null, "3", "club", (byte) 12));
 
-        leosztas.add(new Kartyalap(null, "2", "diamond", (byte) 3));
-        leosztas.add(new Kartyalap(null, "3", "spades", (byte) 4));
-        leosztas.add(new Kartyalap(null, "4", "club", (byte) 2));
-        leosztas.add(new Kartyalap(null, "5", "hearts", (byte) 5));
-        leosztas.add(new Kartyalap(null, "6", "spades", (byte) 14));        
+//        leosztas.add(new Kartyalap(null, "2", "diamond", (byte) 3));
+//        leosztas.add(new Kartyalap(null, "3", "spades", (byte) 4));
+//        leosztas.add(new Kartyalap(null, "4", "club", (byte) 2));
+//        leosztas.add(new Kartyalap(null, "5", "hearts", (byte) 5));
+//        leosztas.add(new Kartyalap(null, "6", "spades", (byte) 14));        
         
         Map<Byte, List<Kartyalap>> jatekosokKartyalapjai = new HashMap<>();
 
         jatekosokKartyalapjai.put((byte) 0, lapok);
         jatekosokKartyalapjai.put((byte) 1, lapok2);
-        jatekosokKartyalapjai.put((byte) 2, lapok3);
-        jatekosokKartyalapjai.put((byte) 3, lapok4);
-        jatekosokKartyalapjai.put((byte) 4, lapok5);
+//        jatekosokKartyalapjai.put((byte) 2, lapok3);
+//        jatekosokKartyalapjai.put((byte) 3, lapok4);
+//        jatekosokKartyalapjai.put((byte) 4, lapok5);
         
         nyertesek = PokerKezKiertekelo.nyertesPokerKezKeres(jatekosokKartyalapjai, leosztas);
         for (Map.Entry<Byte, PokerKez> entrySet : nyertesek.entrySet()) {
@@ -58,6 +59,13 @@ public class Tester {
                 System.out.print(kartyalap.getKartyaErtek() + " " + kartyalap.getKartyaSzin() + ", ");
             }
             System.out.println("");
+        }
+        List<Zseton> pot = ZsetonKezelo.zsetonKioszt(2656);
+        Map<Byte, List<Zseton>> nyertesekZsetonjai = ZsetonKezelo.potSzetvalogat((byte) nyertesek.size(), pot);
+        for (Map.Entry<Byte, List<Zseton>> entrySet : nyertesekZsetonjai.entrySet()) {
+            Byte key = entrySet.getKey();
+            List<Zseton> value = entrySet.getValue();
+            System.out.println(key +" " + ZsetonKezelo.zsetonokOsszege(value));
         }
     }
 }

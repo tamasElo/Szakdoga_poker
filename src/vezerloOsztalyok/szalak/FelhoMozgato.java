@@ -15,7 +15,7 @@ public class FelhoMozgato extends Thread {
     private double akty;
     private double felhoKepSzelesseg;
     private double felhoKepMagassag;
-    private static final long IDO = 2000;
+    private static final long IDO = 1500;
     private SzalVezerlo szalVezerlo;
 
     public FelhoMozgato(SzalVezerlo szalVezerlo) {

@@ -269,8 +269,7 @@ public class SzalVezerlo {
      */
     public void zsetonokKioszt(){
         zsetonMozgato = new ZsetonMozgato(this);
-        zsetonMozgato.zsetonokBetolt();
-        pot = new CopyOnWriteArrayList<>();
+        zsetonMozgato.zsetonokBetolt();     
     }
     
     /**
@@ -289,11 +288,22 @@ public class SzalVezerlo {
     }
     
     /**
+     * Létrehoz egy új potot.
+     */
+    public void ujPot(){
+        pot = new CopyOnWriteArrayList<>();
+    }
+    
+    /**
      * Megkeveri a paklit és kiosztja a játékosoknak.
      * 
      * @param dealer 
      */
     public void kartyalapokKiosztSzalIndit(byte dealer) {
+        kartyalapok = null;
+        leosztottKartyalapok = new CopyOnWriteArrayList<>();
+        jatekosokKartyalapjai = new ConcurrentHashMap<>();
+        kiszalltJatekosokKartyalapjai = new ConcurrentHashMap<>();
         kartyaMozgato = new KartyaMozgato(this);
         kartyaMozgato.setKartyalapokKiosztasa(true);
         kartyaMozgato.setDealer(dealer);
@@ -369,6 +379,46 @@ public class SzalVezerlo {
         executor.submit(zsetonMozgato);
         executor.shutdown();
     }
+
+    /**
+     * Kikeresi hogy mennyi aktív játékos van.
+     * 
+     * @return 
+     */
+    public byte aktivJatekosokKeres() {
+        byte aktivJatekosokSzama = 0;
+        for (byte i = 0; i < jatekosokSzama(); i++) {
+            if (isJatekosAktiv(i)) {
+                aktivJatekosokSzama++;
+            }
+        }
+
+        return aktivJatekosokSzama;
+    }
+
+    /**
+     * Megkeresi hogy melyi játékos aktív.
+     *
+     * @param sorszam
+     * @return
+     */
+    public byte aktivJatekosSorszamKeres(byte sorszam) {
+        boolean aktivJatekosTalalat = false;
+        
+        while (!aktivJatekosTalalat) {
+            if (sorszam == jatekosokSzama()) {
+                sorszam = 0;
+            }
+
+            if (!isJatekosAktiv(sorszam)) {
+                sorszam++;
+            } else {
+                aktivJatekosTalalat = true;
+            }
+        }
+
+        return sorszam;
+    }
     
     /**
      * Hozzáad egy kártyalapot a leosztottKartyalapok listához. Ha a lista 
@@ -376,7 +426,6 @@ public class SzalVezerlo {
      * @param kartyalap 
      */
     public void leosztottKartyalapokhozAd(Kartyalap kartyalap){        
-        if(leosztottKartyalapok == null) leosztottKartyalapok = new ArrayList<>();
         leosztottKartyalapok.add(kartyalap);
     }    
    
@@ -398,10 +447,7 @@ public class SzalVezerlo {
      * @param sorszam
      * @param kartyalap 
      */
-    public void jatekosKartyalapokhozAd(byte sorszam, Kartyalap kartyalap) {        
-        if (jatekosokKartyalapjai == null) {
-            jatekosokKartyalapjai = new ConcurrentHashMap<>();
-        }
+    public void jatekosKartyalapokhozAd(byte sorszam, Kartyalap kartyalap) {   
         if (jatekosokKartyalapjai.containsKey(sorszam)) {
             jatekosokKartyalapjai.get(sorszam).add(kartyalap);
         } else {
@@ -422,10 +468,6 @@ public class SzalVezerlo {
     }
     
     public void jatekosKiszall(byte jatekosSorszam){
-        if (kiszalltJatekosokKartyalapjai == null) {
-            kiszalltJatekosokKartyalapjai = new ConcurrentHashMap<>();
-        }
-        
         kiszalltJatekosokKartyalapjai.put(jatekosSorszam, jatekosokKartyalapjai.remove(jatekosSorszam));
     }
     
@@ -656,6 +698,10 @@ public class SzalVezerlo {
 
     public Dealer getDealer() {
         return dealer;
+    }
+
+    public List<Korong> getKorongok() {
+        return korongok;
     }
 
     public Felho getFelho() {
