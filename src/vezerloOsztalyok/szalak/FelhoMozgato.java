@@ -15,10 +15,11 @@ public class FelhoMozgato extends Thread {
     private double akty;
     private double felhoKepSzelesseg;
     private double felhoKepMagassag;
-    private static final long IDO = 1500;
+    private Felho felho;
     private SzalVezerlo szalVezerlo;
 
-    public FelhoMozgato(SzalVezerlo szalVezerlo) {
+    public FelhoMozgato(Felho felho, SzalVezerlo szalVezerlo) {
+        this.felho = felho;
         this.szalVezerlo = szalVezerlo;
     }
 
@@ -26,12 +27,11 @@ public class FelhoMozgato extends Thread {
     @SuppressWarnings("SleepWhileInLoop")
     public void run() {
         try {           
-            Felho felho = szalVezerlo.getFelho();
             kx = felho.getKx();
             ky = felho.getKy();
             felhoKepSzelesseg = felho.getFelhoKepSzelesseg();
             felhoKepMagassag = felho.getFelhoKepMagassag();
-            vx = kx + felhoKepSzelesseg/4;
+            vx = kx + felhoKepSzelesseg / 4;
             vy = ky - felhoKepMagassag / 1.7;
             double szovegMeret = 0;            
             double aktTav = 0;
@@ -42,7 +42,8 @@ public class FelhoMozgato extends Thread {
             double szovegLepes = (felhoKepMagassag/7.8)/tavolsag;
             long ido = 2;
             felhoKepSzelesseg = 0;
-            felhoKepMagassag = 0;                
+            felhoKepMagassag = 0;     
+            
             while (aktTav <= tavolsag) {
                 aktTav ++;
                 felhoKepSzelesseg+= felhoHorizontalisLepes;
@@ -58,8 +59,10 @@ public class FelhoMozgato extends Thread {
                 szalVezerlo.frissit();
                 sleep(ido);
             }
+            
+            ido = 1500;
             szalVezerlo.frissit();
-            sleep(IDO);
+            sleep(ido);
         } catch (InterruptedException ex) {
             Logger.getLogger(FelhoMozgato.class.getName()).log(Level.SEVERE, null, ex);
         }

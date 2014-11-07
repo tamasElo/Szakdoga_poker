@@ -29,7 +29,7 @@ public class Felho {
         szovegSzelesseg = g.getFontMetrics().getStringBounds(nev, g).getWidth();
         szovegMagassag = g.getFontMetrics().getStringBounds(nev, g).getHeight();        
         g.drawImage(felhoKep, (int)(kx - felhoKepSzelesseg / 2), (int) (ky - felhoKepMagassag / 2), (int)felhoKepSzelesseg, (int) felhoKepMagassag, o);
-        g.drawString(nev, (int) (kx - szovegSzelesseg / 2), (int) (ky - (szovegMagassag / 2)-felhoKepMagassag/15));
+        g.drawString(nev, (int) (kx - szovegSzelesseg / 2), (int) (ky - (szovegMagassag / 1.5)));
     }
 
     public void setFont(Font font) {

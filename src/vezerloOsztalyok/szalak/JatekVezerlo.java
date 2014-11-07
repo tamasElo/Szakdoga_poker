@@ -50,21 +50,24 @@ public class JatekVezerlo extends Thread{
     /**
      * Elindít egy új kört.
      */
-    private void ujKor() {  
-            korokSzama++;
-            szalVezerlo.jatekosokAktival();     
-            aktivJatekosokSzama = szalVezerlo.aktivJatekosokKeres();
-            jatekosSorszamokBeallit();           
-            osszeg = nagyVakErtek;  
+    private void ujKor() {
+        korokSzama++;
+        szalVezerlo.jatekosokAktival();
+        aktivJatekosokSzama = szalVezerlo.aktivJatekosokKeres();
+        
+        if (aktivJatekosokSzama > 1) {
+            jatekosSorszamokBeallit();
+            osszeg = nagyVakErtek;
             allInSzamlalo = 0;
             licitSzamlalo = 0;
             szalVezerlo.korongokMozgatSzalIndit(dealerJatekosSorszam);
-            szalVezerlo.kartyalapokKiosztSzalIndit(dealerJatekosSorszam); 
+            szalVezerlo.kartyalapokKiosztSzalIndit(dealerJatekosSorszam);
             szalVezerlo.ujPot();
-            megallit();     
+            megallit();
             vakokErtekeBeallit();
             lehetosegekBeallit();
             ujkorIndit = false;
+        } else szalVezerlo.nyertesSzalIndit();
     }
     
     /**
@@ -171,6 +174,9 @@ public class JatekVezerlo extends Thread{
         }
     }
     
+    /**
+     * A kör végén a nyertes játékosok keresését indítja el.
+     */
     private void korVege(){ 
         szalVezerlo.nyertesJatekosKeres();
         korVege = false;
@@ -294,7 +300,7 @@ public class JatekVezerlo extends Thread{
     private void ujLicitkor(){              
         jatekosSorszam = kisVakJatekosSorszam;
         
-        if (szalVezerlo.leosztottKartyalapokSzama() < LEOSZTHATO_KARTYALAPOK_SZAMA) {
+        if (szalVezerlo.leosztottKartyalapokSzama() < LEOSZTHATO_KARTYALAPOK_SZAMA && aktivJatekosokSzama > 1) {
             szalVezerlo.kartyalapokLeosztSzalIndit();
             megallit();
         } else {

@@ -14,8 +14,6 @@ import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -130,6 +128,8 @@ public class JatekterPanel extends JPanel{
         }        
         
         szalVezerlo.felhoRajzol(g);
+        
+        szalVezerlo.nyertesRajzol(g2D);
         
         if (gombok != null) {            
             String osszeg;

@@ -5,8 +5,10 @@ import alapOsztalyok.Kartyalap;
 import alapOsztalyok.PokerKez;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -471,33 +473,35 @@ public class KartyaMozgato extends Thread{
     @SuppressWarnings("SleepWhileInLoop")
     private void keretAnimacio(){
         Map<Byte, PokerKez> nyertesPokerKezek = szalVezerlo.getNyertesPokerKezek();
+        Set<Kartyalap> nyertesKartyalapok = new HashSet();
         ido = 12;
         double keretKepSzelesseg, keretKepMagassag;
         double ertek = 0;
-                
-        for(int i = 0; i < 600; i++) {
+        
+        for (Map.Entry<Byte, PokerKez> entrySet : nyertesPokerKezek.entrySet()) {
+            PokerKez pokerKez = entrySet.getValue();
+            List<Kartyalap> jatekosPokerKezKartyalapok = pokerKez.getPokerKezKartyalapok();
+            nyertesKartyalapok.addAll(jatekosPokerKezKartyalapok);
+        }
+        
+        for (int i = 0; i < 600; i++) {
             ertek = ertek > 3 ? 0 : ertek + 0.1;
- 
-            for (Map.Entry<Byte, PokerKez> entrySet : nyertesPokerKezek.entrySet()) {
-                PokerKez pokerKez = entrySet.getValue();
-                List<Kartyalap> jatekosPokerKezKartyalapok = pokerKez.getPokerKezKartyalapok();
-                
-                for (Kartyalap kartyalap : jatekosPokerKezKartyalapok) {
-                    if (!kartyalap.isKeretRajzol()) {
-                        kartyalap.setKeretRajzol(true);
-                    }
 
-                    keretKepSzelesseg = kartyalap.getKartyaKepSzelesseg() + Math.sin(ertek) * jatekterSzelesseg/64;
-                    keretKepMagassag = kartyalap.getKartyaKepMagassag() + Math.sin(ertek) * jatekterSzelesseg/64;
-                    kartyalap.setKeretKepSzelesseg(keretKepSzelesseg);
-                    kartyalap.setKeretKepMagassag(keretKepMagassag);
+            for (Kartyalap kartyalap : nyertesKartyalapok) {
+                if (!kartyalap.isKeretRajzol()) {
+                    kartyalap.setKeretRajzol(true);
                 }
 
-                try {
-                    sleep(ido);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(KartyaMozgato.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                keretKepSzelesseg = kartyalap.getKartyaKepSzelesseg() + Math.sin(ertek) * jatekterSzelesseg / 64;
+                keretKepMagassag = kartyalap.getKartyaKepMagassag() + Math.sin(ertek) * jatekterSzelesseg / 64;
+                kartyalap.setKeretKepSzelesseg(keretKepSzelesseg);
+                kartyalap.setKeretKepMagassag(keretKepMagassag);
+            }
+
+            try {
+                sleep(ido);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(KartyaMozgato.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

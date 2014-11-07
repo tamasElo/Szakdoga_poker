@@ -14,7 +14,7 @@ public class FeluletKezelo {
     static DisplayMode dm;
     
     public static void main(String[] args){
-        int szelesseg = 1600, magassag = 1200;
+        int szelesseg = 1024, magassag = 768;
         dm = new DisplayMode(szelesseg, magassag, 32, 60);
         JFrame pokerFrame = new JFrame();
         SzalVezerlo szalVezerlo = new SzalVezerlo();

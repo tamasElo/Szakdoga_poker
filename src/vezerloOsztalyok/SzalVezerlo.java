@@ -6,6 +6,7 @@ import alapOsztalyok.Felho;
 import alapOsztalyok.Jatekos;
 import alapOsztalyok.Kartyalap;
 import alapOsztalyok.Korong;
+import alapOsztalyok.Nyertes;
 import alapOsztalyok.PokerKez;
 import alapOsztalyok.Vak;
 import alapOsztalyok.Zseton;
@@ -24,12 +25,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import vezerloOsztalyok.szalak.FelhoMozgato;
 import vezerloOsztalyok.szalak.KartyaMozgato;
 import vezerloOsztalyok.szalak.KorongMozgato;
+import vezerloOsztalyok.szalak.NyertesMozgato;
 import vezerloOsztalyok.szalak.ZsetonMozgato;
 
 public class SzalVezerlo {
@@ -52,7 +52,9 @@ public class SzalVezerlo {
     private ZsetonMozgato zsetonMozgato;
     private KartyaMozgato kartyaMozgato;
     private FelhoMozgato felhoMozgato;
+    private NyertesMozgato nyertesMozgato;
     private Felho felho;
+    private Nyertes nyertes;
 
     public SzalVezerlo() {
         keveresAnimacio = new ImageIcon(this.getClass().getResource("/adatFajlok/kartyaPakli/keveresAnimacio.gif")).getImage();
@@ -184,6 +186,23 @@ public class SzalVezerlo {
         if(felhoMozgato != null && felhoMozgato.isAlive()) felho.rajzol(g, jatekterPanel);
     }
     
+    /**
+     * Kirajzolja a nyertest a panelre.
+     *
+     * @param g2D
+     */
+    public void nyertesRajzol(Graphics2D g2D) {
+        if (nyertesMozgato != null && nyertesMozgato.isAlive()) {
+            nyertes.rajzol(g2D, jatekterPanel);
+        }
+    }
+
+    /**
+     * Be vagy kikapcsolja az átadott paraméter szerint a grafikai elemek
+     * elmosását.
+     * 
+     * @param elmosas 
+     */
     public void grafikaElmosas(boolean elmosas){
         jatekterPanel.setElmosas(elmosas);
         
@@ -260,6 +279,9 @@ public class SzalVezerlo {
         jatekVezerlo.start();
     }
     
+    /**
+     * Folytatja a jatekVezerlo szal futását.
+     */
     public void jatekVezerlesFolytat(){
         jatekVezerlo.folytat();
     }
@@ -358,9 +380,24 @@ public class SzalVezerlo {
         felho.setKy(ky);
         felho.setFelhoKepSzelesseg(felhoKepSzelesseg);
         felho.setFelhoKepMagassag(felhoKepMagassag);
-        felhoMozgato = new FelhoMozgato(this);
+        felhoMozgato = new FelhoMozgato(felho, this);
         felhoMozgato.start();
-    }    
+    }
+    
+    public void nyertesSzalIndit(){
+        byte jatekosSorszam = aktivJatekosSorszamKeres((byte)0);
+        Image nyertesKep = new ImageIcon(this.getClass().getResource("/adatFajlok/nyertes/nyertes.png")).getImage();
+        double nyertesKepSzelesseg = 400, nyertesKepMagassag = 200;
+        double kx = jatekterPanelSzelesseg() / 2, ky = jatekterPanelMagassag() / 2;
+        Jatekos jatekos = getJatekosok().get(jatekosSorszam);
+        nyertes = new Nyertes(jatekos.getNev(), nyertesKep);
+        nyertes.setKx(kx);
+        nyertes.setKy(ky);
+        nyertes.setNyertesKepSzelesseg(nyertesKepSzelesseg);
+        nyertes.setNyertesKepMagassag(nyertesKepMagassag);
+        nyertesMozgato = new NyertesMozgato(nyertes, this);
+        nyertesMozgato.start();
+    }
     
     /**
      * Megkeresi a nyertes játékosokat és elindítja az ehez tartozó animációkat.
@@ -387,6 +424,7 @@ public class SzalVezerlo {
      */
     public byte aktivJatekosokKeres() {
         byte aktivJatekosokSzama = 0;
+        
         for (byte i = 0; i < jatekosokSzama(); i++) {
             if (isJatekosAktiv(i)) {
                 aktivJatekosokSzama++;
@@ -487,25 +525,25 @@ public class SzalVezerlo {
     /**
      * Aktiválja a megfelelő gombokat a gombsorból.
      */
-    public void gombSorAllapotvalt() {    
-                boolean[] aktivalandoGombok = {true, true, true, false, true, true};
+    public void gombSorAllapotvalt() {
+        boolean[] aktivalandoGombok = {true, true, true, false, true, true};
 
-                if (!jatekVezerlo.isMegadhat() && !jatekVezerlo.isPasszolhat()) {
-                    aktivalandoGombok[1] = false;
-                }
-                
-                if (!jatekVezerlo.isEmelhet() && !jatekVezerlo.isNyithat()) {
-                    for (byte i = 2; i < 5; i++) {
-                        aktivalandoGombok[i] = false;
-                    }
-                }
-                
-                jatekterPanel.gombsorAktival(aktivalandoGombok);                  
-                jatekterPanel.setMegadandoOsszeg(jatekVezerlo.getOsszeg()-jatekVezerlo.getJatekosokTetje()[JatekVezerlo.EMBER_JATEKOS_SORSZAM]);
-                jatekterPanel.setLepesKoz(kisVakErtekVisszaad());
-                jatekterPanel.setEmelendoOsszeg(jatekVezerlo.getOsszeg() == 0 ? nagyVakErtekVisszaad() : jatekVezerlo.getOsszeg());
-                jatekterPanel.setMinOsszeg(jatekVezerlo.getOsszeg() == 0 ? nagyVakErtekVisszaad() : jatekVezerlo.getOsszeg());
-                jatekterPanel.setMaxOsszeg(getJatekosZsetonOsszeg(JatekVezerlo.EMBER_JATEKOS_SORSZAM));
+        if (!jatekVezerlo.isMegadhat() && !jatekVezerlo.isPasszolhat()) {
+            aktivalandoGombok[1] = false;
+        }
+
+        if (!jatekVezerlo.isEmelhet() && !jatekVezerlo.isNyithat()) {
+            for (byte i = 2; i < 5; i++) {
+                aktivalandoGombok[i] = false;
+            }
+        }
+
+        jatekterPanel.gombsorAktival(aktivalandoGombok);
+        jatekterPanel.setMegadandoOsszeg(jatekVezerlo.getOsszeg() - jatekVezerlo.getJatekosokTetje()[JatekVezerlo.EMBER_JATEKOS_SORSZAM]);
+        jatekterPanel.setLepesKoz(kisVakErtekVisszaad());
+        jatekterPanel.setEmelendoOsszeg(jatekVezerlo.getOsszeg() == 0 ? nagyVakErtekVisszaad() : jatekVezerlo.getOsszeg());
+        jatekterPanel.setMinOsszeg(jatekVezerlo.getOsszeg() == 0 ? nagyVakErtekVisszaad() : jatekVezerlo.getOsszeg());
+        jatekterPanel.setMaxOsszeg(getJatekosZsetonOsszeg(JatekVezerlo.EMBER_JATEKOS_SORSZAM));
     }
     
     public double aranytSzamol(double ertek){
@@ -706,6 +744,10 @@ public class SzalVezerlo {
 
     public Felho getFelho() {
         return felho;
+    }
+
+    public Nyertes getNyertes() {
+        return nyertes;
     }
 
     public boolean isJatekosAktiv(byte jatekosSorszam) {
