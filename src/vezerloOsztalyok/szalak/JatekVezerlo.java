@@ -27,6 +27,7 @@ public class JatekVezerlo extends Thread{
     private boolean emelhet;
     private boolean ujkorIndit;
     private boolean korVege;
+    private boolean szalStop;
     private int kisVakErtek;
     private int nagyVakErtek;
     private int aktJatekosZsetonOsszeg;
@@ -67,7 +68,11 @@ public class JatekVezerlo extends Thread{
             vakokErtekeBeallit();
             lehetosegekBeallit();
             ujkorIndit = false;
-        } else szalVezerlo.nyertesSzalIndit();
+        } else {
+            szalStop = true;
+            folytat();
+            szalVezerlo.nyertesSzalIndit();            
+        }
     }
     
     /**
@@ -341,6 +346,8 @@ public class JatekVezerlo extends Thread{
                 kovetkezoJatekos();
             }
             
+            if(szalStop) break;
+                
             megallit();
             
             {

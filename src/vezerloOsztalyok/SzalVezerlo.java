@@ -10,6 +10,7 @@ import alapOsztalyok.Nyertes;
 import alapOsztalyok.PokerKez;
 import alapOsztalyok.Vak;
 import alapOsztalyok.Zseton;
+import felulet.JatekMenuPanel;
 import felulet.JatekterPanel;
 import java.awt.Color;
 import java.awt.Font;
@@ -33,6 +34,8 @@ import vezerloOsztalyok.szalak.NyertesMozgato;
 import vezerloOsztalyok.szalak.ZsetonMozgato;
 
 public class SzalVezerlo {
+    private JatekterPanel jatekterPanel;
+    private JatekMenuPanel jatekMenuPanel;
     private List<Kartyalap> kartyalapok;  
     private List<Kartyalap> leosztottKartyalapok;
     private List<Jatekos> jatekosok;
@@ -43,7 +46,6 @@ public class SzalVezerlo {
     private Map<Byte, PokerKez> nyertesPokerKezek;
     private List<Zseton> pot;
     private boolean kartyaGrafikaElore;
-    private JatekterPanel jatekterPanel;
     private JatekVezerlo jatekVezerlo;
     private Vak kisVak;
     private Vak nagyVak;
@@ -57,6 +59,9 @@ public class SzalVezerlo {
     private Nyertes nyertes;
 
     public SzalVezerlo() {
+        KorongMozgato.setKorongokBetoltve(false);
+        Jatekos.sorszamIndexNullaz();
+        
         keveresAnimacio = new ImageIcon(this.getClass().getResource("/adatFajlok/kartyaPakli/keveresAnimacio.gif")).getImage();
         /*A vakok értékét majd valamilyen beállított értékből fogja lekérni.*/
         kisVak = new Vak(new ImageIcon(this.getClass().getResource("/adatFajlok/korongok/small_blind.png")).getImage(), 
@@ -80,7 +85,7 @@ public class SzalVezerlo {
             for (Kartyalap kartyalap : kartyalapok) {
                 kartyalap.rajzol(g2D, jatekterPanel);
             }
-        } else {
+        } else if (isJatekterPanelBetoltve()) {
             g2D.drawImage(keveresAnimacio, (int) aranytSzamol(2.286), (int) aranytSzamol(2.143, 'y'), (int) aranytSzamol(8), (int) aranytSzamol(16, 'y'), jatekterPanel);
         }
 
@@ -112,7 +117,7 @@ public class SzalVezerlo {
                 }
             }
     }
-
+    
     /**
      * Kirajzolja a panelre a játékosok neveit és zsetonjaik összegét.
      *
@@ -183,7 +188,9 @@ public class SzalVezerlo {
      * @param g 
      */
     public void felhoRajzol(Graphics g){
-        if(felhoMozgato != null && felhoMozgato.isAlive()) felho.rajzol(g, jatekterPanel);
+        if (felhoMozgato != null && felhoMozgato.isAlive()) {
+            felho.rajzol(g, jatekterPanel);
+        }
     }
     
     /**
@@ -258,7 +265,6 @@ public class SzalVezerlo {
         jatekosok.add(new Jatekos("Géza"));
         jatekosok.add(new Jatekos("András"));
        /*-----------------------------------*/
-        
         int i = 0;
         List<Point> vegpontLista = SzogSzamito.vegpontLista(jatekosokSzama(), jatekterPanelSzelesseg(), jatekterPanelMagassag());
         Point vegpont;
@@ -354,6 +360,22 @@ public class SzalVezerlo {
     }
     
     /**
+     * Elindítja a játék menü háttér animációt.
+     */
+    public void jatekMenuAnimacioIndit(){        
+        kartyalapok = null;
+        kartyaMozgato = new KartyaMozgato(this);
+        kartyaMozgato.setMenuAnimacio(true);
+        kartyaMozgato.start();
+    }
+     /**
+      * Megállítja a játék menü háttér animációt
+      */
+    public void jatekMenuAnimacioMegallit(){
+        kartyaMozgato.setSzalStop(true);
+    }
+    
+    /**
      * Beállítja a korongokat a megfelelő játékoshoz.
      * 
      * @param dealer 
@@ -373,13 +395,11 @@ public class SzalVezerlo {
     public void felhoSzalIndit(String nev, byte jatekosSorszam){
         Image felhoKep = new ImageIcon(this.getClass().getResource("/adatFajlok/felho/felho.png")).getImage();
         Jatekos jatekos = getJatekosok().get(jatekosSorszam);        
-        double felhoKepSzelesseg = jatekterPanelSzelesseg() * 0.06875, felhoKepMagassag = jatekterPanelMagassag() * 0.0975;
         double kx = jatekos.getKx(), ky = jatekos.getKy();  
         felho = new Felho(felhoKep, nev);             
         felho.setKx(kx);
         felho.setKy(ky);
-        felho.setFelhoKepSzelesseg(felhoKepSzelesseg);
-        felho.setFelhoKepMagassag(felhoKepMagassag);
+        felho.setFont(new Font("", 0, 0));
         felhoMozgato = new FelhoMozgato(felho, this);
         felhoMozgato.start();
     }
@@ -562,7 +582,11 @@ public class SzalVezerlo {
      * Frissíti a játéktér panelt.
      */
     public void frissit() {
-        jatekterPanel.repaint();
+        if (isJatekterPanelBetoltve()) {
+            jatekterPanel.repaint();
+        } else {
+            jatekMenuPanel.repaint();
+        }
     }
       
     /**
@@ -581,6 +605,24 @@ public class SzalVezerlo {
      */
     public int jatekterPanelMagassag(){
         return jatekterPanel.getHeight();
+    }
+ 
+    /**
+     * Visszaadja a játék menü panel szélességét.
+     *
+     * @return
+     */
+    public int jatekMenuPanelSzelesseg() {
+        return jatekMenuPanel.getWidth();
+    }
+
+    /**
+     * Visszaadja a játék menü panel magasságát.
+     *
+     * @return
+     */
+    public int jatekMenuPanelMagassag() {
+        return jatekMenuPanel.getHeight();
     }
     
     /**
@@ -659,10 +701,6 @@ public class SzalVezerlo {
         jatekVezerlo.bedob();
     }
 
-    public void setJatekTerPanel(JatekterPanel jatekTerPanel) {
-        this.jatekterPanel = jatekTerPanel;
-    }
-
     public void setKartyalapok(List<Kartyalap> kartyalapok) {
         this.kartyalapok = kartyalapok;
     }
@@ -681,6 +719,14 @@ public class SzalVezerlo {
 
     public void setJatekosokZsetonjai(Map<Byte, List<Zseton>> jatekosokZsetonjai) {
         this.jatekosokZsetonjai = jatekosokZsetonjai;
+    }
+    
+    public void setJatekTerPanel(JatekterPanel jatekTerPanel) {
+        this.jatekterPanel = jatekTerPanel;
+    }
+
+    public void setJatekMenuPanel(JatekMenuPanel jatekMenuPanel) {
+        this.jatekMenuPanel = jatekMenuPanel;
     }
 
     public Map<Byte, List<Kartyalap>> getJatekosokKartyalapjai() {
@@ -749,7 +795,11 @@ public class SzalVezerlo {
     public Nyertes getNyertes() {
         return nyertes;
     }
-
+    
+    public boolean isJatekterPanelBetoltve(){
+            return jatekterPanel != null;
+    }
+    
     public boolean isJatekosAktiv(byte jatekosSorszam) {
         return jatekosok.get(jatekosSorszam).isAktiv();
     }

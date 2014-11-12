@@ -9,22 +9,22 @@ import javax.swing.ImageIcon;
 public final class PakliKezelo {
 
     public static final int PAKLI_MERET = 52;
+    private static List<Kartyalap> pakli;
 
     private PakliKezelo() {
     }
 
-    private static List<Kartyalap> pakli;
-
     /**
      * Létrehozza a kártyapaklit
+     * @return 
      */
-    private static void pakliBetolt() {
+    public static List<Kartyalap> pakliBetolt() {
         
-        byte j = 0, k = 0, l = 0;
+        byte j = 0, k = 0, l;
         String [][] adatok = {{"clubs", "diamonds", "hearts", "spades"},
                               {"2", "3", "4", "5", "6", "7", "8", "9", "10",
                                "Jumbo", "Dáma", "Király", "Ász"}};
-        pakli = new ArrayList<>();
+        pakli = new CopyOnWriteArrayList<>();
 
         for (byte i = 0; i < PAKLI_MERET; i++) {
 
@@ -41,6 +41,8 @@ public final class PakliKezelo {
                     adatok[1][k],adatok[0][j], l));                
             j++;
         }
+        
+        return pakli;
     }
     
     /**

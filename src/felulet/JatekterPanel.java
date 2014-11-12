@@ -44,10 +44,7 @@ public class JatekterPanel extends JPanel{
         inicializal();
     }
 
-    private void inicializal() {
-        jatekTer = new ImageIcon(this.getClass().getResource("/adatFajlok/jatekTer/jatekTer_normal.png")).getImage();
-        elmosottJatekTer = new ImageIcon(this.getClass().getResource("/adatFajlok/jatekTer/jatekTer_normal_blur.png")).getImage();
-        
+    private void inicializal() {     
         addAncestorListener(new AncestorListener() {
             @Override
             public void ancestorAdded(AncestorEvent ae) {
@@ -76,11 +73,12 @@ public class JatekterPanel extends JPanel{
 
             @Override
             public void mouseReleased(MouseEvent me) {
-                jatekTermouseReleased(me);
+                jatekTerMouseReleased(me);
             }
 
             @Override
             public void mouseEntered(MouseEvent me) {
+                
             }
 
             @Override
@@ -109,7 +107,7 @@ public class JatekterPanel extends JPanel{
         g2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                 RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         
-        g2D.drawImage(kep, 0, 0, this.getWidth(), this.getHeight(), this);
+        g2D.drawImage(kep, 0, 0, szelesseg, magassag, this);
         
         if (szalVezerlo != null) {
             szalVezerlo.jatekosokRajzol(g2D);    
@@ -234,9 +232,11 @@ public class JatekterPanel extends JPanel{
      * 
      * @param ae 
      */
-    private void jatekTerAncestorAdded(AncestorEvent ae){       
+    private void jatekTerAncestorAdded(AncestorEvent ae){    
+        jatekTer = new ImageIcon(this.getClass().getResource("/adatFajlok/jatekTer/jatekTer_normal.png")).getImage();
+        elmosottJatekTer = new ImageIcon(this.getClass().getResource("/adatFajlok/jatekTer/jatekTer_normal_blur.png")).getImage();   
         szelesseg = this.getWidth();
-        magassag = this.getHeight();       
+        magassag = this.getHeight();  
         gombsorBeallit();
         szalVezerlo.jatekosokBeallit();
         szalVezerlo.jatekVezerloIndit();
@@ -267,7 +267,7 @@ public class JatekterPanel extends JPanel{
      * 
      * @param me 
      */
-    private void jatekTermouseReleased(MouseEvent me) {
+    private void jatekTerMouseReleased(MouseEvent me) {
             if (lenyomottGomb != null && lenyomottGomb.getMegjSorszam() == 1) {
                 lenyomottGomb.setMegjSorszam(2);
                 osszegValtoztat();

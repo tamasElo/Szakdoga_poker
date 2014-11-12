@@ -113,7 +113,7 @@ public class KorongMozgato extends Thread{
             szalVezerlo.frissit();
         }
     }
-
+    
     @Override
     public void run() {
         if (!korongokBetoltve) {
@@ -121,8 +121,12 @@ public class KorongMozgato extends Thread{
         }else{
             korongokMozgat();
         }
-    }
+    }    
 
+    public static void setKorongokBetoltve(boolean korongokBetoltve) {
+        KorongMozgato.korongokBetoltve = korongokBetoltve;
+    }
+    
     public void setDealer(byte dealer) {
         this.dealerJatekosSorszam = dealer;
     }

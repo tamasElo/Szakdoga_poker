@@ -19,8 +19,7 @@ public final class SorrendKevero {
      * 
      * @return 
      */
-    public static List<Integer> kevertSorrend() {
-        
+    public static List<Integer> kevertSorrend() {        
         general = new Random();
         kevertSorrendLista = new ArrayList<>();
         List<Integer> balOldaliSorrendLista = new ArrayList<>();
@@ -49,8 +48,7 @@ public final class SorrendKevero {
                 /*Feltölti a szétválasztott paklikat*/
                 for (byte j = 0; j < balOldalMeret; j++) {
                     balOldaliSorrendLista.add(kevertSorrendLista.get(j));
-                }
-                for (int j = balOldalMeret; j < teljesPakliMeret; j++) {
+                }                for (int j = balOldalMeret; j < teljesPakliMeret; j++) {
                     jobbOldaliSorrendLista.add(kevertSorrendLista.get(j));
                 }
 
@@ -59,6 +57,7 @@ public final class SorrendKevero {
                  * pakliból
                  */
                 kevertSorrendLista.clear();
+                
                 while (kevertSorrendLista.size() != teljesPakliMeret) {                    
                     varakozasIdo();
                     kevertSorrendListaFeltolt(balOldaliSorrendLista);     
@@ -76,8 +75,7 @@ public final class SorrendKevero {
      * 
      * @param sorrendOldal 
      */
-    private static void kevertSorrendListaFeltolt(List<Integer> sorrendOldal) {
-        
+    private static void kevertSorrendListaFeltolt(List<Integer> sorrendOldal) {        
         int elemekSzama;
         byte kevertElemekAlsoKorlat = 1, kevertElemekFelsoKorlat = 3;
         elemekSzama = general.nextInt(kevertElemekFelsoKorlat) + kevertElemekAlsoKorlat;
@@ -85,6 +83,7 @@ public final class SorrendKevero {
         if (elemekSzama > sorrendOldal.size()) {
             elemekSzama = sorrendOldal.size();
         }
+        
         for (byte j = 0; j < elemekSzama; j++) {
             kevertSorrendLista.add(sorrendOldal.get(sorrendOldal.size() - 1));
             sorrendOldal.remove(sorrendOldal.size() - 1);
@@ -94,11 +93,12 @@ public final class SorrendKevero {
     /**
      * Megadott korlátok közötti véletlen ideig várakoztat.
      */
-    private static void varakozasIdo() {
-        
+    @SuppressWarnings("SleepWhileHoldingLock")
+    private static void varakozasIdo() {        
         int ido;
-        byte alsoIdoKorlat = 5, felsoIdoKorlat = 15;
+        byte alsoIdoKorlat = 5, felsoIdoKorlat = 10;
         ido = general.nextInt(felsoIdoKorlat) + alsoIdoKorlat; //Véletlen ideig várakozik hogy növelje a véletlenkártyaszám generálást.
+        
         try {
             Thread.sleep(ido);
         } catch (InterruptedException ex) {

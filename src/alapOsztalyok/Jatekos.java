@@ -34,6 +34,10 @@ public class Jatekos {
         g2D.drawString(nev, (int) (kx - nevSzelesseg / 2), (int) (ky + nevMagassag / 2));
     }
     
+    public static void sorszamIndexNullaz(){
+        index = 0;
+    }
+    
     public void setKx(double kx) {
         this.kx = kx;
     }

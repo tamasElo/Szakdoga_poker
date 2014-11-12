@@ -26,14 +26,14 @@ public class FelhoMozgato extends Thread {
     @Override
     @SuppressWarnings("SleepWhileInLoop")
     public void run() {
-        try {           
+        try {
             kx = felho.getKx();
             ky = felho.getKy();
-            felhoKepSzelesseg = felho.getFelhoKepSzelesseg();
-            felhoKepMagassag = felho.getFelhoKepMagassag();
+            felhoKepSzelesseg = szalVezerlo.jatekterPanelSzelesseg() * 0.06875;
+            felhoKepMagassag = szalVezerlo.jatekterPanelMagassag() * 0.0975;
             vx = kx + felhoKepSzelesseg / 4;
             vy = ky - felhoKepMagassag / 1.7;
-            double szovegMeret = 0;            
+            double betuMeret = 0;           
             double aktTav = 0;
             double szog = Math.atan2(vy - ky, vx - kx);
             double tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
@@ -48,8 +48,8 @@ public class FelhoMozgato extends Thread {
                 aktTav ++;
                 felhoKepSzelesseg+= felhoHorizontalisLepes;
                 felhoKepMagassag+= felhoVertikalisLepes;
-                szovegMeret += szovegLepes;
-                felho.setFont(new Font("Arial", 2, (int) szovegMeret));
+                betuMeret += szovegLepes;
+                felho.setFont(new Font("Arial", 2, (int) betuMeret));
                 aktx = kx + aktTav * Math.cos(szog);
                 akty = ky + aktTav * Math.sin(szog);
                 felho.setKx(aktx);

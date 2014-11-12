@@ -1,11 +1,11 @@
 package vezerloOsztalyok.szalak;
 
-import alapOsztalyok.Kartyalap;
 import alapOsztalyok.Nyertes;
 import java.awt.Font;
 import static java.lang.Thread.sleep;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import vezerloOsztalyok.FeluletKezelo;
 import vezerloOsztalyok.SzalVezerlo;
 
 public class NyertesMozgato extends Thread{
@@ -56,6 +56,7 @@ public class NyertesMozgato extends Thread{
             
             ido = 4000;
             sleep(ido);
+            FeluletKezelo.jatekMenuPanelBetolt();
         } catch (InterruptedException ex) {
             Logger.getLogger(NyertesMozgato.class.getName()).log(Level.SEVERE, null, ex);
         }
