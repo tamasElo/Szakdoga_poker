@@ -1,6 +1,7 @@
 package vezerloOsztalyok;
 
-import alapOsztalyok.Zseton;
+import hu.szakdolgozat.poker.vezerloOsztalyok.ZsetonKezelo;
+import hu.szakdolgozat.poker.alapOsztalyok.Zseton;
 import java.util.List;
 import static org.junit.Assert.*;
 import org.junit.Before;

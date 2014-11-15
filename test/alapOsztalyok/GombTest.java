@@ -1,5 +1,6 @@
 package alapOsztalyok;
 
+import hu.szakdolgozat.poker.alapOsztalyok.Gomb;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import org.junit.Before;

@@ -1,5 +1,6 @@
 package vezerloOsztalyok;
 
+import hu.szakdolgozat.poker.vezerloOsztalyok.SorrendKevero;
 import java.util.List;
 import org.junit.After;
 import org.junit.Before;

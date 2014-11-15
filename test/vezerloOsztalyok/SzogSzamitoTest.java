@@ -1,5 +1,6 @@
 package vezerloOsztalyok;
 
+import hu.szakdolgozat.poker.vezerloOsztalyok.SzogSzamito;
 import java.awt.Point;
 import java.util.List;
 import static org.junit.Assert.*;

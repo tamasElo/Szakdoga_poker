@@ -1,6 +1,7 @@
 package vezerloOsztalyok;
 
-import alapOsztalyok.Kartyalap;
+import hu.szakdolgozat.poker.vezerloOsztalyok.PakliKezelo;
+import hu.szakdolgozat.poker.alapOsztalyok.Kartyalap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

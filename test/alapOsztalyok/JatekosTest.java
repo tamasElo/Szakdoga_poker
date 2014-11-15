@@ -1,5 +1,6 @@
 package alapOsztalyok;
 
+import hu.szakdolgozat.poker.alapOsztalyok.Jatekos;
 import java.awt.Font;
 import static org.junit.Assert.*;
 import org.junit.Before;

@@ -1,5 +1,6 @@
 package alapOsztalyok;
 
+import hu.szakdolgozat.poker.alapOsztalyok.Kartyalap;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
