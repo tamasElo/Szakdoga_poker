@@ -34,6 +34,7 @@ import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.NyertesMozgato;
 import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.ZsetonMozgato;
 
 public class SzalVezerlo {
+    private FeluletKezelo feluletKezelo;
     private JatekterPanel jatekterPanel;
     private JatekMenuPanel jatekMenuPanel;
     private List<Kartyalap> kartyalapok;  
@@ -50,14 +51,19 @@ public class SzalVezerlo {
     private Vak kisVak;
     private Vak nagyVak;
     private Dealer dealer;
-    private final Image keveresAnimacio;
+    private Image keveresAnimacio;
     private ZsetonMozgato zsetonMozgato;
     private KartyaMozgato kartyaMozgato;
     private FelhoMozgato felhoMozgato;
     private NyertesMozgato nyertesMozgato;
     private Felho felho;
     private Nyertes nyertes;
-
+    private String emberJatekosNev;
+    private byte jatekosokSzama;
+    private int zsetonOsszeg;
+    private byte nagyVakErtek;
+    private byte vakErtekEmeles;
+    
     public SzalVezerlo() {
         KorongMozgato.setKorongokBetoltve(false);
         Jatekos.sorszamIndexNullaz();
@@ -257,16 +263,30 @@ public class SzalVezerlo {
      * távolságra legyenek.
      */
     public void jatekosokBeallit() {
-       /*tesztelés*/
+        String[] jatekosNevek = {"Sanyi", "Pityu", "Géza", "András", "Eszti", "Reni", "Józsi", "Kriszti"};
+        String jatekosNev;
+        boolean talalat = false;
         jatekosok = new ArrayList<>();
-        jatekosok.add(new Jatekos("Sanyi"));
-        jatekosok.add(new Jatekos("Pityu"));
-        jatekosok.add(new Jatekos("Tomi"));
-        jatekosok.add(new Jatekos("Géza"));
-        jatekosok.add(new Jatekos("András"));
-       /*-----------------------------------*/
+        
+        jatekosok.add(new Jatekos(emberJatekosNev));
+        
+        while (jatekosok.size() != jatekosokSzama) {
+            jatekosNev = jatekosNevek[(int) (Math.random() * (jatekosNevek.length - 1))];
+            for (Jatekos jatekos : jatekosok) {
+                if (jatekos.getNev().equals(jatekosNev)) {
+                    talalat = true;
+                }
+            }
+            
+            if (!talalat) {
+                jatekosok.add(new Jatekos(jatekosNev));
+            }
+            
+            talalat = false;
+        }
+        
         int i = 0;
-        List<Point> vegpontLista = SzogSzamito.vegpontLista(jatekosokSzama(), jatekterPanelSzelesseg(), jatekterPanelMagassag());
+        List<Point> vegpontLista = SzogSzamito.vegpontLista(jatekosokSzama, jatekterPanelSzelesseg(), jatekterPanelMagassag());
         Point vegpont;
         for (Jatekos jatekos : jatekosok) {
             vegpont = vegpontLista.get(i++);
@@ -445,7 +465,7 @@ public class SzalVezerlo {
     public byte aktivJatekosokKeres() {
         byte aktivJatekosokSzama = 0;
         
-        for (byte i = 0; i < jatekosokSzama(); i++) {
+        for (byte i = 0; i < jatekosokSzama; i++) {
             if (isJatekosAktiv(i)) {
                 aktivJatekosokSzama++;
             }
@@ -464,7 +484,7 @@ public class SzalVezerlo {
         boolean aktivJatekosTalalat = false;
         
         while (!aktivJatekosTalalat) {
-            if (sorszam == jatekosokSzama()) {
+            if (sorszam == jatekosokSzama) {
                 sorszam = 0;
             }
 
@@ -590,6 +610,13 @@ public class SzalVezerlo {
     }
       
     /**
+     * Kilép a főmenübe.
+     */
+    public void kilepes(){
+        feluletKezelo.jatekMenuPanelBetolt(feluletKezelo);
+    }
+    
+    /**
      * Visszaadja a játéktér panel szélességét.
      * 
      * @return 
@@ -623,15 +650,6 @@ public class SzalVezerlo {
      */
     public int jatekMenuPanelMagassag() {
         return jatekMenuPanel.getHeight();
-    }
-    
-    /**
-     * Visszaadja a játékosok számát.
-     * 
-     * @return 
-     */
-    public byte jatekosokSzama(){
-        return (byte)jatekosok.size();
     }
     
     /**
@@ -729,6 +747,10 @@ public class SzalVezerlo {
         this.jatekMenuPanel = jatekMenuPanel;
     }
 
+    public void setFeluletKezelo(FeluletKezelo feluletKezelo) {
+        this.feluletKezelo = feluletKezelo;
+    }
+
     public Map<Byte, List<Kartyalap>> getJatekosokKartyalapjai() {
         return jatekosokKartyalapjai;
     }
@@ -751,6 +773,10 @@ public class SzalVezerlo {
 
     public List<Jatekos> getJatekosok() {
         return jatekosok;
+    }    
+    
+    public byte getJatekosokSzama(){
+        return jatekosokSzama;
     }
     
     public Map<Byte, List<Zseton>> getJatekosokZsetonjai() {

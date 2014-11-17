@@ -36,7 +36,7 @@ public class JatekVezerlo extends Thread{
     
     public JatekVezerlo(SzalVezerlo szalVezerlo){
         this.szalVezerlo = szalVezerlo;
-        this.jatekosokSzama = szalVezerlo.jatekosokSzama();
+        this.jatekosokSzama = szalVezerlo.getJatekosokSzama();
         kisVakErtek = szalVezerlo.kisVakErtekVisszaad();
         nagyVakErtek = szalVezerlo.nagyVakErtekVisszaad();
         jatekosokTetje = new int[jatekosokSzama];
@@ -92,7 +92,7 @@ public class JatekVezerlo extends Thread{
      * Beállítja a vakok értékeit.
      */
     private void vakokErtekeBeallit() {
-        if (korokSzama % korOszto == 0) {
+        if (korOszto > 0 && korokSzama % korOszto == 0) {
             kisVakErtek *= 2;
             nagyVakErtek = kisVakErtek * 2;
             szalVezerlo.vakokErtekeBeallit(kisVakErtek, nagyVakErtek);

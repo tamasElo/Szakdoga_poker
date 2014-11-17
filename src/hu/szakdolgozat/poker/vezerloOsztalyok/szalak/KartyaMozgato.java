@@ -62,7 +62,7 @@ public class KartyaMozgato extends Thread{
         if (szalVezerlo.isJatekterPanelBetoltve()) {
             panelSzelesseg = szalVezerlo.jatekterPanelSzelesseg();
             panelMagassag = szalVezerlo.jatekterPanelMagassag();
-            jatekosokSzama = szalVezerlo.jatekosokSzama();
+            jatekosokSzama = szalVezerlo.getJatekosokSzama();
             vegpontok = SzogSzamito.vegpontLista(jatekosokSzama, panelSzelesseg, panelMagassag);//Lekéri a végpontok listáját a játékosok száma alapján.
         } else {
             panelSzelesseg = szalVezerlo.jatekMenuPanelSzelesseg();
@@ -636,7 +636,9 @@ public class KartyaMozgato extends Thread{
             tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
             aktTav = 0;
             aktForgSzog = 0;
-
+            
+            if(Math.random() < 0.5) elteres *= -1;
+            
             while (aktTav <= tavolsag) {
                 aktx = kx + aktTav * Math.cos(foSzog);
                 akty = ky + aktTav * Math.sin(foSzog);

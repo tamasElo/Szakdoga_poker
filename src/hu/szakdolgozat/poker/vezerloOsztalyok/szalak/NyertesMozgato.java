@@ -5,7 +5,6 @@ import java.awt.Font;
 import static java.lang.Thread.sleep;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import hu.szakdolgozat.poker.vezerloOsztalyok.FeluletKezelo;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
 
 public class NyertesMozgato extends Thread{
@@ -56,7 +55,7 @@ public class NyertesMozgato extends Thread{
             
             ido = 4000;
             sleep(ido);
-            FeluletKezelo.jatekMenuPanelBetolt();
+            szalVezerlo.kilepes();
         } catch (InterruptedException ex) {
             Logger.getLogger(NyertesMozgato.class.getName()).log(Level.SEVERE, null, ex);
         }

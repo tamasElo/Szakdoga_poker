@@ -26,7 +26,7 @@ public class KorongMozgato extends Thread{
         this.szalVezerlo = szalVezerlo;
         jatekterSzelesseg = szalVezerlo.jatekterPanelSzelesseg();
         jatekterMagassag = szalVezerlo.jatekterPanelMagassag();
-        jatekosokSzama = szalVezerlo.jatekosokSzama();
+        jatekosokSzama = szalVezerlo.getJatekosokSzama();
     }
 
     private void korongokBetolt() {

@@ -1,6 +1,7 @@
 package hu.szakdolgozat.poker.felulet;
 
 import hu.szakdolgozat.poker.alapOsztalyok.Gomb;
+import hu.szakdolgozat.poker.vezerloOsztalyok.FeluletKezelo;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -39,6 +40,7 @@ public class JatekterPanel extends JPanel{
     private Gomb plusz;
     private Gomb minusz;
     private boolean elmosas;
+    private boolean elsimitas;
 
     public JatekterPanel() {
         inicializal();
@@ -102,10 +104,13 @@ public class JatekterPanel extends JPanel{
         Image kep;
         kep = elmosas ? elmosottJatekTer : jatekTer;
         Graphics2D g2D = (Graphics2D) g;
+       
+        if(elsimitas){
         g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
         g2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                 RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        }
         
         g2D.drawImage(kep, 0, 0, szelesseg, magassag, this);
         
@@ -358,6 +363,10 @@ public class JatekterPanel extends JPanel{
     
     public void setLepesKoz(int lepesKoz) {
         this.lepesKoz = lepesKoz;
+    }    
+
+    public void setElsimitas(boolean elsimitas) {
+        this.elsimitas = elsimitas;
     }
     
     /*------tesztelés----------------*/

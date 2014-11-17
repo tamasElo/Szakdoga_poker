@@ -45,7 +45,7 @@ public class ZsetonMozgato extends Thread {
         this.szalVezerlo = szalVezerlo;
         jatekterSzelesseg = szalVezerlo.jatekterPanelSzelesseg();
         jatekterMagassag = szalVezerlo.jatekterPanelMagassag();
-        jatekosokSzama = szalVezerlo.jatekosokSzama();
+        jatekosokSzama = szalVezerlo.getJatekosokSzama();
         vegpontLista = SzogSzamito.vegpontLista(jatekosokSzama, jatekterSzelesseg, jatekterMagassag);
         lepes = jatekterMagassag * 0.0025;
     }
