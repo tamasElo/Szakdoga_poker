@@ -7,8 +7,9 @@ import java.awt.image.ImageObserver;
 import java.util.List;
 
 public class Jatekos {
+
     private String nev;
-    private Font font;    
+    private Font font;
     private Color szin;
     private boolean aktiv;
     private static byte index;

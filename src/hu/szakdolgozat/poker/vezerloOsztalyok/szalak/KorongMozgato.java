@@ -10,19 +10,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzogSzamito;
 
-public class KorongMozgato extends Thread{
+public class KorongMozgato extends Thread {
+
     private static List<Point> vegpontLista;
     private static boolean korongokBetoltve;
     private List<Korong> korongok;
-    private byte dealerJatekosSorszam;    
+    private byte dealerJatekosSorszam;
     private int jatekterSzelesseg;
-    private int jatekterMagassag;      
+    private int jatekterMagassag;
     private byte jatekosokSzama;
     private double szog;
     private double elteres;
     private SzalVezerlo szalVezerlo;
-    
-    public KorongMozgato(SzalVezerlo szalVezerlo){
+
+    public KorongMozgato(SzalVezerlo szalVezerlo) {
         this.szalVezerlo = szalVezerlo;
         jatekterSzelesseg = szalVezerlo.jatekterPanelSzelesseg();
         jatekterMagassag = szalVezerlo.jatekterPanelMagassag();

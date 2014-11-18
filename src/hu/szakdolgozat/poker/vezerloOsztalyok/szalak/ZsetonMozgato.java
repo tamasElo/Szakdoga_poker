@@ -3,6 +3,7 @@ package hu.szakdolgozat.poker.vezerloOsztalyok.szalak;
 import hu.szakdolgozat.poker.alapOsztalyok.PokerKez;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
 import hu.szakdolgozat.poker.alapOsztalyok.Zseton;
+import hu.szakdolgozat.poker.vezerloOsztalyok.AudioLejatszo;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,10 +57,10 @@ public class ZsetonMozgato extends Thread {
     public void zsetonokBetolt() {
         Map<Byte, List<Zseton>> jatekosokZsetonjai = new ConcurrentHashMap<>();
         List<Zseton> zsetonok;
-        int osszeg = 2500;
+        int zsetonOsszeg = szalVezerlo.getZsetonOsszeg();
 
         for (byte i = 0; i < jatekosokSzama; i++) {
-            zsetonok = ZsetonKezelo.zsetonKioszt(osszeg);
+            zsetonok = ZsetonKezelo.zsetonKioszt(zsetonOsszeg);
             jatekosokZsetonjai.put(i, zsetonok);
 
             for (Zseton zseton : zsetonok) {                    
@@ -94,6 +95,8 @@ public class ZsetonMozgato extends Thread {
      * Újratölti a megadott játékos zsetonjait és elhelyezi a megfelelő pozícióban.
      */
     private void zsetonokUjratolt(List<Zseton> zsetonok) {
+        AudioLejatszo.audioLejatszas(AudioLejatszo.ZSETON_CSORGES, false);
+        
         for (Zseton zseton : zsetonok) {
             veletlenForgSzog = Math.random() * 360;
             szoras = -jatekterSzelesseg / 800 + Math.random() * jatekterSzelesseg / 400;
@@ -158,6 +161,7 @@ public class ZsetonMozgato extends Thread {
         double zsetonokVegpontban = 0;
         long ido = 3;
         Zseton zseton;
+        AudioLejatszo.audioLejatszas(AudioLejatszo.ZSETON_CSORGES, false);
         
         while(zsetonokVegpontban != jatekosTetje.size()){
             zsetonokVegpontban = 0;
@@ -225,7 +229,8 @@ public class ZsetonMozgato extends Thread {
         Zseton aktZseton;
         int lastIndex;
         List<Zseton> jatekosZsetonNyeremeny;
-
+        szalVezerlo.setKartyaGrafikaElore(false);
+        
         for (byte i = 0; i < nyertesJatekosSroszamok.size(); i++) {
             jatekosSorszam = nyertesJatekosSroszamok.get(i);
             jatekosZsetonjai = szalVezerlo.getJatekosokZsetonjai().get(jatekosSorszam);
@@ -249,7 +254,9 @@ public class ZsetonMozgato extends Thread {
                 y += elteres * Math.sin(Math.toRadians(szog)) + szoras;
                 vegPontok.add(new Point((int) x, (int) y));
             }
-
+            
+            AudioLejatszo.audioLejatszas(AudioLejatszo.ZSETON_CSORGES, false);
+            
             while (!jatekosZsetonNyeremeny.isEmpty()) {
                 for (int j = 0; j < jatekosZsetonNyeremeny.size(); j++) {
                     aktZseton = jatekosZsetonNyeremeny.get(j);

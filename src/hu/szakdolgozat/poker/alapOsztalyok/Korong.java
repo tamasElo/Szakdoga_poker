@@ -6,6 +6,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.ImageObserver;
 
 public abstract class Korong {
+
     private Image korongKep;
     private Image elmosodottKorongKep;
     private double kx;

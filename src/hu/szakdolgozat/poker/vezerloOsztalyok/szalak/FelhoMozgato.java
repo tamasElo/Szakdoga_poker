@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
 
 public class FelhoMozgato extends Thread {
+
     private double kx;
     private double ky;
     private double vx;

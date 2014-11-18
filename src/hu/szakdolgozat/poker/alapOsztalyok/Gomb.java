@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.image.ImageObserver;
 
 public class Gomb {
+
     private final String nev;
     private final Image alapHelyzet;
     private final Image rakattintva;

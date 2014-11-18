@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.image.ImageObserver;
 
 public class Felho {
+
     private Image felhoKep;
     private String nev;
     private Color szin;    

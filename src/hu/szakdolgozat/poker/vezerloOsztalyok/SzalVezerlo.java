@@ -32,8 +32,10 @@ import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.KartyaMozgato;
 import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.KorongMozgato;
 import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.NyertesMozgato;
 import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.ZsetonMozgato;
+import java.util.Iterator;
 
 public class SzalVezerlo {
+
     private FeluletKezelo feluletKezelo;
     private JatekterPanel jatekterPanel;
     private JatekMenuPanel jatekMenuPanel;
@@ -67,15 +69,15 @@ public class SzalVezerlo {
     public SzalVezerlo() {
         KorongMozgato.setKorongokBetoltve(false);
         Jatekos.sorszamIndexNullaz();
+        beallitasokBetolt();
         
         keveresAnimacio = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/kartyaPakli/keveresAnimacio.gif")).getImage();
-        /*A vakok értékét majd valamilyen beállított értékből fogja lekérni.*/
         kisVak = new Vak(new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/korongok/small_blind.png")).getImage(), 
                          new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/korongok/small_blind_blur.png")).getImage());
-        kisVak.setErtek(5);
+        kisVak.setErtek(nagyVakErtek / 2);
         nagyVak = new Vak(new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/korongok/big_blind.png")).getImage(), 
                           new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/korongok/big_blind_blur.png")).getImage());
-        nagyVak.setErtek(10);
+        nagyVak.setErtek(nagyVakErtek);
         dealer = new Dealer(new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/korongok/dealer.png")).getImage(), 
                             new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/korongok/dealer_blur.png")).getImage());
     } 
@@ -301,7 +303,7 @@ public class SzalVezerlo {
      * Létrehoz egy jatekVezerlo objektumot.
      */
     public void jatekVezerloIndit() {
-        jatekVezerlo = new JatekVezerlo(this);
+        jatekVezerlo = new JatekVezerlo(this, nagyVakErtek, vakErtekEmeles);
         jatekVezerlo.start();
     }
     
@@ -718,7 +720,23 @@ public class SzalVezerlo {
     public void emberiJatekosBedob() {
         jatekVezerlo.bedob();
     }
+   
+    /**
+     * Betölti az audió és játékmenet beállításokat.
+     */
+    private void beallitasokBetolt() {
+        List<String> adatok;
+        Iterator itr;
 
+        adatok = AdatKezelo.beallitasBetolt(AdatKezelo.JATEKMENET);
+        itr = adatok.iterator();
+        emberJatekosNev = (String) itr.next();
+        jatekosokSzama = Byte.parseByte((String) itr.next());
+        zsetonOsszeg = Integer.parseInt((String) itr.next());
+        nagyVakErtek = Byte.parseByte((String) itr.next());
+        vakErtekEmeles = Byte.parseByte((String) itr.next());
+    }
+    
     public void setKartyalapok(List<Kartyalap> kartyalapok) {
         this.kartyalapok = kartyalapok;
     }
@@ -782,6 +800,10 @@ public class SzalVezerlo {
     public Map<Byte, List<Zseton>> getJatekosokZsetonjai() {
         return jatekosokZsetonjai;
     }    
+    
+    public int getZsetonOsszeg() {
+        return zsetonOsszeg;
+    }
     
     /**
      * A paraméterként átadot sorszámhoz tartozó játékos zseonjainak összegét

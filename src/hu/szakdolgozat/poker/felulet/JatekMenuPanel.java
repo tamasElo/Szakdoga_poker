@@ -2,23 +2,9 @@ package hu.szakdolgozat.poker.felulet;
 
 import hu.szakdolgozat.poker.alapOsztalyok.Menupont;
 import hu.szakdolgozat.poker.vezerloOsztalyok.AdatKezelo;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
-import java.awt.Image;
-import java.awt.RenderingHints;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.geom.Rectangle2D;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import hu.szakdolgozat.poker.vezerloOsztalyok.FeluletKezelo;
+import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
+import hu.szakdolgozat.poker.vezerloOsztalyok.AudioLejatszo;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -34,13 +20,26 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
-import hu.szakdolgozat.poker.vezerloOsztalyok.FeluletKezelo;
-import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
-import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.geom.Rectangle2D;
 import java.awt.DisplayMode;
-import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.io.File;
+import java.io.IOException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.net.URL;
+import javax.swing.JOptionPane;
 
 public class JatekMenuPanel extends JPanel{
     private FeluletKezelo feluletKezelo;
@@ -48,12 +47,12 @@ public class JatekMenuPanel extends JPanel{
     private JScrollPane scpPokerSzabaly;
     private List<Menupont> menupontok;  
     private List<JComponent> beallitasKomponensek;
+    private JTextField txtNev;
     private JLabel lblFelbontasE;
     private JLabel lblJatekosokSzamaE;
     private JLabel lblOsszegE;
     private JLabel lblNagyVakErtekE;
     private JLabel lblVakEmelesE;
-    private JTextField txtNev;
     private JSlider sliFelbontas;
     private JSlider sliJatekosokSzama;
     private JSlider sliOsszeg ;
@@ -64,27 +63,27 @@ public class JatekMenuPanel extends JPanel{
     private JCheckBox cbElsimitas;
     private JCheckBox cbMenuZene;
     private JCheckBox cbHang;
-    private Dimension felbontas;
-    private byte kepFrissites;
-    private byte kepernyoMod;
+    private DisplayMode kepernyoMod;
+    private byte kepernyoAllapot;
     private List<DisplayMode> kepernyoModok;
     private boolean elsimitas;
     private byte[] nagyVakErtekek = {2, 10, 20, 30, 40, 50}; 
     private String jatekosNev;
     private byte jatekosokSzama;
     private int osszeg;
+    private int osszegNovekmeny;
     private byte nagyVakErtek;
     private byte vakEmeles;
+    private boolean menuZene;
+    private boolean hangok;
     private Image eloter;
     private Image hatter;
     private int szelesseg;
     private int magassag;
     private String menupontNev;
 
-    public JatekMenuPanel(Dimension felbontas, byte kepFrissites, byte kepernyoMod, List<DisplayMode> kepernyoModok, boolean elsimitas) {
-        this.felbontas = felbontas;
-        this.kepFrissites = kepFrissites;
-        this.kepernyoMod = kepernyoMod;
+    public JatekMenuPanel(byte kepernyoAllapot, List<DisplayMode> kepernyoModok, boolean elsimitas) {
+        this.kepernyoAllapot = kepernyoAllapot;
         this.kepernyoModok = kepernyoModok;
         this.elsimitas = elsimitas;
         inicializal();
@@ -191,7 +190,8 @@ public class JatekMenuPanel extends JPanel{
     /**
      * Létrehozza a beállítások menü opciókat.
      */
-    private void beallitasokMenuBetolt() {  
+    private void beallitasokMenuBetolt() {
+        kepernyoMod = feluletKezelo.getKepernyoMod();
         JLabel lblFelbontas = new JLabel("Felbontás");
         JLabel lblGrafikaAudio = new JLabel("Grafika és audió");
         JLabel lblJatekmenet = new JLabel("Játékmenet");
@@ -201,37 +201,61 @@ public class JatekMenuPanel extends JPanel{
         JLabel lblNagyVakErtek = new JLabel("Nagy vak értéke");
         JLabel lblVakEmeles = new JLabel("Vakok növelése(x körönként)"); 
         
+        jatekmenetBeallitasokBetolt();
+        
         sliFelbontas = new JSlider();
         sliFelbontas.setMaximum(kepernyoModok.size() - 1);
+        DisplayMode dmode;
         
         for (byte i = 0; i < kepernyoModok.size(); i++) {
-            DisplayMode dmode = kepernyoModok.get(i);
+            dmode = kepernyoModok.get(i);
 
-            if (dmode.getWidth() == felbontas.getWidth() && dmode.getHeight() == felbontas.getHeight()
-                    && dmode.getRefreshRate() == kepFrissites) {
+            if (dmode.equals(kepernyoMod)) {
                 sliFelbontas.setValue(i);
             }
         }
         
-        lblFelbontasE = new JLabel(felbontas.width + " x " + felbontas.height + " " + kepFrissites + "Hz");
+        lblFelbontasE = new JLabel(kepernyoMod.getWidth() + " x " + kepernyoMod.getHeight() + " " + kepernyoMod.getRefreshRate() + "Hz");
         
         sliFelbontas.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent evt) {
                 int horizontalisFelbontas = kepernyoModok.get(sliFelbontas.getValue()).getWidth(), 
                         vertikalisFelbontas = kepernyoModok.get(sliFelbontas.getValue()).getHeight();
-                kepFrissites = (byte) kepernyoModok.get(sliFelbontas.getValue()).getRefreshRate();
-                felbontas = new Dimension(horizontalisFelbontas, vertikalisFelbontas);
+                byte kepFrissites = (byte) kepernyoModok.get(sliFelbontas.getValue()).getRefreshRate();
+                kepernyoMod = new DisplayMode(horizontalisFelbontas, vertikalisFelbontas, kepernyoMod.getBitDepth(), kepFrissites);
                 lblFelbontasE.setText(horizontalisFelbontas + " x " + vertikalisFelbontas + " " + kepFrissites + "Hz");
             }
-        });
+        });        
+                
+        ButtonGroup bgrKepernyoMod = new ButtonGroup();
+        rbtnAblakos = new JRadioButton("Ablakos");
+        rbtnTeljesKepernyo = new JRadioButton("Teljes");        
+        bgrKepernyoMod.add(rbtnAblakos);
+        bgrKepernyoMod.add(rbtnTeljesKepernyo);     
+        
+        if (kepernyoAllapot == FeluletKezelo.TELJES_KEPERNYO_MOD) {
+            rbtnTeljesKepernyo.setSelected(true);
+        } else {
+            rbtnAblakos.setSelected(true);
+        }
+        
+        cbElsimitas = new JCheckBox("Élsimítás");
+        cbElsimitas.setSelected(elsimitas);
+        
+        menuZene = AudioLejatszo.isMenuZene();
+        cbMenuZene = new JCheckBox("Menü Zene");
+        cbMenuZene.setSelected(menuZene);
+        
+        hangok = AudioLejatszo.isHangok();
+        cbHang = new JCheckBox("Hangok");
+        cbHang.setSelected(hangok);
+        
+        txtNev = new JTextField(jatekosNev);
         
         sliJatekosokSzama = new JSlider(2, 5);
-        sliJatekosokSzama.setMinimum(2);
-        sliJatekosokSzama.setMaximum(5);
-        sliJatekosokSzama.setValue(3);
+        sliJatekosokSzama.setValue(jatekosokSzama);
         lblJatekosokSzamaE = new JLabel(String.valueOf(sliJatekosokSzama.getValue())); 
-        
         sliJatekosokSzama.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent evt) {
@@ -240,23 +264,28 @@ public class JatekMenuPanel extends JPanel{
             }
         });
         
-        sliOsszeg = new JSlider();
-        sliOsszeg.setMaximum(7);
-        sliOsszeg.setMinimum(1);
-        sliOsszeg.setValue(3);
-        lblOsszegE = new JLabel(String.valueOf(sliOsszeg.getValue() * 500));
+        osszegNovekmeny = 500;
+        sliOsszeg = new JSlider(1, 7);
+        sliOsszeg.setValue(osszeg / 500);
+        lblOsszegE = new JLabel(String.valueOf(sliOsszeg.getValue() * osszegNovekmeny));
 
         sliOsszeg.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent evt) {
-                osszeg = sliOsszeg.getValue() * 500;
+                osszeg = sliOsszeg.getValue() * osszegNovekmeny;
                 lblOsszegE.setText(String.valueOf(osszeg));
             }
         });
 
         sliNagyVakErtek = new JSlider();
         sliNagyVakErtek.setMaximum(5);
-        sliNagyVakErtek.setValue(1);
+        
+        for (byte i = 0; i < nagyVakErtekek.length; i++) {
+            if (nagyVakErtek == nagyVakErtekek[i]) {
+                sliNagyVakErtek.setValue(i);
+            }
+        }
+        
         lblNagyVakErtekE = new JLabel(String.valueOf(nagyVakErtekek[sliNagyVakErtek.getValue()]));
         
         sliNagyVakErtek.addChangeListener(new ChangeListener() {
@@ -269,7 +298,7 @@ public class JatekMenuPanel extends JPanel{
         
         sliVakEmeles = new JSlider();
         sliVakEmeles.setMaximum(10);
-        sliVakEmeles.setValue(5);
+        sliVakEmeles.setValue(vakEmeles);
         lblVakEmelesE = new JLabel(String.valueOf(sliVakEmeles.getValue()));
                 
         sliVakEmeles.addChangeListener(new ChangeListener() {
@@ -278,28 +307,7 @@ public class JatekMenuPanel extends JPanel{
                 vakEmeles = (byte) sliVakEmeles.getValue();
                 lblVakEmelesE.setText(String.valueOf(vakEmeles));
             }
-        });
-        
-        ButtonGroup bgrKepernyoMod = new ButtonGroup();
-        rbtnAblakos = new JRadioButton("Ablakos");
-        rbtnTeljesKepernyo = new JRadioButton("Teljes");        
-        bgrKepernyoMod.add(rbtnAblakos);
-        bgrKepernyoMod.add(rbtnTeljesKepernyo);     
-        
-        if (kepernyoMod == FeluletKezelo.TELJES_KEPERNYO_MOD) {
-            rbtnTeljesKepernyo.setSelected(true);
-        } else {
-            rbtnAblakos.setSelected(true);
-        }
-        
-        cbElsimitas = new JCheckBox("Élsimítás");
-        if(elsimitas) cbElsimitas.setSelected(true);
-        
-        cbMenuZene = new JCheckBox("Menü Zene");
-        
-        cbHang = new JCheckBox("Hangok");
-        
-        txtNev = new JTextField("Tomi");        
+        });        
         
         // ezeket majd egy xml fájlból kell beolvasni és így be lehet tenni ciklusba.
         lblGrafikaAudio.setBounds(405, 150, 300, 30);
@@ -313,11 +321,11 @@ public class JatekMenuPanel extends JPanel{
         cbHang.setBounds(400, 400, 100, 30);
         lblJatekmenet.setBounds(405, 500, 300, 30);
         lblNev.setBounds(405, 550, 50, 30);
+        txtNev.setBounds(450, 550, 100, 30);
         lblJatekosokSzama.setBounds(405, 600, 150, 30);
         lblOsszeg.setBounds(405, 650, 100, 30);
         lblNagyVakErtek.setBounds(405, 700, 150, 30);
         lblVakEmeles.setBounds(405, 750, 250, 30);
-        txtNev.setBounds(450, 550, 100, 30);
         sliJatekosokSzama.setBounds(545, 602, 100, 30);
         sliOsszeg.setBounds(465, 652, 100, 30);
         sliNagyVakErtek.setBounds(540, 702, 100, 30);
@@ -392,7 +400,7 @@ public class JatekMenuPanel extends JPanel{
         try {
             epPokerSzabaly.setPage(urlPokerSzabaly);
         } catch (IOException ex) {
-            Logger.getLogger(JatekMenuPanel.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
 
         add(scpPokerSzabaly);        
@@ -419,6 +427,19 @@ public class JatekMenuPanel extends JPanel{
     }
     
     /**
+     * Betölti az játékmenet beállításokat.
+     */
+    private void jatekmenetBeallitasokBetolt() {        
+        List<String> adatok = AdatKezelo.beallitasBetolt(AdatKezelo.JATEKMENET);;
+        Iterator<String> itr = adatok.iterator();       
+        jatekosNev = itr.next();
+        jatekosokSzama = Byte.parseByte(itr.next());
+        osszeg = Integer.parseInt(itr.next());
+        nagyVakErtek = Byte.parseByte(itr.next());
+        vakEmeles = Byte.parseByte(itr.next());          
+    }
+    
+    /**
      * Fájlból tölti be a betű típust.
      */
     private void fontBetoltes(){
@@ -428,15 +449,16 @@ public class JatekMenuPanel extends JPanel{
         try {
             env.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(urlFont.getFile())));
         } catch (FontFormatException | IOException ex) {
-            Logger.getLogger(JatekMenuPanel.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }
         
     private void jatekMenuAncestorAdded(AncestorEvent ae) {    
         eloter = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/jatekMenu/eloter.png")).getImage();
-        hatter = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/jatekMenu/hatter.png")).getImage();        
-        szelesseg = this.getWidth();
-        magassag = this.getHeight();        
+        hatter = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/jatekMenu/hatter.png")).getImage(); 
+        kepernyoMod = feluletKezelo.getKepernyoMod();       
+        szelesseg = kepernyoMod.getWidth();
+        magassag = kepernyoMod.getHeight();
         menupontok = new ArrayList<>();
         beallitasKomponensek = new ArrayList<>();
         szalVezerlo.jatekMenuAnimacioIndit();
@@ -485,9 +507,15 @@ public class JatekMenuPanel extends JPanel{
                 break;
             case "Alkalmaz":
                 elsimitas = cbElsimitas.isSelected();                
-                kepernyoMod = rbtnTeljesKepernyo.isSelected() ? FeluletKezelo.TELJES_KEPERNYO_MOD : FeluletKezelo.ABLAKOS_MOD;
+                feluletKezelo.setFelbontasValtozott(!feluletKezelo.getKepernyoMod().equals(kepernyoMod));                
+                kepernyoAllapot = rbtnTeljesKepernyo.isSelected() ? FeluletKezelo.TELJES_KEPERNYO_MOD : FeluletKezelo.ABLAKOS_MOD;   
+                menuZene = cbMenuZene.isSelected();
+                hangok = cbHang.isSelected();
+                jatekosNev = txtNev.getText();
                 
-                AdatKezelo.grafikaBeallitasMent(new Dimension(felbontas.width, felbontas.height), kepFrissites, kepernyoMod, elsimitas);
+                AdatKezelo.grafikaBeallitasMent(kepernyoMod, kepernyoAllapot, elsimitas);
+                AdatKezelo.audioBeallitasMent(menuZene, hangok);
+                AdatKezelo.jatekmenetBeallitasMent(jatekosNev, jatekosokSzama, osszeg, nagyVakErtek, vakEmeles);
                 feluletKezelo.beallitasokAlkalmaz();
                 foMenuBetolt();
                 break;

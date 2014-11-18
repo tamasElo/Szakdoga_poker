@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SzogSzamito {
+
     private static double kx;
     private static double ky;
     private static double szog;

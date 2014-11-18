@@ -18,6 +18,12 @@ public class KepernyoKezelo {
         vc = ge.getDefaultScreenDevice();
     }
     
+    /**
+     * Leelenőrzi, hogy támogatja-e a kijelző a képernyő módot.
+     * 
+     * @param dm
+     * @return 
+     */
     public boolean kepernyoModEllenorzes(DisplayMode dm){
         boolean tamogatott = false;
         kepernyoModok = new ArrayList<>();
@@ -29,31 +35,31 @@ public class KepernyoKezelo {
             horizontalisFelbontas = dmode.getWidth();
             vertikalisFelbontas = dmode.getHeight();
             szinMelyseg = dmode.getBitDepth();
-            
-            if (feluletKezelo.getKepernyoMod() == FeluletKezelo.TELJES_KEPERNYO_MOD) {
+
+            if (feluletKezelo.getKepernyoAllapot() == FeluletKezelo.TELJES_KEPERNYO_MOD) {
                 if (((double) Math.round(10 * horizontalisFelbontas / vertikalisFelbontas) / 10 == 1.3 && szinMelyseg == 32
                         || (double) Math.round(10 * horizontalisFelbontas / vertikalisFelbontas) / 10 == 1.7 && szinMelyseg == 32)
                         && dmode.getHeight() >= 768) {
                     kepernyoModok.add(dmode);
                 }
-            } else {
-                if (((double) Math.round(10 * horizontalisFelbontas / vertikalisFelbontas) / 10 == 1.3 && szinMelyseg == 32 
-                        && dmode.getRefreshRate() == vc.getDisplayMode().getRefreshRate()
-                        || (double) Math.round(10 * horizontalisFelbontas / vertikalisFelbontas) / 10 == 1.7 && szinMelyseg == 32 
-                        && dmode.getRefreshRate() == vc.getDisplayMode().getRefreshRate())
-                        && dmode.getHeight() >= 768) {
-                    kepernyoModok.add(dmode);
-                }
+            } else if (((double) Math.round(10 * horizontalisFelbontas / vertikalisFelbontas) / 10 == 1.3 && szinMelyseg == 32
+                    && dmode.getRefreshRate() == vc.getDisplayMode().getRefreshRate()
+                    || (double) Math.round(10 * horizontalisFelbontas / vertikalisFelbontas) / 10 == 1.7 && szinMelyseg == 32
+                    && dmode.getRefreshRate() == vc.getDisplayMode().getRefreshRate())
+                    && dmode.getHeight() >= 768) {
+                kepernyoModok.add(dmode);
             }
         }
        
-        if (feluletKezelo.getKepernyoMod() == FeluletKezelo.ABLAKOS_MOD) {
-            feluletKezelo.setKepFrissites((byte) vc.getDisplayMode().getRefreshRate());
+        if (feluletKezelo.getKepernyoAllapot() == FeluletKezelo.ABLAKOS_MOD) {
+            feluletKezelo.setKepernyoMod(new DisplayMode(dm.getWidth(), 
+                    dm.getHeight(), dm.getBitDepth(), 
+                    vc.getDisplayMode().getRefreshRate()));
+            dm = feluletKezelo.getKepernyoMod();
         }
         
         for (DisplayMode dmode : kepernyoModok) {
-            if(dmode.getWidth() == dm.getWidth() && dmode.getHeight() == dm.getHeight() 
-                    && dmode.getRefreshRate() == dm.getRefreshRate()){
+            if(dmode.equals(dm)){
                 tamogatott = true;
             }
         }

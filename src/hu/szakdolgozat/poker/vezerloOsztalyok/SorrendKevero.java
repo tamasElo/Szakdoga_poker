@@ -30,42 +30,48 @@ public final class SorrendKevero {
         byte balOldalAlsoKorlat = 20, balOldalFelsoKorlat = 7;
         int balOldalMeret;
         int kartyaSzam;
-
-            /*Alap pakli keverés*/
-            while (kevertSorrendLista.size() != teljesPakliMeret) {
-                varakozasIdo();
-                kartyaSzam = general.nextInt(teljesPakliMeret); //Generál 52 db számot
-                if (!kevertSorrendLista.contains(kartyaSzam)) {
-                    kevertSorrendLista.add(kartyaSzam);
-                }
+        
+        AudioLejatszo.audioLejatszas(AudioLejatszo.KARTYA_KEVERES, true);
+        
+        /*Alap sorrend keverés*/
+        while (kevertSorrendLista.size() != teljesPakliMeret) {
+            varakozasIdo();
+            kartyaSzam = general.nextInt(teljesPakliMeret); //Generál 52 db számot
+            if (!kevertSorrendLista.contains(kartyaSzam)) {
+                kevertSorrendLista.add(kartyaSzam);
             }
+        }
 
-            /* Pakli megkeverése annyiszor amennyi a keverések száma*/
-            for (int i = 0; i < keveresekSzama; i++) {                
-                varakozasIdo();
-                balOldalMeret = general.nextInt(balOldalFelsoKorlat) + balOldalAlsoKorlat;
+        /* sorrend megkeverése annyiszor amennyi a keverések száma*/
+        for (int i = 0; i < keveresekSzama; i++) {
+            varakozasIdo();
+            balOldalMeret = general.nextInt(balOldalFelsoKorlat) + balOldalAlsoKorlat;
 
-                /*Feltölti a szétválasztott paklikat*/
-                for (byte j = 0; j < balOldalMeret; j++) {
-                    balOldaliSorrendLista.add(kevertSorrendLista.get(j));
-                }                for (int j = balOldalMeret; j < teljesPakliMeret; j++) {
-                    jobbOldaliSorrendLista.add(kevertSorrendLista.get(j));
-                }
-
-                /*
-                 * paklit kinullázza és újra feltölti az összekevert bal és jobb
-                 * pakliból
-                 */
-                kevertSorrendLista.clear();
-                
-                while (kevertSorrendLista.size() != teljesPakliMeret) {                    
-                    varakozasIdo();
-                    kevertSorrendListaFeltolt(balOldaliSorrendLista);     
-                    varakozasIdo();
-                    kevertSorrendListaFeltolt(jobbOldaliSorrendLista);
-                }
+            /*Feltölti a szétválasztott paklikat*/
+            for (byte j = 0; j < balOldalMeret; j++) {
+                balOldaliSorrendLista.add(kevertSorrendLista.get(j));
             }
             
+            for (int j = balOldalMeret; j < teljesPakliMeret; j++) {
+                jobbOldaliSorrendLista.add(kevertSorrendLista.get(j));
+            }
+
+            /*
+             * paklit kinullázza és újra feltölti az összekevert bal és jobb
+             * pakliból
+             */
+            kevertSorrendLista.clear();
+
+            while (kevertSorrendLista.size() != teljesPakliMeret) {
+                varakozasIdo();
+                kevertSorrendListaFeltolt(balOldaliSorrendLista);
+                varakozasIdo();
+                kevertSorrendListaFeltolt(jobbOldaliSorrendLista);
+            }
+        }
+        
+        AudioLejatszo.audioMegallit();
+        
         return kevertSorrendLista;
     }
     

@@ -10,6 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.ImageIcon;
 
 public final class ZsetonKezelo {
+
     private static byte[] aranySzamok;
     private static List<Zseton> zsetonLista;
     private static final byte[] zsetonErtekek = {100, 25, 10, 5, 1};

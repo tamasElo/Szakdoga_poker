@@ -9,16 +9,17 @@ import java.util.List;
 import java.util.Map;
 
 public class PokerKezKiertekelo {
+
     private static List<Byte> nyertesJatekosokSorszama;
     private static Map<Byte, PokerKez> jatekosokPokerKeze;
     private static byte legmagasabbPokerKezErtek;
     private static byte aktPokerKezErtek;
-            
+
     /**
      * Megkeresi a nyertes póker kezeket.
-     * 
+     *
      * @param jatekosokKartyalapjai
-     * @param leosztottKartyalapok 
+     * @param leosztottKartyalapok
      * @return  
      */
     public static Map<Byte, PokerKez> nyertesPokerKezKeres(Map<Byte, List<Kartyalap>> jatekosokKartyalapjai, List<Kartyalap> leosztottKartyalapok){

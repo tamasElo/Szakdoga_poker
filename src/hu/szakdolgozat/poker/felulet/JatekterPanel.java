@@ -1,7 +1,6 @@
 package hu.szakdolgozat.poker.felulet;
 
 import hu.szakdolgozat.poker.alapOsztalyok.Gomb;
-import hu.szakdolgozat.poker.vezerloOsztalyok.FeluletKezelo;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;

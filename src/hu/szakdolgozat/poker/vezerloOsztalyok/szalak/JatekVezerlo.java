@@ -5,12 +5,13 @@ import java.util.logging.Logger;
 import hu.szakdolgozat.poker.vezerloOsztalyok.Mi;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
 
-public class JatekVezerlo extends Thread{
+public class JatekVezerlo extends Thread {
+
     public static final byte EMBER_JATEKOS_SORSZAM = 0;
     public static final byte LEOSZTHATO_KARTYALAPOK_SZAMA = 5;
     private byte korokSzama;
-    private SzalVezerlo szalVezerlo;    
-    private byte dealerJatekosSorszam;    
+    private SzalVezerlo szalVezerlo;
+    private byte dealerJatekosSorszam;
     private byte kisVakJatekosSorszam;
     private byte nagyVakJatekosSorszam;
     private byte jatekosSorszam;
@@ -28,21 +29,21 @@ public class JatekVezerlo extends Thread{
     private boolean ujkorIndit;
     private boolean korVege;
     private boolean szalStop;
-    private int kisVakErtek;
-    private int nagyVakErtek;
+    private byte kisVakErtek;
+    private byte nagyVakErtek;
     private int aktJatekosZsetonOsszeg;
     private byte korOszto;
     private long ido;
     
-    public JatekVezerlo(SzalVezerlo szalVezerlo){
+    public JatekVezerlo(SzalVezerlo szalVezerlo, byte nagyVakErtek, byte korOszto){
         this.szalVezerlo = szalVezerlo;
-        this.jatekosokSzama = szalVezerlo.getJatekosokSzama();
-        kisVakErtek = szalVezerlo.kisVakErtekVisszaad();
-        nagyVakErtek = szalVezerlo.nagyVakErtekVisszaad();
+        this.nagyVakErtek = nagyVakErtek;
+        this.korOszto = korOszto;
+        kisVakErtek = (byte) (nagyVakErtek / 2);
+        jatekosokSzama = szalVezerlo.getJatekosokSzama();
         jatekosokTetje = new int[jatekosokSzama];
         dealerJatekosSorszam = (byte) (Math.random() * jatekosokSzama);
         mi = new Mi();     
-        korOszto = 10;
         ido = 1000;
         ujkorIndit = true;
         szalVezerlo.zsetonokKioszt();   
@@ -94,7 +95,7 @@ public class JatekVezerlo extends Thread{
     private void vakokErtekeBeallit() {
         if (korOszto > 0 && korokSzama % korOszto == 0) {
             kisVakErtek *= 2;
-            nagyVakErtek = kisVakErtek * 2;
+            nagyVakErtek = (byte) (kisVakErtek * 2);
             szalVezerlo.vakokErtekeBeallit(kisVakErtek, nagyVakErtek);
         }
 

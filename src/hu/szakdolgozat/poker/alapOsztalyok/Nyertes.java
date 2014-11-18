@@ -8,6 +8,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.ImageObserver;
 
 public class Nyertes {
+
     private String nyertesNeve;
     private Image nyertesKep;
     private Color szin;

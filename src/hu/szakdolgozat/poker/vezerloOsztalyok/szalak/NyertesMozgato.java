@@ -1,21 +1,23 @@
 package hu.szakdolgozat.poker.vezerloOsztalyok.szalak;
 
 import hu.szakdolgozat.poker.alapOsztalyok.Nyertes;
+import hu.szakdolgozat.poker.vezerloOsztalyok.AudioLejatszo;
 import java.awt.Font;
 import static java.lang.Thread.sleep;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
 
-public class NyertesMozgato extends Thread{
-    private SzalVezerlo szalVezerlo;     
+public class NyertesMozgato extends Thread {
+
+    private SzalVezerlo szalVezerlo;
     private double kx;
     private double ky;
     private double nyertesKepSzelesseg;
     private double nyertesKepMagassag;
     private Nyertes nyertes;
     private long ido;
-    
+
     public NyertesMozgato(Nyertes nyertes, SzalVezerlo szalVezerlo) {
         this.nyertes = nyertes;
         this.szalVezerlo = szalVezerlo;
@@ -38,7 +40,8 @@ public class NyertesMozgato extends Thread{
             ido = 10;
             nyertesKepSzelesseg = 0;
             nyertesKepMagassag = 0;
-
+            AudioLejatszo.audioLejatszas(AudioLejatszo.JATEK_NYERTES, false);
+            
             while (aktTav <= vegsoMeret) {
                 aktTav += szorzo;
                 nyertesKepSzelesseg += nyertesHorizontalisLepes;

@@ -5,6 +5,7 @@ import java.util.List;
 /*Ez az osztály egy burkoló osztály ami arra szolgál, hogy a póker kéz
   nevét, értékét, a kártyalapok és kisérőlapok listáját együtt kezelje.*/
 public class PokerKez {
+
     private String pokerKezNev;
     private byte pokerKezErtek;
     private List<Kartyalap> pokerKezKartyalapok;

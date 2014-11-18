@@ -3,6 +3,7 @@ package hu.szakdolgozat.poker.vezerloOsztalyok.szalak;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
 import hu.szakdolgozat.poker.alapOsztalyok.Kartyalap;
 import hu.szakdolgozat.poker.alapOsztalyok.PokerKez;
+import hu.szakdolgozat.poker.vezerloOsztalyok.AudioLejatszo;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,12 +17,13 @@ import hu.szakdolgozat.poker.vezerloOsztalyok.PakliKezelo;
 import hu.szakdolgozat.poker.vezerloOsztalyok.PokerKezKiertekelo;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzogSzamito;
 
-public class KartyaMozgato extends Thread{    
+public class KartyaMozgato extends Thread {
+
     private SzalVezerlo szalVezerlo;
     private Map<Byte, List<Kartyalap>> jatekosokKartyalapjai;
     private Map<Byte, List<Kartyalap>> kiszalltJatekosokKartyalapjai;
     private List<Kartyalap> leosztottKartyalapok;
-    private List<Kartyalap> kartyalapok;    
+    private List<Kartyalap> kartyalapok;
     private List<Point> vegpontok;
     private static List<Point> szorasok;
     private int panelSzelesseg;
@@ -87,6 +89,7 @@ public class KartyaMozgato extends Thread{
                minY = -szorasHatar.getY() - panelMagassag / 1200,
                maxY = panelMagassag / 600 * szorasHatar.getY() + panelMagassag / 600;
         
+        szalVezerlo.setKartyaGrafikaElore(false);
         kartyalapok = PakliKezelo.kevertPakli();
         
         for (Kartyalap kartyalap : kartyalapok) {
@@ -181,7 +184,7 @@ public class KartyaMozgato extends Thread{
             
             jatekosSorszamok.addAll(jatekosSorszamok);
             
-            for (byte i = 0; i < jatekosSorszamok.size(); i++) {                               
+            for (byte i = 0; i < jatekosSorszamok.size(); i++) {                                  
                 kartyalap = kartyalapok.remove(kartyalapok.size()-1);//A kártyalap hivatkozást ráállítja a kartyalapok lista utolsó elemére, törli a hivatkozást a listából.      
                 aktTav = 0;
                 aktForgSzog = 0;
@@ -193,7 +196,8 @@ public class KartyaMozgato extends Thread{
                 vegForgSzog = SzogSzamito.forgasSzogSzamit(panelSzelesseg, panelMagassag, vx, vy);
                 foSzog = Math.atan2(vy - ky, vx - kx);
                 tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
-                szalVezerlo.jatekosKartyalapokhozAd(jatekosSorszam, kartyalap);//Hozzá adja az aktuális játékos lapjaihoz a kártyát.         
+                szalVezerlo.jatekosKartyalapokhozAd(jatekosSorszam, kartyalap);//Hozzá adja az aktuális játékos lapjaihoz a kártyát.  
+                AudioLejatszo.audioLejatszas(AudioLejatszo.KARTYA_OSZTAS, false);          
                 
                 while (aktTav <= tavolsag) {
                     aktTav += lepes;
@@ -205,7 +209,7 @@ public class KartyaMozgato extends Thread{
                     kartyalap.setForgat(aktForgSzog);
                     sleep(ido);
                     szalVezerlo.frissit();
-                }                
+                }         
             }   
             
             szalVezerlo.setKartyaGrafikaElore(false);//A zsetonokat lesz elsőként kirajzolva a játékpanelre.            
@@ -336,7 +340,7 @@ public class KartyaMozgato extends Thread{
         int leosztandoKartyalapokSzama;
         double veletlenX, veletlenY;
         double novekmeny;        
-        ido = 2;
+        ido = 3;
         kartyalapok = szalVezerlo.getKartyalapok();
 
         if (szalVezerlo.leosztottKartyalapokSzama() == 0) {
@@ -367,7 +371,8 @@ public class KartyaMozgato extends Thread{
             vegForgSzog = -3 + Math.random() * 6;
             foSzog = Math.atan2(vy - ky, vx - kx);
             tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
-            novekmeny += kartyalap.getKartyaKepSzelesseg() + panelSzelesseg / 160;//A leosztott lapok közötti távolságot számolja ki
+            novekmeny += kartyalap.getKartyaKepSzelesseg() + panelSzelesseg / 160;//A leosztott lapok közötti távolságot számolja ki            
+            AudioLejatszo.audioLejatszas(AudioLejatszo.KARTYA_OSZTAS, false);
             
             while (aktTav <= tavolsag) {
                 aktTav += lepes;
@@ -410,6 +415,7 @@ public class KartyaMozgato extends Thread{
         
         szalVezerlo.grafikaElmosas(true);
         szalVezerlo.setKartyaGrafikaElore(true);
+        AudioLejatszo.audioLejatszas(AudioLejatszo.KOR_NYERTES, szalStop);
         
         do {
             for (Map.Entry<Byte, List<Kartyalap>> entrySet : jatekosokKartyalapjai.entrySet()) {
@@ -520,7 +526,6 @@ public class KartyaMozgato extends Thread{
      */
     @SuppressWarnings("SleepWhileInLoop")
     private void kartyalapokPakliba(){
-        szalVezerlo.grafikaElmosas(false);
         List<Kartyalap> mozgatandoKartyalapok = new CopyOnWriteArrayList<>();  
         List<Kartyalap> nagyitottKartyalapok = new CopyOnWriteArrayList<>();
         kiszalltJatekosokKartyalapjai = szalVezerlo.getKiszalltJatekosokKartyalapjai();
@@ -543,7 +548,10 @@ public class KartyaMozgato extends Thread{
                 mozgatandoKartyalapok.addAll(jatekosKartyalapok);
             }            
         }
-        
+
+        pakliMozgat();
+            
+        szalVezerlo.grafikaElmosas(false);
         try {           
             while (kartyalapokVegpontban != mozgatandoKartyalapok.size()) {
                 kartyalapokVegpontban = 0;
@@ -587,8 +595,6 @@ public class KartyaMozgato extends Thread{
                 szalVezerlo.frissit();
                 sleep(ido);
             }
-            
-            pakliMozgat();
             
             do {
                 for (Kartyalap kartyalap : nagyitottKartyalapok) {
@@ -686,8 +692,10 @@ public class KartyaMozgato extends Thread{
             if (szalVezerlo.getJatekosokKartyalapjai().size() > 1) {
                 kartyalapokNagyit();
                 keretAnimacio();
+            } else {
+                kartyalapok = szalVezerlo.getKartyalapok();
             }
-            
+
             kartyalapokPakliba();
         }
         

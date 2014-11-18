@@ -5,7 +5,8 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 
 public class Menupont {
-    private String nev;    
+
+    private String nev;
     private String betuTipus;
     private int betuMeret;
     private double kx;

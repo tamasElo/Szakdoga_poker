@@ -6,7 +6,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.ImageObserver;
 import javax.swing.ImageIcon;
 
-public class Kartyalap implements Comparable<Kartyalap>{
+public class Kartyalap implements Comparable<Kartyalap> {
+
     private Image elolap;
     private final Image hatlap;
     private final Image elmosodottHatlap;

@@ -2,7 +2,8 @@ package hu.szakdolgozat.poker.alapOsztalyok;
 
 import java.awt.Image;
 
-public class Vak extends Korong{
+public class Vak extends Korong {
+
     private int ertek;
 
     public Vak(Image korongKep, Image elmosodottKorongKep) {
