@@ -29,20 +29,20 @@ public class JatekVezerlo extends Thread {
     private boolean ujkorIndit;
     private boolean korVege;
     private boolean szalStop;
-    private byte kisVakErtek;
-    private byte nagyVakErtek;
+    private int kisVakErtek;
+    private int nagyVakErtek;
     private int aktJatekosZsetonOsszeg;
     private byte korOszto;
     private long ido;
     
-    public JatekVezerlo(SzalVezerlo szalVezerlo, byte nagyVakErtek, byte korOszto){
+    public JatekVezerlo(SzalVezerlo szalVezerlo, int nagyVakErtek, byte korOszto){
         this.szalVezerlo = szalVezerlo;
         this.nagyVakErtek = nagyVakErtek;
         this.korOszto = korOszto;
-        kisVakErtek = (byte) (nagyVakErtek / 2);
+        kisVakErtek = nagyVakErtek / 2;
         jatekosokSzama = szalVezerlo.getJatekosokSzama();
         jatekosokTetje = new int[jatekosokSzama];
-        dealerJatekosSorszam = (byte) (Math.random() * jatekosokSzama);
+        dealerJatekosSorszam = 3;//(byte) (Math.random() * jatekosokSzama);
         mi = new Mi();     
         ido = 1000;
         ujkorIndit = true;
@@ -52,14 +52,12 @@ public class JatekVezerlo extends Thread {
     /**
      * Elindít egy új kört.
      */
-    private void ujKor() {
-        korokSzama++;
+    private void ujKor() {       
         szalVezerlo.jatekosokAktival();
         aktivJatekosokSzama = szalVezerlo.aktivJatekosokKeres();
         
         if (aktivJatekosokSzama > 1) {
             jatekosSorszamokBeallit();
-            osszeg = nagyVakErtek;
             allInSzamlalo = 0;
             licitSzamlalo = 0;
             szalVezerlo.korongokMozgatSzalIndit(dealerJatekosSorszam);
@@ -93,30 +91,56 @@ public class JatekVezerlo extends Thread {
      * Beállítja a vakok értékeit.
      */
     private void vakokErtekeBeallit() {
-        if (korOszto > 0 && korokSzama % korOszto == 0) {
+        
+        if (korOszto > 0 && korokSzama > 0 && korokSzama % korOszto == 0) {
             kisVakErtek *= 2;
-            nagyVakErtek = (byte) (kisVakErtek * 2);
+            nagyVakErtek = kisVakErtek * 2;
             szalVezerlo.vakokErtekeBeallit(kisVakErtek, nagyVakErtek);
         }
+   
+        osszeg = nagyVakErtek;
+        korokSzama++;
 
         /*Ezek az utasítások a kisvak és a nagyvak játékosok zsetonjaiból
-          automatikusan berakják a potba a vakoknak megfelelő értéket.*/
-        jatekosokTetje[kisVakJatekosSorszam] = kisVakErtek;
-        jatekosokTetje[nagyVakJatekosSorszam] = nagyVakErtek;
-        szalVezerlo.zsetonokPotba(kisVakJatekosSorszam, kisVakErtek);
-        szalVezerlo.zsetonokPotba(nagyVakJatekosSorszam, nagyVakErtek);
+          automatikusan berakják a potba a vakoknak megfelelő értéket. A a kisvak játékos vagy a nagyvak játékosnak nincs elég zsetonja akkor allint hív*/
+        if (kisVakErtek >= (aktJatekosZsetonOsszeg = szalVezerlo.getJatekosZsetonOsszeg(kisVakJatekosSorszam))) {
+            allInSzamlalo++;
+            aktivJatekosokSzama--;
+            jatekosokTetje[kisVakJatekosSorszam] = aktJatekosZsetonOsszeg;
+            szalVezerlo.zsetonokPotba(kisVakJatekosSorszam, aktJatekosZsetonOsszeg);
+            szalVezerlo.jatekosPasszival(kisVakJatekosSorszam);
+        } else {
+            jatekosokTetje[kisVakJatekosSorszam] = kisVakErtek;
+            szalVezerlo.zsetonokPotba(kisVakJatekosSorszam, kisVakErtek);
+        }
+
+        if (nagyVakErtek >= (aktJatekosZsetonOsszeg = szalVezerlo.getJatekosZsetonOsszeg(nagyVakJatekosSorszam))) {
+            allInSzamlalo++;
+            aktivJatekosokSzama--;
+            jatekosokTetje[nagyVakJatekosSorszam] = aktJatekosZsetonOsszeg;
+            szalVezerlo.zsetonokPotba(nagyVakJatekosSorszam, aktJatekosZsetonOsszeg);
+            szalVezerlo.jatekosPasszival(nagyVakJatekosSorszam);
+        } else {
+            jatekosokTetje[nagyVakJatekosSorszam] = nagyVakErtek;
+            szalVezerlo.zsetonokPotba(nagyVakJatekosSorszam, nagyVakErtek);
+        }
     }
     
     /**
      * Beállítja a soron következő játékos lehetőségeit.
      */
-    private void lehetosegekBeallit(){ 
+    private void lehetosegekBeallit() {
         aktJatekosZsetonOsszeg = szalVezerlo.getJatekosZsetonOsszeg(jatekosSorszam);
-        
-        if (aktJatekosZsetonOsszeg <= osszeg-jatekosokTetje[jatekosSorszam]) { //Ez a lehetőség akkor van, ha az aktuális játékos zsetonjainak értéke kevesebb mint az előzőleg feltett tét
+
+        if (aktJatekosZsetonOsszeg <= osszeg - jatekosokTetje[jatekosSorszam]) { //Ez a lehetőség akkor van, ha az aktuális játékos zsetonjainak értéke kevesebb mint az előzőleg feltett tét
             nyithat = false;
             emelhet = false;
             megadhat = false;
+            passzolhat = false;
+        } else if (aktJatekosZsetonOsszeg <= osszeg * 2 - jatekosokTetje[jatekosSorszam]) {
+            nyithat = false;
+            emelhet = false;
+            megadhat = true;
             passzolhat = false;
         } else if (osszeg == 0) { //Ez a lehetőség akkor van, ha a licitkörben még senki nem tett fel tétet.
             nyithat = true;
@@ -134,7 +158,7 @@ public class JatekVezerlo extends Thread {
             megadhat = true;
             passzolhat = false;
         }
-
+        
         /*---tesztelés---*/
         szalVezerlo.setMikezeles(nyithat, emelhet, megadhat, passzolhat);
         szalVezerlo.setjatekosSorszam(jatekosSorszam);
@@ -152,7 +176,7 @@ public class JatekVezerlo extends Thread {
      */
     public void kovetkezoJatekos() {
         jatekosAllapotEllenorzes();
-        lehetosegekBeallit();
+        if(!ujkorIndit)lehetosegekBeallit();
     }
     
     /**

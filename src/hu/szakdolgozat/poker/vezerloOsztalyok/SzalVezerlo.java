@@ -63,7 +63,7 @@ public class SzalVezerlo {
     private String emberJatekosNev;
     private byte jatekosokSzama;
     private int zsetonOsszeg;
-    private byte nagyVakErtek;
+    private int nagyVakErtek;
     private byte vakErtekEmeles;
     
     public SzalVezerlo() {
@@ -579,7 +579,7 @@ public class SzalVezerlo {
                 aktivalandoGombok[i] = false;
             }
         }
-
+        
         jatekterPanel.gombsorAktival(aktivalandoGombok);
         jatekterPanel.setMegadandoOsszeg(jatekVezerlo.getOsszeg() - jatekVezerlo.getJatekosokTetje()[JatekVezerlo.EMBER_JATEKOS_SORSZAM]);
         jatekterPanel.setLepesKoz(kisVakErtekVisszaad());
@@ -726,15 +726,15 @@ public class SzalVezerlo {
      */
     private void beallitasokBetolt() {
         List<String> adatok;
-        Iterator itr;
+        Iterator<String> itr;
 
         adatok = AdatKezelo.beallitasBetolt(AdatKezelo.JATEKMENET);
         itr = adatok.iterator();
-        emberJatekosNev = (String) itr.next();
-        jatekosokSzama = Byte.parseByte((String) itr.next());
-        zsetonOsszeg = Integer.parseInt((String) itr.next());
-        nagyVakErtek = Byte.parseByte((String) itr.next());
-        vakErtekEmeles = Byte.parseByte((String) itr.next());
+        emberJatekosNev = itr.next();
+        jatekosokSzama = Byte.parseByte(itr.next());
+        zsetonOsszeg = Integer.parseInt(itr.next());
+        nagyVakErtek = Integer.parseInt(itr.next());
+        vakErtekEmeles = Byte.parseByte(itr.next());
     }
     
     public void setKartyalapok(List<Kartyalap> kartyalapok) {

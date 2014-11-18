@@ -325,7 +325,7 @@ public class JatekterPanel extends JPanel{
                 gombsorPasszival();
                 break;
             case "raise_bet":
-                if(megadandoOsszeg == 0) szalVezerlo.emberiJatekosNyit(emelendoOsszeg);
+                if(megadandoOsszeg == 0 && szalVezerlo.leosztottKartyalapokSzama() != 0) szalVezerlo.emberiJatekosNyit(emelendoOsszeg);
                 else szalVezerlo.emberiJatekosEmel(emelendoOsszeg);
                 gombsorPasszival();
                 break;

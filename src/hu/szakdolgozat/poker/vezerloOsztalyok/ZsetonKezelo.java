@@ -90,7 +90,6 @@ public final class ZsetonKezelo {
     public synchronized static List<Zseton> pot(List<Zseton> jatekosZsetonok, int osszeg){
         int osszeg2;
         List<Zseton> potZsetonok = new CopyOnWriteArrayList<>();  
-        List<Zseton> maradek = new CopyOnWriteArrayList<>();
         aranySzamok = new byte[] {1, 1, 1, 1, 1};//Ez azért kell mert ennek az új arányosságnak megfelelően bontja fel a zsetonkioszt metódus az összeget.
         
         zsetonKioszt(osszeg);
@@ -155,8 +154,8 @@ public final class ZsetonKezelo {
             keresendoZseton = potMasolat.get(potMasolat.size()-1); //A zsetonlista utolsó elemét beállítja keresendő zsetonnak.
             zsetonErtek = keresendoZseton.getErtek();
             
-            for (int i = 0; i < potMasolat.size(); i++) {
-                zseton = potMasolat.get(i);
+            for (Zseton potMasolat1 : potMasolat) {
+                zseton = potMasolat1;
                 if (zseton.equals(keresendoZseton)) {
                     egyformaZsetonok.add(zseton);
                 }

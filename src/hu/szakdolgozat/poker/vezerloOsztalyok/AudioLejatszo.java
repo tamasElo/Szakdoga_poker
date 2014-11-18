@@ -23,6 +23,8 @@ public class AudioLejatszo {
     public static final File ZSETON_CSORGES = new File("src/hu/szakdolgozat/poker/adatFajlok/audio/zseton_csorges.wav");
     public static final File JATEK_NYERTES = new File("src/hu/szakdolgozat/poker/adatFajlok/audio/jatek_nyertes.wav");
     public static final File KOR_NYERTES = new File("src/hu/szakdolgozat/poker/adatFajlok/audio/kor_nyertes.wav");
+    public static final File ELOUGRO_FELHO = new File("src/hu/szakdolgozat/poker/adatFajlok/audio/elougro_felho.wav");
+    public static final File MENUPONT_HANG = new File("src/hu/szakdolgozat/poker/adatFajlok/audio/menupont_hang.wav");
 
     /**
      * Hangok lejátszását teszi lehetővé
@@ -35,6 +37,7 @@ public class AudioLejatszo {
 
         try {
             if (menuZene && !elinditva && cim == MENU_ZENE) {
+                audioMegallit();
                 ais = AudioSystem.getAudioInputStream(cim);
                 clip = AudioSystem.getClip();
                 clip.open(ais);               

@@ -353,8 +353,6 @@ public class KartyaMozgato extends Thread {
 
         if (osszesKartyalapLeosztasa) {
             leosztandoKartyalapokSzama = JatekVezerlo.LEOSZTHATO_KARTYALAPOK_SZAMA - szalVezerlo.leosztottKartyalapokSzama();
-        } else {
-            szalVezerlo.jatekVezerlesFolytat();
         }
         
         for (byte i = 0; i < leosztandoKartyalapokSzama; i++) {
@@ -399,8 +397,12 @@ public class KartyaMozgato extends Thread {
         if (szalVezerlo.leosztottKartyalapokSzama() == JatekVezerlo.LEOSZTHATO_KARTYALAPOK_SZAMA) {
             jatekosokKartyalapjai = szalVezerlo.getJatekosokKartyalapjai();
             leosztottKartyalapok = szalVezerlo.getLeosztottKartyalapok();
-            szalVezerlo.setNyertesPokerKezek(PokerKezKiertekelo.nyertesPokerKezKeres(jatekosokKartyalapjai, leosztottKartyalapok));
-        }        
+            szalVezerlo.setNyertesPokerKezek(PokerKezKiertekelo.nyertesPokerKezKeres(jatekosokKartyalapjai, leosztottKartyalapok));    
+        }    
+        
+        if (!osszesKartyalapLeosztasa) {
+            szalVezerlo.jatekVezerlesFolytat();
+        }
     }
     
     /**
@@ -533,6 +535,7 @@ public class KartyaMozgato extends Thread {
         double arany;
         ido = 3;
         
+        szalVezerlo.grafikaElmosas(false);
         mozgatandoKartyalapok.addAll(leosztottKartyalapok);
         nagyitottKartyalapok.addAll(leosztottKartyalapok);        
         
@@ -548,10 +551,7 @@ public class KartyaMozgato extends Thread {
                 mozgatandoKartyalapok.addAll(jatekosKartyalapok);
             }            
         }
-
-        pakliMozgat();
             
-        szalVezerlo.grafikaElmosas(false);
         try {           
             while (kartyalapokVegpontban != mozgatandoKartyalapok.size()) {
                 kartyalapokVegpontban = 0;
@@ -595,6 +595,8 @@ public class KartyaMozgato extends Thread {
                 szalVezerlo.frissit();
                 sleep(ido);
             }
+
+            pakliMozgat();
             
             do {
                 for (Kartyalap kartyalap : nagyitottKartyalapok) {
@@ -697,6 +699,7 @@ public class KartyaMozgato extends Thread {
             }
 
             kartyalapokPakliba();
+            szalVezerlo.jatekVezerlesFolytat();
         }
         
         if(kartyalapokBedobasa)kartyalapokBedob();

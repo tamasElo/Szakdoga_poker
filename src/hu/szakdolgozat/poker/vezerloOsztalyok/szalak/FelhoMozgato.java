@@ -1,6 +1,7 @@
 package hu.szakdolgozat.poker.vezerloOsztalyok.szalak;
 
 import hu.szakdolgozat.poker.alapOsztalyok.Felho;
+import hu.szakdolgozat.poker.vezerloOsztalyok.AudioLejatszo;
 import java.awt.Font;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +45,7 @@ public class FelhoMozgato extends Thread {
             long ido = 2;
             felhoKepSzelesseg = 0;
             felhoKepMagassag = 0;     
+            AudioLejatszo.audioLejatszas(AudioLejatszo.ELOUGRO_FELHO, false);
             
             while (aktTav <= tavolsag) {
                 aktTav ++;

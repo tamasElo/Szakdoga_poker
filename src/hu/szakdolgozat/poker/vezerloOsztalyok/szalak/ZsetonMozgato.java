@@ -94,9 +94,7 @@ public class ZsetonMozgato extends Thread {
     /**
      * Újratölti a megadott játékos zsetonjait és elhelyezi a megfelelő pozícióban.
      */
-    private void zsetonokUjratolt(List<Zseton> zsetonok) {
-        AudioLejatszo.audioLejatszas(AudioLejatszo.ZSETON_CSORGES, false);
-        
+    private void zsetonokUjratolt(List<Zseton> zsetonok) {        
         for (Zseton zseton : zsetonok) {
             veletlenForgSzog = Math.random() * 360;
             szoras = -jatekterSzelesseg / 800 + Math.random() * jatekterSzelesseg / 400;

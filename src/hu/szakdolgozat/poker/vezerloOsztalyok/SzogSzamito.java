@@ -24,7 +24,7 @@ public class SzogSzamito {
      * @param magassag
      * @return
      */
-    public static List<Point> vegpontLista(int vegpontokSzama, int szelesseg, int magassag){
+    public synchronized static List<Point> vegpontLista(int vegpontokSzama, int szelesseg, int magassag){
         List<Point> vegpontok = new ArrayList<>();
         double aktSzog = 90;
         int szogNovekmeny = 360 / vegpontokSzama;
@@ -43,7 +43,7 @@ public class SzogSzamito {
      * @param magassag
      * @return
      */
-    public static Point vegpontSzamit(double szog, int szelesseg, int magassag) {
+    public synchronized static Point vegpontSzamit(double szog, int szelesseg, int magassag) {
         RoundRectangle2D roundRectangle = new RoundRectangle2D.Double(szelesseg / 5.517, magassag / 4, szelesseg/1.569, magassag/2, magassag/2, magassag/2);
         kx = szelesseg / 2;
         ky = magassag / 2;
@@ -70,7 +70,7 @@ public class SzogSzamito {
      * @param vy
      * @return
      */
-    public static double szogSzamit(int szelesseg, int magassag, double vx, double vy) {
+    public synchronized static double szogSzamit(int szelesseg, int magassag, double vx, double vy) {
         szog = 0;
         
         foSzogSzamit(szelesseg, magassag, vx, vy);
@@ -110,7 +110,7 @@ public class SzogSzamito {
      * @param vy
      * @return
      */
-    public static double forgasSzogSzamit(int szelesseg, int magassag, double vx, double vy) {
+    public synchronized static double forgasSzogSzamit(int szelesseg, int magassag, double vx, double vy) {
         double kulonbseg;
         szog = 0;
 
@@ -144,7 +144,7 @@ public class SzogSzamito {
      * @param vy
      * @return
      */
-    public static double foSzogSzamit(int szelesseg, int magassag, double vx, double vy) {
+    public synchronized static double foSzogSzamit(int szelesseg, int magassag, double vx, double vy) {
         foSzog = Math.atan2(vy - magassag / 2, vx - szelesseg / 2);
         foSzog = Math.toDegrees(foSzog);
         if (foSzog < 0) {

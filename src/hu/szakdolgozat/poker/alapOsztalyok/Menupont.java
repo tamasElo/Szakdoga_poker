@@ -1,5 +1,6 @@
 package hu.szakdolgozat.poker.alapOsztalyok;
 
+import hu.szakdolgozat.poker.vezerloOsztalyok.AudioLejatszo;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
