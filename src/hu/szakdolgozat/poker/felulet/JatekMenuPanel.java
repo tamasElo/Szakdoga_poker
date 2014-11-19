@@ -335,40 +335,48 @@ public class JatekMenuPanel extends JPanel{
         lblNagyVakErtekE.setBounds(645, 700, 30, 30);
         lblVakEmelesE.setBounds(750, 750, 30, 30); 
         
-        beallitasKomponensek.add(lblGrafikaAudio);
-        beallitasKomponensek.add(lblFelbontas);
-        beallitasKomponensek.add(lblFelbontasE);
-        beallitasKomponensek.add(sliFelbontas);
-        beallitasKomponensek.add(rbtnAblakos);
-        beallitasKomponensek.add(rbtnTeljesKepernyo);
-        beallitasKomponensek.add(cbElsimitas);
-        beallitasKomponensek.add(cbMenuZene);
-        beallitasKomponensek.add(cbHang);
-        beallitasKomponensek.add(lblJatekmenet);
-        beallitasKomponensek.add(lblNev);
-        beallitasKomponensek.add(lblJatekosokSzama);
-        beallitasKomponensek.add(lblOsszeg);
-        beallitasKomponensek.add(lblNagyVakErtek);
-        beallitasKomponensek.add(lblVakEmeles);
-        beallitasKomponensek.add(txtNev);
-        beallitasKomponensek.add(sliJatekosokSzama);
-        beallitasKomponensek.add(sliOsszeg);
-        beallitasKomponensek.add(sliNagyVakErtek);
-        beallitasKomponensek.add(sliVakEmeles);
-        beallitasKomponensek.add(lblJatekosokSzamaE);
-        beallitasKomponensek.add(lblOsszegE);
-        beallitasKomponensek.add(lblNagyVakErtekE);
-        beallitasKomponensek.add(lblVakEmelesE);
-
+        beallitasKomponensek.add(lblGrafikaAudio); lblGrafikaAudio.setName("lblGrafikaAudio");
+        beallitasKomponensek.add(lblFelbontas); lblFelbontas.setName("lblFelbontas");
+        beallitasKomponensek.add(lblFelbontasE); lblFelbontasE.setName("lblFelbontasE");
+        beallitasKomponensek.add(sliFelbontas); sliFelbontas.setName("sliFelbontas");
+        beallitasKomponensek.add(rbtnAblakos); rbtnAblakos.setName("rbtnAblakos");
+        beallitasKomponensek.add(rbtnTeljesKepernyo); rbtnTeljesKepernyo.setName("rbtnTeljesKepernyo");
+        beallitasKomponensek.add(cbElsimitas); cbElsimitas.setName("cbElsimitas");
+        beallitasKomponensek.add(cbMenuZene); cbMenuZene.setName("cbMenuZene");
+        beallitasKomponensek.add(cbHang); cbHang.setName("cbHang");
+        beallitasKomponensek.add(lblJatekmenet); lblJatekmenet.setName("lblJatekmenet");
+        beallitasKomponensek.add(lblNev); lblNev.setName("lblNev");
+        beallitasKomponensek.add(lblJatekosokSzama); lblJatekosokSzama.setName("lblJatekosokSzama");
+        beallitasKomponensek.add(lblOsszeg); lblOsszeg.setName("lblOsszeg");
+        beallitasKomponensek.add(lblNagyVakErtek); lblNagyVakErtek.setName("lblNagyVakErtek");
+        beallitasKomponensek.add(lblVakEmeles); lblVakEmeles.setName("lblVakEmeles");
+        beallitasKomponensek.add(txtNev); txtNev.setName("txtNev");
+        beallitasKomponensek.add(sliJatekosokSzama); sliJatekosokSzama.setName("sliJatekosokSzama");
+        beallitasKomponensek.add(sliOsszeg); sliOsszeg.setName("sliOsszeg");
+        beallitasKomponensek.add(sliNagyVakErtek); sliNagyVakErtek.setName("sliNagyVakErtek");
+        beallitasKomponensek.add(sliVakEmeles); sliVakEmeles.setName("sliVakEmeles");
+        beallitasKomponensek.add(lblJatekosokSzamaE); lblJatekosokSzamaE.setName("lblJatekosokSzamaE");
+        beallitasKomponensek.add(lblOsszegE); lblOsszegE.setName("lblOsszegE");
+        beallitasKomponensek.add(lblNagyVakErtekE); lblNagyVakErtekE.setName("lblNagyVakErtekE");
+        beallitasKomponensek.add(lblVakEmelesE); lblVakEmelesE.setName("lblVakEmelesE");
+        
+     //  AdatKezelo.ideiglenesCucc(beallitasKomponensek, szelesseg);
+        
         AbstractButton aButton;
-
+        List<String> adatok = AdatKezelo.szelessegBetolt(new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/proba.xml"));        
+        Iterator<String> itr = adatok.iterator();
+        
         for (JComponent beallitasKomponens : beallitasKomponensek) {
             beallitasKomponens.setOpaque(false);
 
+                beallitasKomponens.setBounds((int) (szelesseg/Double.parseDouble(itr.next())), (int) (szelesseg/Double.parseDouble(itr.next())), 
+                       (int) (szelesseg / Double.parseDouble(itr.next())), (int) (szelesseg / Double.parseDouble(itr.next())));
+
+            
             if (beallitasKomponens.equals(lblGrafikaAudio) || beallitasKomponens.equals(lblJatekmenet)) {
-                beallitasKomponens.setFont(new Font("Copperplate Gothic Bold", 0, 20));
+                beallitasKomponens.setFont(new Font("Copperplate Gothic Bold", 0, szelesseg/80));
             } else {
-                beallitasKomponens.setFont(new Font("Copperplate Gothic Bold", 0, 14));
+                beallitasKomponens.setFont(new Font("Copperplate Gothic Bold", 0, (int) (szelesseg * 0.00875)));
             }
 
             if (beallitasKomponens instanceof AbstractButton) {
@@ -514,7 +522,10 @@ public class JatekMenuPanel extends JPanel{
                 jatekosNev = txtNev.getText();
                 
                 AdatKezelo.grafikaBeallitasMent(kepernyoMod, kepernyoAllapot, elsimitas);
+                AdatKezelo.grafikaBeallitasMent(kepernyoMod, kepernyoAllapot, elsimitas);
                 AdatKezelo.audioBeallitasMent(menuZene, hangok);
+                AdatKezelo.audioBeallitasMent(menuZene, hangok);
+                AdatKezelo.jatekmenetBeallitasMent(jatekosNev, jatekosokSzama, osszeg, nagyVakErtek, vakEmeles);
                 AdatKezelo.jatekmenetBeallitasMent(jatekosNev, jatekosokSzama, osszeg, nagyVakErtek, vakEmeles);
                 feluletKezelo.beallitasokAlkalmaz();
                 foMenuBetolt();

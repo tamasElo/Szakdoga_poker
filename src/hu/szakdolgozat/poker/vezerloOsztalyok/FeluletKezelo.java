@@ -7,7 +7,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.DisplayMode;
-import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.JFrame;
@@ -63,13 +62,13 @@ public class FeluletKezelo {
         jatekMenuPanel.setSize(felbontas);
         jatekMenuPanel.setFeluletKezelo(feluletKezelo);
         jatekMenuPanel.setSzalVezerlo(szalVezerlo);
-        szalVezerlo.setJatekMenuPanel(jatekMenuPanel);        
-
+        szalVezerlo.setJatekMenuPanel(jatekMenuPanel);    
         if (jatekterPanel != null) {
             pokerFrame.remove(jatekterPanel);
         }
 
         pokerFrame.getContentPane().add(BorderLayout.CENTER, jatekMenuPanel);
+        pokerFrame.setResizable(false);
         pokerFrame.pack();
         AudioLejatszo.audioLejatszas(AudioLejatszo.MENU_ZENE, true);
     }
