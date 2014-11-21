@@ -21,13 +21,8 @@ public class FeluletKezelo {
     private JFrame pokerFrame;
     private KepernyoKezelo kepernyoKezelo;
     private byte kepernyoAllapot;
-    private byte keparany;
     private boolean elsimitas;
     private boolean felbontasValtozott;
-    public static final byte ABLAKOS_MOD = 0;
-    public static final byte TELJES_KEPERNYO_MOD = 1;
-    public static final byte NORMAL_KEPERNYO = 3;
-    public static final byte SZELES_KEPERNYO = 2;
 
     public static void main(String[] args) {
         FeluletKezelo fk = new FeluletKezelo();
@@ -39,6 +34,10 @@ public class FeluletKezelo {
      * Betölti a poker frame-et
      */
     public void pokerFrameBetolt() {
+        if (pokerFrame != null) {
+            pokerFrame.dispose();
+        }
+        
         pokerFrame = new JFrame();
         pokerFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pokerFrame.setTitle("Póker");
@@ -55,24 +54,26 @@ public class FeluletKezelo {
         if (jatekMenuPanel != null) {
             szalVezerlo.jatekMenuAnimacioMegallit();
         }
+        
         szalVezerlo = new SzalVezerlo();
-        jatekMenuPanel = new JatekMenuPanel(kepernyoAllapot, kepernyoKezelo.getKepernyoModok(), elsimitas);
+        jatekMenuPanel = new JatekMenuPanel(kepernyoAllapot, kepernyoKezelo.kepernyoModLista(), elsimitas);
         jatekMenuPanel.setLayout(null);
         jatekMenuPanel.setBackground(Color.black);
         jatekMenuPanel.setSize(felbontas);
         jatekMenuPanel.setFeluletKezelo(feluletKezelo);
         jatekMenuPanel.setSzalVezerlo(szalVezerlo);
         szalVezerlo.setJatekMenuPanel(jatekMenuPanel);    
+        
         if (jatekterPanel != null) {
             pokerFrame.remove(jatekterPanel);
         }
-
-        pokerFrame.getContentPane().add(BorderLayout.CENTER, jatekMenuPanel);
+        
+        pokerFrame.getContentPane().add(jatekMenuPanel);
         pokerFrame.setResizable(false);
         pokerFrame.pack();
         AudioLejatszo.audioLejatszas(AudioLejatszo.MENU_ZENE, true);
     }
-
+    
     /**
      * Betölti a játék tér panelt.
      */
@@ -102,36 +103,25 @@ public class FeluletKezelo {
             felbontas = new Dimension(kepernyoMod.getWidth(), kepernyoMod.getHeight());
         }
 
-        if (kepernyoAllapot == ABLAKOS_MOD && kepernyoKezelo.isTeljesKepernyoBekapcsolva()) {
+        if (kepernyoAllapot == KepernyoKezelo.ABLAKOS_MOD && kepernyoKezelo.isTeljesKepernyoBekapcsolva()) {
             kepernyoKezelo.teljesKepernyoKi();
-            pokerFrame.dispose();
             pokerFrameBetolt();
             jatekMenuPanelBetolt(this);
             pokerFrame.setVisible(true);
-        } else if (kepernyoAllapot == TELJES_KEPERNYO_MOD && !kepernyoKezelo.isTeljesKepernyoBekapcsolva()) {//bezárja a póker frame-et és létrehoz egy újat majd betölti a menü panelt.           
-            if (pokerFrame != null) {
-                pokerFrame.dispose();
-            }
-
+        } else if (kepernyoAllapot == KepernyoKezelo.TELJES_KEPERNYO_MOD && !kepernyoKezelo.isTeljesKepernyoBekapcsolva()) {//bezárja a póker frame-et és létrehoz egy újat majd betölti a menü panelt.           
             pokerFrameBetolt();
             kepernyoKezelo.teljesKepernyoBe(kepernyoMod, pokerFrame);
             jatekMenuPanelBetolt(this);
-        } else if (kepernyoAllapot == TELJES_KEPERNYO_MOD && kepernyoKezelo.isTeljesKepernyoBekapcsolva() && felbontasValtozott) {            
-            pokerFrame.dispose();
+        } else if (kepernyoAllapot == KepernyoKezelo.TELJES_KEPERNYO_MOD && kepernyoKezelo.isTeljesKepernyoBekapcsolva() && felbontasValtozott) {            
             kepernyoKezelo.teljesKepernyoKi();
             pokerFrameBetolt();
             kepernyoKezelo.teljesKepernyoBe(kepernyoMod, pokerFrame);
             jatekMenuPanelBetolt(this);
-        } else if (kepernyoAllapot == ABLAKOS_MOD && !kepernyoKezelo.isTeljesKepernyoBekapcsolva() && felbontasValtozott) {
-            pokerFrame.dispose();
+        } else if (kepernyoAllapot == KepernyoKezelo.ABLAKOS_MOD && !kepernyoKezelo.isTeljesKepernyoBekapcsolva() && felbontasValtozott || pokerFrame == null) {
             pokerFrameBetolt();
             jatekMenuPanelBetolt(this);
             pokerFrame.setVisible(true);
-        } else if (pokerFrame == null) {
-            pokerFrameBetolt();
-            jatekMenuPanelBetolt(this);
-            pokerFrame.setVisible(true);
-        } else{
+        } else {
             AudioLejatszo.audioLejatszas(AudioLejatszo.MENU_ZENE, true);
         }
     }

@@ -71,7 +71,7 @@ public class KartyaMozgato extends Thread {
             panelMagassag = szalVezerlo.jatekMenuPanelMagassag();
         }
 
-        lepes = panelSzelesseg * 0.001875;
+        lepes = (double)panelMagassag / 400;
     }
 
     /**
@@ -93,7 +93,7 @@ public class KartyaMozgato extends Thread {
         kartyalapok = PakliKezelo.kevertPakli();
         
         for (Kartyalap kartyalap : kartyalapok) {
-            kartyalap.setKartyaKepSzelesseg(panelSzelesseg/22.857);
+            kartyalap.setKartyaKepSzelesseg(panelMagassag/16.901);
             kartyalap.setKartyaKepMagassag(panelMagassag/11.765);    
             aktSzoras = new Point((int) (minX + Math.random() * maxX), (int) (minY + Math.random() * maxY));
             kartyalap.setKx(kx+aktSzoras.getX());
@@ -169,7 +169,7 @@ public class KartyaMozgato extends Thread {
         try {
             szalVezerlo.setKartyaGrafikaElore(true);//A kártyalapok elsőként való kirajzolását teszi lehetővé a játéktéren.     
             ido = 2;
-            elteres = panelSzelesseg/80;//A játékos lapjai közötti távolság értékét adja meg.
+            elteres = panelMagassag/60;//A játékos lapjai közötti távolság értékét adja meg.
             jatekosSorszam = dealer;   
             Kartyalap kartyalap;
             List<Byte> jatekosSorszamok = new ArrayList<>();

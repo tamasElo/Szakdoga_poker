@@ -1,5 +1,7 @@
 package hu.szakdolgozat.poker.vezerloOsztalyok;
 
+import hu.szakdolgozat.poker.felulet.KepernyoKezelo;
+import java.awt.Dimension;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,7 +17,11 @@ import org.w3c.dom.ls.LSSerializer;
 import org.w3c.dom.ls.LSOutput;
 import java.awt.DisplayMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import org.w3c.dom.NodeList;
@@ -34,13 +40,21 @@ public final class AdatKezelo {
     /**
      * Létre hoz egy úgy Document példányt.
      */
-    private static void dokumentumLetrehozas() {
+    private static void dokumentumLetrehozas(File eleresiUt) {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        
         try {
             DocumentBuilder db = dbf.newDocumentBuilder();
-            doc = db.newDocument();
+            
+            if (eleresiUt == null) {
+                doc = db.newDocument();
+            } else {
+                doc = db.parse(eleresiUt);
+            }            
         } catch (ParserConfigurationException pce) {
             JOptionPane.showMessageDialog(null, pce.getMessage());
+        } catch (SAXException | IOException ex) {
+            Logger.getLogger(AdatKezelo.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -52,7 +66,7 @@ public final class AdatKezelo {
      * @param elsimitas
      */
     public static void grafikaBeallitasMent(DisplayMode kepernyoMod, byte kepernyoAllapot, boolean elsimitas) {
-        dokumentumLetrehozas();
+        dokumentumLetrehozas(null);
 
         Element rootEle = doc.createElement("Grafika");
         doc.appendChild(rootEle);
@@ -94,7 +108,7 @@ public final class AdatKezelo {
      * @param hangok
      */
     public static void audioBeallitasMent(boolean menuZene, boolean hangok) {
-        dokumentumLetrehozas();
+        dokumentumLetrehozas(null);
 
         Element rootEle = doc.createElement("Audio");
         doc.appendChild(rootEle);
@@ -124,7 +138,7 @@ public final class AdatKezelo {
      */
     public static void jatekmenetBeallitasMent(String emberJatekosNev, byte jatekosokSzama,
             int zsetonOsszeg, byte nagyVakErtek, byte vakErtekEmeles) {
-        dokumentumLetrehozas();
+        dokumentumLetrehozas(null);
 
         Element rootEle = doc.createElement("Jatekmenet");
         doc.appendChild(rootEle);
@@ -183,16 +197,9 @@ public final class AdatKezelo {
      * @return
      */
     public static List<String> beallitasBetolt(File eleresiUt) {
-        List<String> adatok = new ArrayList<>();
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-
-        try {
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            doc = db.parse(eleresiUt);
-        } catch (ParserConfigurationException | SAXException | IOException pce) {
-            JOptionPane.showMessageDialog(null, pce.getMessage());
-        }
-
+        dokumentumLetrehozas(eleresiUt);
+        
+        ArrayList<String> adatok = new ArrayList<>();
         Element docEle = doc.getDocumentElement();
         NodeList nl = docEle.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
@@ -202,57 +209,85 @@ public final class AdatKezelo {
         return adatok;
     }
     
-    public static List<String> szelessegBetolt(File eleresiUt) {
-        List<String> adatok = new ArrayList<>();
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-
-        try {
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            doc = db.parse(eleresiUt);
-        } catch (ParserConfigurationException | SAXException | IOException pce) {
-            JOptionPane.showMessageDialog(null, pce.getMessage());
-        }
-
-        Element docEle = doc.getDocumentElement();
-        NodeList nl = docEle.getChildNodes();
+    public static HashMap<String, List<Double>> aranyErtekekBetolt(File eleresiUt, String elemNev, Dimension felbontas) {
+        dokumentumLetrehozas(eleresiUt);
+        List<Double> ertekek;
+        HashMap<String,List<Double>> adatok = new HashMap<>();
+        double szelesseg = felbontas.getWidth(), magassag = felbontas.getHeight();
+        double ertek, aranyErtek;
+        Element docEle = doc.getDocumentElement();         
+        Element elem;
+        NodeList nl = docEle.getElementsByTagName(elemNev);
         NodeList nl2;
+        nl = nl.item(0).getChildNodes();
+        nl = nl.item(KepernyoKezelo.keparanySzamit(felbontas)).getChildNodes();
+
         for (int i = 0; i < nl.getLength(); i++) {
+            ertekek = new ArrayList<>();
             nl2 =  nl.item(i).getChildNodes();
+            elemNev = nl.item(i).getNodeName();
             
             for (int j = 0; j < nl2.getLength(); j++) {
-                adatok.add(nl2.item(j).getTextContent());
+               elem = (Element) nl2.item(j);
+               ertek = Double.parseDouble(nl2.item(j).getTextContent());
+               
+                if (elem.getAttribute("Arany").equals("szelesseg")) {
+                    aranyErtek = szelesseg / ertek;
+                } else {
+                    aranyErtek = magassag / ertek;
+                }
+                
+                ertekek.add(aranyErtek);
             }
+            
+            adatok.put(elemNev, ertekek);
         }
 
         return adatok;
     }
-    
-    public static void ideiglenesCucc(List<JComponent> komponensek, double szelesseg){
-         dokumentumLetrehozas();
 
-        Element rootEle = doc.createElement("Komponensek");
-        doc.appendChild(rootEle);
-        Element elem, elem2;
+    public static void ideiglenesCucc(List<JComponent> komponensek, double szelesseg, double magassag) {
+        dokumentumLetrehozas(null);
+
+        Element rootEle = doc.createElement("JatekMenuPanel");
+        Element elem, elem2, elem3, elem4;
         Text text;
-        for (JComponent comp : komponensek) {
-            elem = doc.createElement(comp.getName());         
-            elem2 = doc.createElement("X");
+
+        doc.appendChild(rootEle);
+        elem = doc.createElement("Komponensek");
+        elem2 = doc.createElement("Szeles");
+        rootEle.appendChild(elem);
+        elem.appendChild(elem2);
+
+        for (int i = 0; i < komponensek.size(); i++) {
+            JComponent comp = komponensek.get(i);
+            elem3 = doc.createElement(comp.getName());
+            elem4 = doc.createElement("X");
+            elem4.setAttribute("Arany", "szelesseg");
             text = doc.createTextNode(String.valueOf(szelesseg / comp.getBounds().getX()));
-            elem2.appendChild(text);
-            elem.appendChild(elem2);
-            elem2 = doc.createElement("Y");
-            text = doc.createTextNode(String.valueOf(szelesseg / comp.getBounds().getY()));
-            elem2.appendChild(text);
-            elem.appendChild(elem2);
-            elem2 = doc.createElement("Szelesseg");
-            text = doc.createTextNode(String.valueOf(szelesseg / comp.getBounds().getWidth()));
-            elem2.appendChild(text);
-            elem.appendChild(elem2);
-            elem2 = doc.createElement("Magassag");
-            text = doc.createTextNode(String.valueOf(szelesseg / comp.getBounds().getHeight()));
-            elem2.appendChild(text);
-            elem.appendChild(elem2);
-            rootEle.appendChild(elem);
+            elem4.appendChild(text);
+            elem3.appendChild(elem4);
+            elem4 = doc.createElement("Y");
+            elem4.setAttribute("Arany", "magassag");
+            text = doc.createTextNode(String.valueOf(magassag / comp.getBounds().getY()));
+            elem4.appendChild(text);
+            elem3.appendChild(elem4);
+            elem4 = doc.createElement("Szelesseg");
+            elem4.setAttribute("Arany", "magassag");
+            text = doc.createTextNode(String.valueOf(magassag / comp.getBounds().getWidth()));
+            elem4.appendChild(text);
+            elem3.appendChild(elem4);
+            elem4 = doc.createElement("Magassag");
+            elem4.setAttribute("Arany", "magassag");
+            text = doc.createTextNode(String.valueOf(magassag / comp.getBounds().getHeight()));
+            elem4.appendChild(text);
+            elem3.appendChild(elem4);
+            elem4 = doc.createElement("betuMeret");
+            elem4.setAttribute("Arany", "magassag");
+            text = doc.createTextNode(String.valueOf(magassag / comp.getFont().getSize()));
+            elem4.appendChild(text);
+            elem3.appendChild(elem4);
+            elem2.appendChild(elem3);
         }
         fajlbaKiiras(new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/proba.xml"));
     }

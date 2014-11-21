@@ -4,6 +4,8 @@ import hu.szakdolgozat.poker.vezerloOsztalyok.FeluletKezelo;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 public class KepernyoKezelo {
@@ -11,6 +13,10 @@ public class KepernyoKezelo {
     private List<DisplayMode> kepernyoModok;
     private FeluletKezelo feluletKezelo;
     private boolean teljesKepernyoBekapcsolva;
+    public static final byte ABLAKOS_MOD = 0;
+    public static final byte TELJES_KEPERNYO_MOD = 1;
+    public static final byte NORMAL_KEPERNYO = 0;
+    public static final byte SZELES_KEPERNYO = 1;
 
     public KepernyoKezelo(FeluletKezelo feluletKezelo) {
         this.feluletKezelo = feluletKezelo;
@@ -36,7 +42,7 @@ public class KepernyoKezelo {
             vertikalisFelbontas = dmode.getHeight();
             szinMelyseg = dmode.getBitDepth();
 
-            if (feluletKezelo.getKepernyoAllapot() == FeluletKezelo.TELJES_KEPERNYO_MOD) {
+            if (feluletKezelo.getKepernyoAllapot() == TELJES_KEPERNYO_MOD) {
                 if (((double) Math.round(10 * horizontalisFelbontas / vertikalisFelbontas) / 10 == 1.3 && szinMelyseg == 32
                         || (double) Math.round(10 * horizontalisFelbontas / vertikalisFelbontas) / 10 == 1.7 && szinMelyseg == 32)
                         && dmode.getHeight() >= 768) {
@@ -51,7 +57,7 @@ public class KepernyoKezelo {
             }
         }
        
-        if (feluletKezelo.getKepernyoAllapot() == FeluletKezelo.ABLAKOS_MOD) {
+        if (feluletKezelo.getKepernyoAllapot() == ABLAKOS_MOD) {
             feluletKezelo.setKepernyoMod(new DisplayMode(dm.getWidth(), 
                     dm.getHeight(), dm.getBitDepth(), 
                     vc.getDisplayMode().getRefreshRate()));
@@ -65,6 +71,12 @@ public class KepernyoKezelo {
         }
         
         return tamogatott;
+    }
+    
+    public static byte keparanySzamit(Dimension felbontas){
+        if((double) Math.round(10 * felbontas.getWidth() / felbontas.getHeight()) / 10 == 1.3)
+            return NORMAL_KEPERNYO;
+        else return SZELES_KEPERNYO;
     }
     
     /**
@@ -101,9 +113,15 @@ public class KepernyoKezelo {
         
         vc.setFullScreenWindow(null);
         teljesKepernyoBekapcsolva = false;
+        
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(KepernyoKezelo.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    public List<DisplayMode> getKepernyoModok() {
+    public List<DisplayMode> kepernyoModLista() {
         return kepernyoModok;
     }
 
