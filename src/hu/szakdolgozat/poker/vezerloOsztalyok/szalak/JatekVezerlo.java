@@ -42,7 +42,7 @@ public class JatekVezerlo extends Thread {
         kisVakErtek = nagyVakErtek / 2;
         jatekosokSzama = szalVezerlo.getJatekosokSzama();
         jatekosokTetje = new int[jatekosokSzama];
-        dealerJatekosSorszam = 3;//(byte) (Math.random() * jatekosokSzama);
+        dealerJatekosSorszam = (byte) (Math.random() * jatekosokSzama);
         mi = new Mi();     
         ido = 1000;
         ujkorIndit = true;

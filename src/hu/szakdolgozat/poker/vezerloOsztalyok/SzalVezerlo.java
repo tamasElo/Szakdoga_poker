@@ -429,7 +429,7 @@ public class SzalVezerlo {
     public void nyertesSzalIndit(){
         byte jatekosSorszam = aktivJatekosSorszamKeres((byte)0);
         Image nyertesKep = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/nyertes/nyertes.png")).getImage();
-        double nyertesKepSzelesseg = 400, nyertesKepMagassag = 200;
+        double nyertesKepSzelesseg = jatekterPanelSzelesseg() / 4, nyertesKepMagassag = jatekterPanelMagassag() / 6;
         double kx = jatekterPanelSzelesseg() / 2, ky = jatekterPanelMagassag() / 2;
         Jatekos jatekos = getJatekosok().get(jatekosSorszam);
         nyertes = new Nyertes(jatekos.getNev(), nyertesKep);

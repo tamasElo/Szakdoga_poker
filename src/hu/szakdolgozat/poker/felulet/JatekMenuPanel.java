@@ -86,14 +86,14 @@ public class JatekMenuPanel extends JPanel{
     private String menupontNev;
     private int nagyBetuMeret;
     private int kisBetuMeret;
-    private final byte[] nagyVakErtekek = {2, 10, 20, 30, 40, 50};
-    private final String jatekFolytat = "Játék folytat";
-    private final String ujJatek = "Új játék";
-    private final String beallitasok = "Beállítások";
-    private final String segitseg = "Segítség";
-    private final String kilepes = "Kilépés";
-    private final String alkalmaz = "Alkalmaz";
-    private final String vissza = "Vissza";
+    private static final byte[] NAGY_VAK_ERTEKEK = {2, 10, 20, 30, 40, 50};
+    private static final String JATEK_FOLYTAT = "Játék folytat";
+    private static final String UJ_JATEK = "Új játék";
+    private static final String BEALLITASOK = "Beállítások";
+    private static final String SEGITSEG = "Segítség";
+    private static final String KILEPES = "Kilépés";
+    private static final String ALKALMAZ = "Alkalmaz";
+    private static final String VISSZA = "Vissza";
 
     public JatekMenuPanel(byte kepernyoAllapot, List<DisplayMode> kepernyoModok, boolean elsimitas) {
         this.kepernyoAllapot = kepernyoAllapot;
@@ -179,7 +179,7 @@ public class JatekMenuPanel extends JPanel{
      */
     private void foMenuBetolt() {        
         String[] elemNevek = {"JatekFolytat", "UjJatek", "Beallitasok", "Segitseg", "Kilepes"};
-        String[] mpontNevek = {jatekFolytat, ujJatek, beallitasok, segitseg, kilepes};
+        String[] mpontNevek = {JATEK_FOLYTAT, UJ_JATEK, BEALLITASOK, SEGITSEG, KILEPES};
         
         if(isAncestorOf(scpPokerSzabaly)) remove(scpPokerSzabaly);
         
@@ -319,19 +319,19 @@ public class JatekMenuPanel extends JPanel{
         sliNagyVakErtek.setName("sliNagyVakErtek");
         sliNagyVakErtek.setMaximum(5);
         
-        for (byte i = 0; i < nagyVakErtekek.length; i++) {
-            if (nagyVakErtek == nagyVakErtekek[i]) {
+        for (byte i = 0; i < NAGY_VAK_ERTEKEK.length; i++) {
+            if (nagyVakErtek == NAGY_VAK_ERTEKEK[i]) {
                 sliNagyVakErtek.setValue(i);
             }
         }
         
-        lblNagyVakErtekE = new JLabel(String.valueOf(nagyVakErtekek[sliNagyVakErtek.getValue()]));
+        lblNagyVakErtekE = new JLabel(String.valueOf(NAGY_VAK_ERTEKEK[sliNagyVakErtek.getValue()]));
         lblNagyVakErtekE.setName("lblNagyVakErtekE");
         
         sliNagyVakErtek.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent evt) {
-                nagyVakErtek = nagyVakErtekek[sliNagyVakErtek.getValue()];
+                nagyVakErtek = NAGY_VAK_ERTEKEK[sliNagyVakErtek.getValue()];
                 lblNagyVakErtekE.setText(String.valueOf(nagyVakErtek));
             }
         });
@@ -396,8 +396,8 @@ public class JatekMenuPanel extends JPanel{
         }
 
         menupontok.clear();
-        menupontHozzaad(vissza, "Vissza");        
-        menupontHozzaad(alkalmaz, "Alkalmaz");
+        menupontHozzaad(VISSZA, "Vissza");        
+        menupontHozzaad(ALKALMAZ, "Alkalmaz");
         repaint();  
     }
     
@@ -422,7 +422,7 @@ public class JatekMenuPanel extends JPanel{
 
         add(scpPokerSzabaly);        
         menupontok.clear();
-        menupontHozzaad(vissza, "Vissza");
+        menupontHozzaad(VISSZA, "Vissza");
         repaint();
     }
 
@@ -512,20 +512,20 @@ public class JatekMenuPanel extends JPanel{
     
     private void jatekMenuMouseReleased(MouseEvent me) {
         switch (menupontNev) {
-            case ujJatek:
+            case UJ_JATEK:
                 szalVezerlo.jatekMenuAnimacioMegallit();
                 feluletKezelo.jatekTerPanelBetolt();
                 break;
-            case beallitasok:
+            case BEALLITASOK:
                 beallitasokMenuBetolt();
                 break;
-            case segitseg:
+            case SEGITSEG:
                 segitsegMenuBetolt();
                 break;
-            case vissza:
+            case VISSZA:
                 foMenuBetolt();
                 break;
-            case alkalmaz:
+            case ALKALMAZ:
                 elsimitas = cbElsimitas.isSelected();                
                 feluletKezelo.setFelbontasValtozott(!feluletKezelo.getKepernyoMod().equals(kepernyoMod));                
                 kepernyoAllapot = rbtnTeljesKepernyo.isSelected() ? KepernyoKezelo.TELJES_KEPERNYO_MOD : KepernyoKezelo.ABLAKOS_MOD;   
@@ -542,7 +542,7 @@ public class JatekMenuPanel extends JPanel{
                 feluletKezelo.beallitasokAlkalmaz();
                 foMenuBetolt();
                 break;
-            case kilepes:
+            case KILEPES:
                 System.exit(0);
         }
     }

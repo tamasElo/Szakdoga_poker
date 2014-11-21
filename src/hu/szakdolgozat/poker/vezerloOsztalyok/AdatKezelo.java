@@ -1,6 +1,6 @@
 package hu.szakdolgozat.poker.vezerloOsztalyok;
 
-import hu.szakdolgozat.poker.alapOsztalyok.Menupont;
+import hu.szakdolgozat.poker.alapOsztalyok.Gomb;
 import hu.szakdolgozat.poker.felulet.KepernyoKezelo;
 import java.awt.Dimension;
 import java.io.File;
@@ -20,10 +20,8 @@ import java.awt.DisplayMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -31,12 +29,11 @@ import org.xml.sax.SAXException;
 public final class AdatKezelo {
 
     private static Document doc;
-    private static int i;
     public static final File GRAFIKA = new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/grafika.xml");
     public static final File AUDIO = new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/audio.xml");
     public static final File JATEKMENET = new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/jatekmenet.xml");
-    public static final File JATEK_MENU_PANEL = new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/jatekmenu_panel.xml");
-    public static final File Proba = new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/menupontok.xml");
+    public static final File JATEK_MENU_PANEL = new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/jatek_menu_panel.xml");
+    public static final File JATEKTER_PANEL = new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/jatekter_panel.xml");
 
     private AdatKezelo() {
     }
@@ -250,40 +247,45 @@ public final class AdatKezelo {
         return adatok;
     }
 
-    public static void ideiglenesCucc(List<JComponent> komponensek, double szelesseg, double magassag) {
+    public static void ideiglenesCucc(List<Gomb> gombok, double szelesseg, double magassag) {
         dokumentumLetrehozas(null);
 
-        Element rootEle = doc.createElement("JatekMenuPanel");
+        Element rootEle = doc.createElement("JatekterPanel");
         Element elem, elem2, elem3, elem4;
         Text text;
 
         doc.appendChild(rootEle);
-        elem = doc.createElement("Menupontok");
-        elem2 = doc.createElement("Normal");
+        elem = doc.createElement("Gombok");
+        elem2 = doc.createElement("Szeles");
         rootEle.appendChild(elem);
         elem.appendChild(elem2);
 
-        for (int i = 0; i < komponensek.size(); i++) {
-            JComponent comp = komponensek.get(i);
-            elem3 = doc.createElement(comp.getName());
+        for (int i = 0; i < gombok.size(); i++) {
+            Gomb gomb = gombok.get(i);
+            elem3 = doc.createElement(gomb.getNev());
             elem4 = doc.createElement("X");
             elem4.setAttribute("Arany", "szelesseg");
-            text = doc.createTextNode(String.valueOf(szelesseg / comp.getX()));
+            text = doc.createTextNode(String.valueOf(szelesseg / gomb.getKx()));
             elem4.appendChild(text);
             elem3.appendChild(elem4);
             elem4 = doc.createElement("Y");
             elem4.setAttribute("Arany", "magassag");
-            text = doc.createTextNode(String.valueOf(magassag / comp.getY()));
+            text = doc.createTextNode(String.valueOf(magassag / gomb.getKy()));
             elem4.appendChild(text);
             elem3.appendChild(elem4);
-            elem4 = doc.createElement("betuMeret");
+            elem4 = doc.createElement("Szelesseg");
             elem4.setAttribute("Arany", "magassag");
-            //text = doc.createTextNode(String.valueOf(magassag / comp.getSzovegMagassag()));
+            text = doc.createTextNode(String.valueOf(magassag / gomb.getSzelesseg()));
+            elem4.appendChild(text);
+            elem3.appendChild(elem4);
+            elem4 = doc.createElement("Magassag");
+            elem4.setAttribute("Arany", "magassag");
+            text = doc.createTextNode(String.valueOf(magassag / gomb.getMagassag()));
             elem4.appendChild(text);
             elem3.appendChild(elem4);
             elem2.appendChild(elem3);
         }
         
-        fajlbaKiiras(new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/proba"+ i++ +".xml"));
+        fajlbaKiiras(new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/proba.xml"));
     }
 }

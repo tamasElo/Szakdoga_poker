@@ -1,6 +1,7 @@
 package hu.szakdolgozat.poker.felulet;
 
 import hu.szakdolgozat.poker.alapOsztalyok.Gomb;
+import hu.szakdolgozat.poker.vezerloOsztalyok.AdatKezelo;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -21,6 +22,10 @@ import javax.swing.JPanel;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
+import java.awt.Dimension;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class JatekterPanel extends JPanel{
 
@@ -36,10 +41,20 @@ public class JatekterPanel extends JPanel{
     private int lepesKoz;
     private List<Gomb> gombok;
     private Gomb lenyomottGomb;
-    private Gomb plusz;
+    private Gomb plussz;
     private Gomb minusz;
+    private static final String ALL_IN = "Allin";
+    private static final String TART_MEGAD = "Tart_megad";
+    private static final String NYIT_EMEL = "Nyit_emel";   
+    private static final String PLUSSZ = "Plussz";   
+    private static final String MINUSZ = "Minusz";      
+    private static final String BEDOB = "Bedob";    
     private boolean elmosas;
     private boolean elsimitas;
+    private static final URL NORMAL_JATEK_TER = JatekterPanel.class.getResource("/hu/szakdolgozat/poker/adatFajlok/jatekTer/jatekTer_normal.png");
+    private static final URL SZELES_JATEK_TER = JatekterPanel.class.getResource("/hu/szakdolgozat/poker/adatFajlok/jatekTer/jatekTer_szeles.png");
+    private static final URL NORMAL_JATEK_TER_ELMOSOTT = JatekterPanel.class.getResource("/hu/szakdolgozat/poker/adatFajlok/jatekTer/jatekTer_normal_blur.png");
+    private static final URL SZELES_JATEK_TER_ELMOSOTT = JatekterPanel.class.getResource("/hu/szakdolgozat/poker/adatFajlok/jatekTer/jatekTer_szeles_blur.png");
 
     public JatekterPanel() {
         inicializal();
@@ -144,16 +159,16 @@ public class JatekterPanel extends JPanel{
                 Gomb gomb = gombok.get(i);
                 gomb.rajzol(g, this);
                 
-                if (gomb.getNev().equals("call_check") && gomb.getMegjSorszam() != 3 && megadandoOsszeg > 0) {
+                if (gomb.getNev().equals(TART_MEGAD) && gomb.getMegjSorszam() != 3 && megadandoOsszeg > 0) {
                     osszeg = String.valueOf(megadandoOsszeg);
                     szovegSzelesseg = g.getFontMetrics().getStringBounds(osszeg, g).getWidth();
                     szovegMagassag = g.getFontMetrics().getStringBounds(osszeg, g).getHeight();
-                    g.drawString(osszeg, (int) (gomb.getX() + gomb.getSzelesseg() / 2 - szovegSzelesseg / 2), (int) (magassag/1.077 - szovegMagassag / 2));
-                } else if (gomb.getNev().equals("raise_bet") && gomb.getMegjSorszam() != 3) {
+                    g.drawString(osszeg, (int) (gomb.getKx() - szovegSzelesseg / 2.0), (int) (magassag/1.077 - szovegMagassag / 2.0));
+                } else if (gomb.getNev().equals(NYIT_EMEL) && gomb.getMegjSorszam() != 3) {
                     osszeg = String.valueOf(emelendoOsszeg);
                     szovegSzelesseg = g.getFontMetrics().getStringBounds(osszeg, g).getWidth();
                     szovegMagassag = g.getFontMetrics().getStringBounds(osszeg, g).getHeight();
-                    g.drawString(osszeg, (int) (gomb.getX() + gomb.getSzelesseg() / 2 - szovegSzelesseg / 2), (int) (magassag/1.077 - szovegMagassag / 2));
+                    g.drawString(osszeg, (int) (gomb.getKx() - szovegSzelesseg / 2.0), (int) (magassag/1.077 - szovegMagassag / 2.0));
                 } 
             }            
         }
@@ -165,40 +180,33 @@ public class JatekterPanel extends JPanel{
     private void gombsorBeallit() {
         Image elsoKep, masodikKep, harmadikKep;
         String nev;
-        double[][] xyPoziciok = {{szalVezerlo.aranytSzamol(2.68), szalVezerlo.aranytSzamol(2.24), 
-                                  szalVezerlo.aranytSzamol(2), szalVezerlo.aranytSzamol(1.84), 
-                                  szalVezerlo.aranytSzamol(1.85), szalVezerlo.aranytSzamol(1.735)},
-                                 {szalVezerlo.aranytSzamol(1.4),szalVezerlo.aranytSzamol(1.4),
-                                  szalVezerlo.aranytSzamol(1.4),szalVezerlo.aranytSzamol(1.376),
-                                  szalVezerlo.aranytSzamol(1.412),szalVezerlo.aranytSzamol(1.4)}};
-        double[][] meretek = {{szalVezerlo.aranytSzamol(16), szalVezerlo.aranytSzamol(25), 
-                               szalVezerlo.aranytSzamol(25), szalVezerlo.aranytSzamol(50), 
-                               szalVezerlo.aranytSzamol(40), szalVezerlo.aranytSzamol(32)},
-                              {szalVezerlo.aranytSzamol(26.67), szalVezerlo.aranytSzamol(25), 
-                               szalVezerlo.aranytSzamol(25), szalVezerlo.aranytSzamol(94.12), 
-                               szalVezerlo.aranytSzamol(40), szalVezerlo.aranytSzamol(32)}};     
-        
-        String[] gombNev = {"allin", "call_check", "raise_bet", "minus", "plus", "fold"};
+
+        HashMap<String, List<Double>> adatok = AdatKezelo.aranyErtekekBetolt(AdatKezelo.JATEKTER_PANEL, "Gombok", new Dimension(szelesseg, magassag));
+        Iterator<Double> itr;
+
+        String[] gombNev = {ALL_IN, TART_MEGAD, NYIT_EMEL, MINUSZ, PLUSSZ, BEDOB};
         gombok = new ArrayList<>();
         Gomb gomb;
+        
         for (byte i = 0; i < gombNev.length; i++) {
             nev = gombNev[i];
+            itr = adatok.get(nev).iterator();
             elsoKep = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/iranyitas/"
                     + gombNev[i] + "_1.png")).getImage();
             masodikKep = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/iranyitas/"
                     + gombNev[i] + "_2.png")).getImage();
             harmadikKep = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/iranyitas/"
-                    + gombNev[i] + "_3.png")).getImage();            
-            gomb = new Gomb(nev, elsoKep, masodikKep, harmadikKep, xyPoziciok[0][i], 
-                    xyPoziciok[1][i] - meretek[1][i] / 2, meretek[0][i], meretek[1][i]);
+                    + gombNev[i] + "_3.png")).getImage();
+            gomb = new Gomb(nev, elsoKep, masodikKep, harmadikKep, itr.next(),
+                    itr.next(), itr.next(), itr.next());
             gomb.setMegjSorszam(3);
             gombok.add(gomb);
-            
+
             switch (gomb.getNev()) {
-                case "plus":
-                    plusz = gomb;
+                case PLUSSZ:
+                    plussz = gomb;
                     break;
-                case "minus":
+                case MINUSZ:
                     minusz = gomb;
                     break;
             }
@@ -236,11 +244,18 @@ public class JatekterPanel extends JPanel{
      * 
      * @param ae 
      */
-    private void jatekTerAncestorAdded(AncestorEvent ae){    
-        jatekTer = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/jatekTer/jatekTer_normal.png")).getImage();
-        elmosottJatekTer = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/jatekTer/jatekTer_normal_blur.png")).getImage();   
+    private void jatekTerAncestorAdded(AncestorEvent ae){            
         szelesseg = this.getWidth();
         magassag = this.getHeight();  
+        
+        if (KepernyoKezelo.keparanySzamit(new Dimension(szelesseg, magassag)) == KepernyoKezelo.NORMAL_KEPERNYO) {
+            jatekTer = new ImageIcon(NORMAL_JATEK_TER).getImage();
+            elmosottJatekTer = new ImageIcon(NORMAL_JATEK_TER_ELMOSOTT).getImage();
+        } else {
+            jatekTer = new ImageIcon(SZELES_JATEK_TER).getImage();
+            elmosottJatekTer = new ImageIcon(SZELES_JATEK_TER_ELMOSOTT).getImage();
+        }
+          
         gombsorBeallit();
         szalVezerlo.jatekosokBeallit();
         szalVezerlo.jatekVezerloIndit();
@@ -255,7 +270,7 @@ public class JatekterPanel extends JPanel{
     private void jatekTerMousePressed(MouseEvent me) {
         for (Gomb gomb : gombok) {
             if(gomb.getMegjSorszam() == 2){
-                Rectangle2D negyszog = new Rectangle2D.Double(gomb.getX(), gomb.getY(), gomb.getSzelesseg(), gomb.getMagassag());
+                Rectangle2D negyszog = new Rectangle2D.Double(gomb.getKx()- gomb.getSzelesseg() / 2, gomb.getKy() - gomb.getMagassag() / 2, gomb.getSzelesseg(), gomb.getMagassag());
                 if (negyszog.contains(me.getX(), me.getY()) && me.getButton() == 1) {
                     gomb.setMegjSorszam(1);
                     lenyomottGomb = gomb;
@@ -285,7 +300,7 @@ public class JatekterPanel extends JPanel{
      */
     private void osszegValtoztat() {
         switch (lenyomottGomb.getNev()) {
-            case "plus":
+            case PLUSSZ:
                 if (emelendoOsszeg + lepesKoz < maxOsszeg) {
                     if (minusz.getMegjSorszam() == 3) {
                         minusz.setMegjSorszam(2);
@@ -296,10 +311,10 @@ public class JatekterPanel extends JPanel{
                     lenyomottGomb.setMegjSorszam(3);
                 }
                 break;
-            case "minus":
+            case MINUSZ:
                 if (emelendoOsszeg - lepesKoz > minOsszeg) {
-                    if (plusz.getMegjSorszam() == 3) {
-                        plusz.setMegjSorszam(2);
+                    if (plussz.getMegjSorszam() == 3) {
+                        plussz.setMegjSorszam(2);
                     }
                     emelendoOsszeg -= lepesKoz;
                 } else {
@@ -315,21 +330,21 @@ public class JatekterPanel extends JPanel{
      */
     private void lehetosegValaszt(){
         switch (lenyomottGomb.getNev()) {
-            case "allin":
+            case ALL_IN:
                 szalVezerlo.emberiJatekosAllIn();
                 gombsorPasszival();
                 break;
-            case "call_check":
+            case TART_MEGAD:
                 if(megadandoOsszeg > 0) szalVezerlo.emberiJatekosMegad();
                 else szalVezerlo.emberiJatekosPasszol();
                 gombsorPasszival();
                 break;
-            case "raise_bet":
+            case NYIT_EMEL:
                 if(megadandoOsszeg == 0 && szalVezerlo.leosztottKartyalapokSzama() != 0) szalVezerlo.emberiJatekosNyit(emelendoOsszeg);
                 else szalVezerlo.emberiJatekosEmel(emelendoOsszeg);
                 gombsorPasszival();
                 break;
-            case "fold":
+            case BEDOB:
                 szalVezerlo.emberiJatekosBedob();
                 gombsorPasszival();
                 break;
@@ -379,7 +394,7 @@ public class JatekterPanel extends JPanel{
     JButton megad = new JButton("megad");
     JButton nyit = new JButton("nyit");
     JButton eldob = new JButton("eldob");
-    JButton plussz = new JButton("plusz");
+    JButton plussz2 = new JButton("plusz");
     JButton minussz = new JButton("minusz");  
     List<JButton> gombLista = new ArrayList<>();
 
@@ -389,7 +404,7 @@ public class JatekterPanel extends JPanel{
         this.add(megad);
         this.add(nyit);
         this.add(emel);
-        this.add(plussz);
+        this.add(plussz2);
         this.add(minussz);
         this.add(eldob);
         this.add(lblOsszeg);
@@ -437,7 +452,7 @@ public class JatekterPanel extends JPanel{
                 szalVezerlo.emberiJatekosBedob();
             }
         });
-        plussz.addActionListener(new ActionListener() {
+        plussz2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 osszeg += 10;

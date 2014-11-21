@@ -71,6 +71,7 @@ public class FeluletKezelo {
         pokerFrame.getContentPane().add(jatekMenuPanel);
         pokerFrame.setResizable(false);
         pokerFrame.pack();
+        pokerFrame.setLocationRelativeTo(null);
         AudioLejatszo.audioLejatszas(AudioLejatszo.MENU_ZENE, true);
     }
     
