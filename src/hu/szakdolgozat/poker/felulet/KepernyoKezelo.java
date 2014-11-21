@@ -113,12 +113,6 @@ public class KepernyoKezelo {
         
         vc.setFullScreenWindow(null);
         teljesKepernyoBekapcsolva = false;
-        
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(KepernyoKezelo.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     public List<DisplayMode> kepernyoModLista() {

@@ -55,6 +55,10 @@ public class Menupont {
         return ky;
     }
 
+    public int getBetuMeret() {
+        return betuMeret;
+    }
+
     public double getSzovegSzelesseg() {
         return szovegSzelesseg;
     }
