@@ -1,11 +1,16 @@
 package hu.szakdolgozat.poker.vezerloOsztalyok.szalak;
 
 import hu.szakdolgozat.poker.alapOsztalyok.Felho;
+import hu.szakdolgozat.poker.vezerloOsztalyok.AdatKezelo;
 import hu.szakdolgozat.poker.vezerloOsztalyok.AudioLejatszo;
 import java.awt.Font;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
+import java.awt.Dimension;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class FelhoMozgato extends Thread {
 
@@ -31,17 +36,20 @@ public class FelhoMozgato extends Thread {
         try {
             kx = felho.getKx();
             ky = felho.getKy();
-            felhoKepSzelesseg = szalVezerlo.jatekterPanelSzelesseg() * 0.06875;
-            felhoKepMagassag = szalVezerlo.jatekterPanelMagassag() * 0.0975;
+            Map<String, List<Double>> xmlAdatok = AdatKezelo.aranyErtekekBetolt("GrafikaElemek", 
+                    new Dimension(szalVezerlo.jatekterPanelSzelesseg(), szalVezerlo.jatekterPanelMagassag()));
+            Iterator<Double> itr = xmlAdatok.get("Felho").iterator();
+            felhoKepSzelesseg = itr.next();
+            felhoKepMagassag = itr.next();
             vx = kx + felhoKepSzelesseg / 4;
             vy = ky - felhoKepMagassag / 1.7;
             double betuMeret = 0;           
             double aktTav = 0;
             double szog = Math.atan2(vy - ky, vx - kx);
             double tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
-            double felhoHorizontalisLepes = felhoKepSzelesseg/tavolsag;
-            double felhoVertikalisLepes = felhoKepMagassag/tavolsag;            
-            double szovegLepes = (felhoKepMagassag/7.8)/tavolsag;
+            double felhoHorizontalisLepes = felhoKepSzelesseg / tavolsag;
+            double felhoVertikalisLepes = felhoKepMagassag / tavolsag;
+            double szovegLepes = (felhoKepMagassag / 7.8) / tavolsag;
             long ido = 2;
             felhoKepSzelesseg = 0;
             felhoKepMagassag = 0;     

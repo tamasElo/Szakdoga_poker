@@ -32,6 +32,8 @@ import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.KartyaMozgato;
 import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.KorongMozgato;
 import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.NyertesMozgato;
 import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.ZsetonMozgato;
+import java.awt.Dimension;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public class SzalVezerlo {
@@ -39,6 +41,8 @@ public class SzalVezerlo {
     private FeluletKezelo feluletKezelo;
     private JatekterPanel jatekterPanel;
     private JatekMenuPanel jatekMenuPanel;
+    private Map<String, List<Double>> xmlAdatok;
+    private Iterator<Double> itr;
     private List<Kartyalap> kartyalapok;  
     private List<Kartyalap> leosztottKartyalapok;
     private List<Jatekos> jatekosok;
@@ -69,6 +73,7 @@ public class SzalVezerlo {
     public SzalVezerlo() {
         KorongMozgato.setKorongokBetoltve(false);
         Jatekos.sorszamIndexNullaz();
+        SzogSzamito.xmlAdatokTorol();
         beallitasokBetolt();
         
         keveresAnimacio = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/kartyaPakli/keveresAnimacio.gif")).getImage();
@@ -93,8 +98,9 @@ public class SzalVezerlo {
             for (Kartyalap kartyalap : kartyalapok) {
                 kartyalap.rajzol(g2D, jatekterPanel);
             }
-        } else if (isJatekterPanelBetoltve()) {
-            g2D.drawImage(keveresAnimacio, (int) aranytSzamol(2.286), (int) aranytSzamol(2.143, 'y'), (int) aranytSzamol(8), (int) aranytSzamol(16, 'y'), jatekterPanel);
+        } else if (isJatekterPanelBetoltve() && xmlAdatok != null) {
+            itr = xmlAdatok.get("KeveresAnimacio").iterator();
+            g2D.drawImage(keveresAnimacio, (int) (double) itr.next(), (int) (double) itr.next(), (int) (double) itr.next(), (int) (double) itr.next(), jatekterPanel);
         }
 
         if (jatekosokKartyalapjai != null) {
@@ -265,11 +271,10 @@ public class SzalVezerlo {
      * távolságra legyenek.
      */
     public void jatekosokBeallit() {
-        String[] jatekosNevek = {"Sanyi", "Pityu", "Géza", "András", "Eszti", "Reni", "Józsi", "Kriszti"};
+        String[] jatekosNevek = {"Sanyi", "Pityu", "Géza", "András", "Eszti", "Szabi", "Reni", "Józsi", "Kriszti"};
         String jatekosNev;
         boolean talalat = false;
-        jatekosok = new ArrayList<>();
-        
+        jatekosok = new ArrayList<>();        
         jatekosok.add(new Jatekos(emberJatekosNev));
         
         while (jatekosok.size() != jatekosokSzama) {
@@ -288,12 +293,14 @@ public class SzalVezerlo {
         }
         
         int i = 0;
+        double elteres = jatekterPanelMagassag() / 8.275862;
         List<Point> vegpontLista = SzogSzamito.vegpontLista(jatekosokSzama, jatekterPanelSzelesseg(), jatekterPanelMagassag());
         Point vegpont;
+        
         for (Jatekos jatekos : jatekosok) {
             vegpont = vegpontLista.get(i++);
-            jatekos.setKx(vegpont.getX() + jatekterPanelSzelesseg()/11.035 * Math.cos(Math.toRadians(SzogSzamito.szogSzamit(jatekterPanelSzelesseg(), jatekterPanelMagassag(), vegpont.getX(), vegpont.getY()))));
-            jatekos.setKy(vegpont.getY() + jatekterPanelMagassag()/8.276 * Math.sin(Math.toRadians(SzogSzamito.szogSzamit(jatekterPanelSzelesseg(), jatekterPanelMagassag(), vegpont.getX(), vegpont.getY()))));
+            jatekos.setKx(vegpont.getX() + elteres * Math.cos(Math.toRadians(SzogSzamito.szogSzamit(jatekterPanelSzelesseg(), jatekterPanelMagassag(), vegpont.getX(), vegpont.getY()))));
+            jatekos.setKy(vegpont.getY() + elteres * Math.sin(Math.toRadians(SzogSzamito.szogSzamit(jatekterPanelSzelesseg(), jatekterPanelMagassag(), vegpont.getX(), vegpont.getY()))));
             jatekos.setFont(new Font("Arial", 1, jatekterPanelMagassag() / 60));
             jatekos.setAktiv(true);
         }
@@ -317,7 +324,7 @@ public class SzalVezerlo {
     /**
      * Kiosztja a játékosoknak a zsetonokat és létre hoz egy pot-ot.
      */
-    public void zsetonokKioszt(){
+    public void zsetonokKioszt(){        
         zsetonMozgato = new ZsetonMozgato(this);
         zsetonMozgato.zsetonokBetolt();     
     }
@@ -349,7 +356,9 @@ public class SzalVezerlo {
      * 
      * @param dealer 
      */
-    public void kartyalapokKiosztSzalIndit(byte dealer) {
+    public void kartyalapokKiosztSzalIndit(byte dealer) {        
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("GrafikaElemek", 
+                new Dimension(jatekterPanelSzelesseg(), jatekterPanelMagassag()));
         kartyalapok = null;
         leosztottKartyalapok = new CopyOnWriteArrayList<>();
         jatekosokKartyalapjai = new ConcurrentHashMap<>();
@@ -358,6 +367,7 @@ public class SzalVezerlo {
         kartyaMozgato.setKartyalapokKiosztasa(true);
         kartyaMozgato.setDealer(dealer);
         kartyaMozgato.start();
+        frissit();
     }
     
     /**
@@ -390,10 +400,11 @@ public class SzalVezerlo {
         kartyaMozgato.setMenuAnimacio(true);
         kartyaMozgato.start();
     }
-     /**
-      * Megállítja a játék menü háttér animációt
-      */
-    public void jatekMenuAnimacioMegallit(){
+
+    /**
+     * Megállítja a játék menü háttér animációt
+     */
+    public void jatekMenuAnimacioMegallit() {
         kartyaMozgato.setSzalStop(true);
     }
     
@@ -429,8 +440,10 @@ public class SzalVezerlo {
     public void nyertesSzalIndit(){
         byte jatekosSorszam = aktivJatekosSorszamKeres((byte)0);
         Image nyertesKep = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/nyertes/nyertes.png")).getImage();
-        double nyertesKepSzelesseg = jatekterPanelSzelesseg() / 4, nyertesKepMagassag = jatekterPanelMagassag() / 6;
-        double kx = jatekterPanelSzelesseg() / 2, ky = jatekterPanelMagassag() / 2;
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("GrafikaElemek", new Dimension(jatekterPanelSzelesseg(), jatekterPanelMagassag()));
+        itr = xmlAdatok.get("Nyertes").iterator();
+        double kx = itr.next(), ky = itr.next();
+        double nyertesKepSzelesseg = itr.next(), nyertesKepMagassag = itr.next();
         Jatekos jatekos = getJatekosok().get(jatekosSorszam);
         nyertes = new Nyertes(jatekos.getNev(), nyertesKep);
         nyertes.setKx(kx);
@@ -586,18 +599,6 @@ public class SzalVezerlo {
         jatekterPanel.setEmelendoOsszeg(jatekVezerlo.getOsszeg() == 0 ? nagyVakErtekVisszaad() : jatekVezerlo.getOsszeg());
         jatekterPanel.setMinOsszeg(jatekVezerlo.getOsszeg() == 0 ? nagyVakErtekVisszaad() : jatekVezerlo.getOsszeg());
         jatekterPanel.setMaxOsszeg(getJatekosZsetonOsszeg(JatekVezerlo.EMBER_JATEKOS_SORSZAM));
-    }
-    
-    public double aranytSzamol(double ertek){
-        double osztando = 0;
-        if((double)Math.round(10 * jatekterPanelSzelesseg() / jatekterPanelMagassag()) / 10 == 1.3) osztando = jatekterPanelSzelesseg();
-        return osztando/ertek;
-    }
-    public double aranytSzamol(double ertek, char tengely){
-        double osztando = 0;
-        if((double)Math.round(10 * jatekterPanelSzelesseg() / jatekterPanelMagassag()) / 10 == 1.3) if(tengely == 'x')osztando = jatekterPanelSzelesseg();
-                else osztando = jatekterPanelMagassag();
-        return osztando/ertek;
     }
     
     /**

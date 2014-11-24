@@ -3,6 +3,7 @@ package hu.szakdolgozat.poker.vezerloOsztalyok.szalak;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
 import hu.szakdolgozat.poker.alapOsztalyok.Kartyalap;
 import hu.szakdolgozat.poker.alapOsztalyok.PokerKez;
+import hu.szakdolgozat.poker.vezerloOsztalyok.AdatKezelo;
 import hu.szakdolgozat.poker.vezerloOsztalyok.AudioLejatszo;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -16,10 +17,14 @@ import java.util.logging.Logger;
 import hu.szakdolgozat.poker.vezerloOsztalyok.PakliKezelo;
 import hu.szakdolgozat.poker.vezerloOsztalyok.PokerKezKiertekelo;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzogSzamito;
+import java.awt.Dimension;
+import java.util.Iterator;
 
 public class KartyaMozgato extends Thread {
 
     private SzalVezerlo szalVezerlo;
+    private Map<String, List<Double>> xmlAdatok;
+    private Iterator<Double> itr;
     private Map<Byte, List<Kartyalap>> jatekosokKartyalapjai;
     private Map<Byte, List<Kartyalap>> kiszalltJatekosokKartyalapjai;
     private List<Kartyalap> leosztottKartyalapok;
@@ -70,8 +75,10 @@ public class KartyaMozgato extends Thread {
             panelSzelesseg = szalVezerlo.jatekMenuPanelSzelesseg();
             panelMagassag = szalVezerlo.jatekMenuPanelMagassag();
         }
-
-        lepes = (double)panelMagassag / 400;
+        
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("KartyaMozgato", new Dimension(panelSzelesseg, panelMagassag));
+        itr = xmlAdatok.get("Konstruktor").iterator();
+        lepes = itr.next();
     }
 
     /**
@@ -79,22 +86,26 @@ public class KartyaMozgato extends Thread {
      * szálvezérlönek.
      */
     private void pakliBetolt() {         
-        Point aktSzoras, szorasHatar = new Point(panelSzelesseg / 400, panelMagassag / 600);            
-        kx = panelSzelesseg / 2;//Beállítja a kezdöpontot középre, hogy onnan induljon az animácio.
-        ky = panelMagassag / 2;        
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("KartyaMozgato", new Dimension(panelSzelesseg, panelMagassag));
+        itr = xmlAdatok.get("PakliBetolt").iterator();
+        Point aktSzoras;        
+        double szorasHatar = itr.next();   
         szorasok = new ArrayList();
         /*Beállítja a minimális és maximális szóráspontokat.*/
-        double minX = -szorasHatar.getX() - panelSzelesseg * 0.000625,
-               maxX = panelSzelesseg * 0.00125 * szorasHatar.getX() + panelSzelesseg * 0.00125,
-               minY = -szorasHatar.getY() - panelMagassag / 1200,
-               maxY = panelMagassag / 600 * szorasHatar.getY() + panelMagassag / 600;
-        
+        double minX = -szorasHatar,
+               maxX = 2 * szorasHatar,
+               minY = -szorasHatar,
+               maxY = 2 * szorasHatar;
+        kx = panelSzelesseg / 2;//Beállítja a kezdöpontot középre, hogy onnan induljon az animácio.
+        ky = panelMagassag / 2;     
         szalVezerlo.setKartyaGrafikaElore(false);
-        kartyalapok = PakliKezelo.kevertPakli();
-        
+        kartyalapok = PakliKezelo.kevertPakli();        
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("GrafikaElemek", new Dimension(panelSzelesseg, panelMagassag));
+                
         for (Kartyalap kartyalap : kartyalapok) {
-            kartyalap.setKartyaKepSzelesseg(panelMagassag/16.901);
-            kartyalap.setKartyaKepMagassag(panelMagassag/11.765);    
+            itr = xmlAdatok.get("Kartyalap").iterator();
+            kartyalap.setKartyaKepSzelesseg(itr.next());
+            kartyalap.setKartyaKepMagassag(itr.next());    
             aktSzoras = new Point((int) (minX + Math.random() * maxX), (int) (minY + Math.random() * maxY));
             kartyalap.setKx(kx+aktSzoras.getX());
             kartyalap.setKy(ky+aktSzoras.getY());
@@ -110,10 +121,12 @@ public class KartyaMozgato extends Thread {
      */
     @SuppressWarnings("SleepWhileInLoop")
     private void pakliMozgat() {  
-        ido = 3;
+        ido = 2;
         aktTav = 0;       
         aktForgSzog = 0;
-        elteres = 0.09375 * panelSzelesseg;        
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("KartyaMozgato", new Dimension(panelSzelesseg, panelMagassag));
+        itr = xmlAdatok.get("PakliMozgat").iterator();
+        elteres = itr.next();        
        
         if (kartyalapokKiertekelese) {
             kx = kartyalapok.get(0).getKx();
@@ -169,7 +182,9 @@ public class KartyaMozgato extends Thread {
         try {
             szalVezerlo.setKartyaGrafikaElore(true);//A kártyalapok elsőként való kirajzolását teszi lehetővé a játéktéren.     
             ido = 2;
-            elteres = panelMagassag/60;//A játékos lapjai közötti távolság értékét adja meg.
+            xmlAdatok = AdatKezelo.aranyErtekekBetolt("KartyaMozgato", new Dimension(panelSzelesseg, panelMagassag));
+            itr = xmlAdatok.get("KartyalapokKioszt").iterator();
+            elteres = itr.next();//A játékos lapjai közötti távolság értékét adja meg.
             jatekosSorszam = dealer;   
             Kartyalap kartyalap;
             List<Byte> jatekosSorszamok = new ArrayList<>();
@@ -304,7 +319,9 @@ public class KartyaMozgato extends Thread {
         }
         
         aktTav = 0;
-        elteres = panelSzelesseg / 64;
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("KartyaMozgato", new Dimension(panelSzelesseg, panelMagassag));
+        itr = xmlAdatok.get("KartyalapokBedob").iterator();
+        elteres = itr.next();
         vegSzog = SzogSzamito.szogSzamit(panelSzelesseg, panelMagassag, vx, vy);
         vx += elteres * Math.cos(Math.toRadians(vegSzog+180));
         vy += elteres * Math.sin(Math.toRadians(vegSzog+180));
@@ -341,12 +358,15 @@ public class KartyaMozgato extends Thread {
         double veletlenX, veletlenY;
         double novekmeny;        
         ido = 3;
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("KartyaMozgato", new Dimension(panelSzelesseg, panelMagassag));
+        itr = xmlAdatok.get("KartyalapLeosztas").iterator();
         kartyalapok = szalVezerlo.getKartyalapok();
-
+        
         if (szalVezerlo.leosztottKartyalapokSzama() == 0) {
             leosztandoKartyalapokSzama = 3;
-            novekmeny = panelSzelesseg / 2.5;
+            novekmeny = itr.next();
         } else {
+            itr.next();
             leosztandoKartyalapokSzama = 1;
             novekmeny = laptavolsagokOsszege;//A növekményt beállítja a már leosztott lapoktól megfelelő távolság értékre.
         }
@@ -355,9 +375,13 @@ public class KartyaMozgato extends Thread {
             leosztandoKartyalapokSzama = JatekVezerlo.LEOSZTHATO_KARTYALAPOK_SZAMA - szalVezerlo.leosztottKartyalapokSzama();
         }
         
+        double novekmenyNovel = itr.next();
+        double minX = itr.next(), maxX = itr.next(), 
+               minY = itr.next(), maxY = itr.next();
+        
         for (byte i = 0; i < leosztandoKartyalapokSzama; i++) {
-            veletlenX = -panelSzelesseg/620 + Math.random() * panelSzelesseg/310;
-            veletlenY = -panelMagassag/240 + Math.random() * panelMagassag/120;
+            veletlenX = -minX + Math.random() * maxX;
+            veletlenY = -minY + Math.random() * maxY;
             kartyalap = kartyalapok.remove(kartyalapok.size()-1);
             szalVezerlo.leosztottKartyalapokhozAd(kartyalap);            
             aktTav = 0;
@@ -369,7 +393,7 @@ public class KartyaMozgato extends Thread {
             vegForgSzog = -3 + Math.random() * 6;
             foSzog = Math.atan2(vy - ky, vx - kx);
             tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
-            novekmeny += kartyalap.getKartyaKepSzelesseg() + panelSzelesseg / 160;//A leosztott lapok közötti távolságot számolja ki            
+            novekmeny += kartyalap.getKartyaKepSzelesseg() + novekmenyNovel;//A leosztott lapok közötti távolságot számolja ki            
             AudioLejatszo.audioLejatszas(AudioLejatszo.KARTYA_OSZTAS, false);
             
             while (aktTav <= tavolsag) {
@@ -410,7 +434,9 @@ public class KartyaMozgato extends Thread {
      */
     @SuppressWarnings("SleepWhileInLoop")
     private void kartyalapokNagyit(){   
-        elteres = panelSzelesseg * 0.046875; 
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("KartyaMozgato", new Dimension(panelSzelesseg, panelMagassag));
+        itr = xmlAdatok.get("KartyalapokNagyit").iterator();
+        elteres = itr.next();
         ido = 12;
         double arany = 0;
         Kartyalap leosztottKartyalap;
@@ -494,6 +520,9 @@ public class KartyaMozgato extends Thread {
         ido = 12;
         double keretKepSzelesseg, keretKepMagassag;
         double ertek = 0;
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("KartyaMozgato", new Dimension(panelSzelesseg, panelMagassag));
+        itr = xmlAdatok.get("KeretAnimacio").iterator();
+        double szorzo = itr.next();
         
         for (Map.Entry<Byte, PokerKez> entrySet : nyertesPokerKezek.entrySet()) {
             PokerKez pokerKez = entrySet.getValue();
@@ -509,8 +538,8 @@ public class KartyaMozgato extends Thread {
                     kartyalap.setKeretRajzol(true);
                 }
 
-                keretKepSzelesseg = kartyalap.getKartyaKepSzelesseg() + Math.sin(ertek) * panelSzelesseg / 64;
-                keretKepMagassag = kartyalap.getKartyaKepMagassag() + Math.sin(ertek) * panelSzelesseg / 64;
+                keretKepSzelesseg = kartyalap.getKartyaKepSzelesseg() + Math.sin(ertek) * panelMagassag / 48;
+                keretKepMagassag = kartyalap.getKartyaKepMagassag() + Math.sin(ertek) * panelMagassag / 48;
                 kartyalap.setKeretKepSzelesseg(keretKepSzelesseg);
                 kartyalap.setKeretKepMagassag(keretKepMagassag);
             }
@@ -598,6 +627,10 @@ public class KartyaMozgato extends Thread {
 
             pakliMozgat();
             
+            xmlAdatok = AdatKezelo.aranyErtekekBetolt("KartyaMozgato", new Dimension(panelSzelesseg, panelMagassag));
+            itr = xmlAdatok.get("KartyalapokPakliba").iterator();
+            double minSzelesseg = itr.next();
+        
             do {
                 for (Kartyalap kartyalap : nagyitottKartyalapok) {
                     aktKartyaKepSzelesseg = kartyalap.getKartyaKepSzelesseg();
@@ -611,7 +644,7 @@ public class KartyaMozgato extends Thread {
 
                 sleep(ido);
                 szalVezerlo.frissit();
-            } while (aktKartyaKepSzelesseg > panelSzelesseg / 22.857);
+            } while (aktKartyaKepSzelesseg > minSzelesseg);
         } catch (InterruptedException ex) {
             Logger.getLogger(KartyaMozgato.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -626,20 +659,24 @@ public class KartyaMozgato extends Thread {
         kartyalapok = PakliKezelo.pakliBetolt();
         szalVezerlo.setKartyalapok(kartyalapok);    
         elteres = 0.5;  
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("KartyaMozgato", new Dimension(panelSzelesseg, panelMagassag));
+        itr = xmlAdatok.get("KartyalapokBeusztatasa").iterator();
         boolean irany;
         Kartyalap kartyalap;
+        double kartyaSzelesseg = itr.next(), kartyaMagassag = itr.next();
+        double vyMin = itr.next(), vyMax = itr.next();
         
         while(!szalStop && !kartyalapok.isEmpty()){
             kartyalap = kartyalapok.get((int) (Math.random() * kartyalapok.size()));
             kartyalap.setMutat(true);
-            kartyalap.setKartyaKepSzelesseg(panelSzelesseg * 0.06875);
-            kartyalap.setKartyaKepMagassag(panelSzelesseg / 10);
+            kartyalap.setKartyaKepSzelesseg(kartyaSzelesseg);
+            kartyalap.setKartyaKepMagassag(kartyaMagassag);
             ido = (int) (15 + Math.random() * 10);
             irany = Math.random() < 0.5;
             kx = irany ? 0 : panelSzelesseg;
             ky = panelMagassag / 2;
             vx = irany ? panelSzelesseg : 0;
-            vy = panelSzelesseg / 8 + Math.random() * panelSzelesseg / 2;
+            vy = vyMin + Math.random() * vyMax;
             foSzog = Math.atan2(vy - ky, vx - kx);
             tavolsag = Math.sqrt((vy - ky) * (vy - ky) + (vx - kx) * (vx - kx));
             aktTav = 0;

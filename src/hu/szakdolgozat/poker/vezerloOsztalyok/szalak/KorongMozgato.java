@@ -3,17 +3,23 @@ package hu.szakdolgozat.poker.vezerloOsztalyok.szalak;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
 import hu.szakdolgozat.poker.alapOsztalyok.Dealer;
 import hu.szakdolgozat.poker.alapOsztalyok.Korong;
+import hu.szakdolgozat.poker.vezerloOsztalyok.AdatKezelo;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzogSzamito;
+import java.awt.Dimension;
+import java.util.Iterator;
+import java.util.Map;
 
 public class KorongMozgato extends Thread {
 
     private static List<Point> vegpontLista;
     private static boolean korongokBetoltve;
+    private Map<String, List<Double>> xmlAdatok;
+    private Iterator<Double> itr;
     private List<Korong> korongok;
     private byte dealerJatekosSorszam;
     private int jatekterSzelesseg;
@@ -28,6 +34,9 @@ public class KorongMozgato extends Thread {
         jatekterSzelesseg = szalVezerlo.jatekterPanelSzelesseg();
         jatekterMagassag = szalVezerlo.jatekterPanelMagassag();
         jatekosokSzama = szalVezerlo.getJatekosokSzama();
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("KorongMozgato", new Dimension(jatekterSzelesseg, jatekterMagassag));
+        itr = xmlAdatok.get("Konstruktor").iterator();
+        elteres = itr.next();
     }
 
     private void korongokBetolt() {
@@ -36,7 +45,6 @@ public class KorongMozgato extends Thread {
         double meret;
         byte i = dealerJatekosSorszam;
         double x, y;
-        elteres = szalVezerlo.jatekterPanelSzelesseg()/16;
         double veletlenForgSzog;
         
         korongok.add(szalVezerlo.getDealer());
@@ -47,11 +55,19 @@ public class KorongMozgato extends Thread {
             veletlenForgSzog = Math.random()*360; //Létrehoz egy véletlen szöget 0 és 360 fok között. A létrehozott értéknek megfelelően fognak elfordulni a zsetonok.                
 
             if (korong instanceof Dealer) {
-                meret = szalVezerlo.jatekterPanelSzelesseg()/32;
+                xmlAdatok = AdatKezelo.aranyErtekekBetolt("GrafikaElemek", new Dimension(jatekterSzelesseg, jatekterMagassag));
+                itr = xmlAdatok.get("Dealer").iterator();
+                meret = itr.next();
             } else {
-                if(++i == jatekosokSzama) i=0;
-                meret = szalVezerlo.jatekterPanelSzelesseg()*0.028125;
+                if (++i == jatekosokSzama) {
+                    i = 0;
+                }
+                
+                xmlAdatok = AdatKezelo.aranyErtekekBetolt("GrafikaElemek", new Dimension(jatekterSzelesseg, jatekterMagassag));
+                itr = xmlAdatok.get("Vak").iterator();
+                meret = itr.next();
             }
+            
             x = vegpontLista.get(i).x;
             y = vegpontLista.get(i).y;
             szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y) + 140; //Kiszámolja hogy az adott x,y pozícióban lévő pont hány fokos szöget zár be. Ehhez a szöghöz hozzá ad még 140 fokot.
@@ -70,14 +86,15 @@ public class KorongMozgato extends Thread {
 
     @SuppressWarnings("SleepWhileInLoop")
     private void korongokMozgat() {
-        korongok = szalVezerlo.getKorongok();
-        elteres = szalVezerlo.jatekterPanelSzelesseg()/16;
+        korongok = szalVezerlo.getKorongok();        
         double kx, ky, vx, vy, aktx, akty;
         byte sorszam;
         double foSzog;
         double tavolsag;
-        double lepes = jatekterMagassag * 0.0025;
-        long ido = 3;        
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("KorongMozgato", new Dimension(jatekterSzelesseg, jatekterMagassag));
+        itr = xmlAdatok.get("KorongokMozgat").iterator();
+        double lepes = itr.next();
+        long ido = 3;
         byte korongokVegpontban = 0;
         
         while (korongokVegpontban != korongok.size()) {

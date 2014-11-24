@@ -24,8 +24,8 @@ import javax.swing.event.AncestorListener;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
 import java.awt.Dimension;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class JatekterPanel extends JPanel{
 
@@ -118,7 +118,7 @@ public class JatekterPanel extends JPanel{
         Image kep;
         kep = elmosas ? elmosottJatekTer : jatekTer;
         Graphics2D g2D = (Graphics2D) g;
-       
+        
         if(elsimitas){
         g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
@@ -163,12 +163,12 @@ public class JatekterPanel extends JPanel{
                     osszeg = String.valueOf(megadandoOsszeg);
                     szovegSzelesseg = g.getFontMetrics().getStringBounds(osszeg, g).getWidth();
                     szovegMagassag = g.getFontMetrics().getStringBounds(osszeg, g).getHeight();
-                    g.drawString(osszeg, (int) (gomb.getKx() - szovegSzelesseg / 2.0), (int) (magassag/1.077 - szovegMagassag / 2.0));
+                    g.drawString(osszeg, (int) (gomb.getKx() - szovegSzelesseg / 2.0), (int) (magassag / 1.077 - szovegMagassag / 2.0));
                 } else if (gomb.getNev().equals(NYIT_EMEL) && gomb.getMegjSorszam() != 3) {
                     osszeg = String.valueOf(emelendoOsszeg);
                     szovegSzelesseg = g.getFontMetrics().getStringBounds(osszeg, g).getWidth();
                     szovegMagassag = g.getFontMetrics().getStringBounds(osszeg, g).getHeight();
-                    g.drawString(osszeg, (int) (gomb.getKx() - szovegSzelesseg / 2.0), (int) (magassag/1.077 - szovegMagassag / 2.0));
+                    g.drawString(osszeg, (int) (gomb.getKx() - szovegSzelesseg / 2.0), (int) (magassag / 1.077 - szovegMagassag / 2.0));
                 } 
             }            
         }
@@ -181,7 +181,7 @@ public class JatekterPanel extends JPanel{
         Image elsoKep, masodikKep, harmadikKep;
         String nev;
 
-        HashMap<String, List<Double>> adatok = AdatKezelo.aranyErtekekBetolt(AdatKezelo.JATEKTER_PANEL, "Gombok", new Dimension(szelesseg, magassag));
+        Map<String, List<Double>> xmlAdatok = AdatKezelo.aranyErtekekBetolt("Gombok", new Dimension(szelesseg, magassag));
         Iterator<Double> itr;
 
         String[] gombNev = {ALL_IN, TART_MEGAD, NYIT_EMEL, MINUSZ, PLUSSZ, BEDOB};
@@ -190,7 +190,7 @@ public class JatekterPanel extends JPanel{
         
         for (byte i = 0; i < gombNev.length; i++) {
             nev = gombNev[i];
-            itr = adatok.get(nev).iterator();
+            itr = xmlAdatok.get(nev).iterator();
             elsoKep = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/iranyitas/"
                     + gombNev[i] + "_1.png")).getImage();
             masodikKep = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/iranyitas/"

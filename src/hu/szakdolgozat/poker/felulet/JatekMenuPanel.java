@@ -41,12 +41,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 
 public class JatekMenuPanel extends JPanel{
     private FeluletKezelo feluletKezelo;
     private SzalVezerlo szalVezerlo; 
-    private HashMap<String, List<Double>> xmlAdatok;
+    private Map<String, List<Double>> xmlAdatok;
     private Iterator<Double> itr;
     private JScrollPane scpPokerSzabaly;
     private List<Menupont> menupontok;  
@@ -377,7 +378,7 @@ public class JatekMenuPanel extends JPanel{
         beallitasKomponensek.add(lblVakEmelesE);     
         
         AbstractButton aButton;
-        xmlAdatok = AdatKezelo.aranyErtekekBetolt(AdatKezelo.JATEK_MENU_PANEL, "Komponensek", new Dimension(szelesseg, magassag));        
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("Komponensek", new Dimension(szelesseg, magassag));        
         
         for (JComponent beallitasKomponens : beallitasKomponensek) {
             itr = xmlAdatok.get(beallitasKomponens.getName()).iterator();
@@ -405,7 +406,7 @@ public class JatekMenuPanel extends JPanel{
      * Betölti a Segítség menü elemeit.
      */
     private void segitsegMenuBetolt() {
-        xmlAdatok = AdatKezelo.aranyErtekekBetolt(AdatKezelo.JATEK_MENU_PANEL, "Komponensek", new Dimension(szelesseg, magassag));
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("Komponensek", new Dimension(szelesseg, magassag));
         itr = xmlAdatok.get("scpPokerSzabaly").iterator();
         JEditorPane epPokerSzabaly = new JEditorPane();
         URL urlPokerSzabaly = this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/jatekMenu/A_Texas_holdem_menete.html");
@@ -433,7 +434,7 @@ public class JatekMenuPanel extends JPanel{
      * @param menupontNev 
      */
     private void menupontHozzaad(String elemNev, String menupontNev){     
-        xmlAdatok = AdatKezelo.aranyErtekekBetolt(AdatKezelo.JATEK_MENU_PANEL, "Menupontok", new Dimension(szelesseg, magassag));
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("Menupontok", new Dimension(szelesseg, magassag));
         itr = xmlAdatok.get(elemNev).iterator();
         Menupont menupont;
         menupont = new Menupont(menupontNev);
@@ -477,7 +478,7 @@ public class JatekMenuPanel extends JPanel{
         kepernyoMod = feluletKezelo.getKepernyoMod();       
         szelesseg = kepernyoMod.getWidth();
         magassag = kepernyoMod.getHeight();
-        xmlAdatok = AdatKezelo.aranyErtekekBetolt(AdatKezelo.JATEK_MENU_PANEL, "Menupontok", new Dimension(szelesseg, magassag));
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("Menupontok", new Dimension(szelesseg, magassag));
         menupontok = new ArrayList<>();
         kisBetuMeret = (int) (double) xmlAdatok.get("BetuMeret").get(0);
         nagyBetuMeret = (int) (double) xmlAdatok.get("BetuMeret").get(1);

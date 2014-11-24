@@ -3,6 +3,7 @@ package hu.szakdolgozat.poker.vezerloOsztalyok.szalak;
 import hu.szakdolgozat.poker.alapOsztalyok.PokerKez;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
 import hu.szakdolgozat.poker.alapOsztalyok.Zseton;
+import hu.szakdolgozat.poker.vezerloOsztalyok.AdatKezelo;
 import hu.szakdolgozat.poker.vezerloOsztalyok.AudioLejatszo;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -14,10 +15,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzogSzamito;
 import hu.szakdolgozat.poker.vezerloOsztalyok.ZsetonKezelo;
+import java.awt.Dimension;
+import java.util.Iterator;
 
 public class ZsetonMozgato extends Thread {
 
     private SzalVezerlo szalVezerlo;
+    private Map<String, List<Double>> xmlAdatok;
+    private Iterator<Double> itr;
     private byte jatekosokSzama;
     private int jatekterSzelesseg;
     private int jatekterMagassag;
@@ -39,6 +44,8 @@ public class ZsetonMozgato extends Thread {
     private double elteres;
     private double lepes;
     private double szoras;
+    private double szorasMin;
+    private double szorasMax;
     private double veletlenForgSzog;
     private double szog;    
 
@@ -48,7 +55,11 @@ public class ZsetonMozgato extends Thread {
         jatekterMagassag = szalVezerlo.jatekterPanelMagassag();
         jatekosokSzama = szalVezerlo.getJatekosokSzama();
         vegpontLista = SzogSzamito.vegpontLista(jatekosokSzama, jatekterSzelesseg, jatekterMagassag);
-        lepes = jatekterMagassag * 0.0025;
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("ZsetonMozgato", new Dimension(jatekterSzelesseg, jatekterMagassag));
+        itr = xmlAdatok.get("Konstruktor").iterator();
+        lepes = itr.next();
+        szorasMin = itr.next();
+        szorasMax = itr.next();
     }
 
     /**
@@ -63,17 +74,18 @@ public class ZsetonMozgato extends Thread {
             zsetonok = ZsetonKezelo.zsetonKioszt(zsetonOsszeg);
             jatekosokZsetonjai.put(i, zsetonok);
 
-            for (Zseton zseton : zsetonok) {                    
+            for (Zseton zseton : zsetonok) {    
+                itr = xmlAdatok.get("ZsetonokBetolt").iterator();
                 veletlenForgSzog = Math.random() * 360;//Létrehoz egy véletlen szöget 0 és 360 fok között. A létrehozott értéknek megfelelően fognak elfordulni a zsetonok.                
-                szoras = -jatekterSzelesseg / 800 + Math.random() * jatekterSzelesseg / 400;//Létrehoz egy véletlen számot. Ennyivel fognak a zsetonok eltérni az aktuális x,y középponttól.
+                szoras = szorasMin + Math.random() * szorasMax;//Létrehoz egy véletlen számot. Ennyivel fognak a zsetonok eltérni az aktuális x,y középponttól.
                 x = vegpontLista.get(i).x;
                 y = vegpontLista.get(i).y;
                 szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y) + 90;//Kiszámolja hogy az adott x,y pozícióban lévő pont hány fokos szöget zár be. Ehhez a szöghöz hozzá ad még kilencven fokot.
-                elteres = jatekterMagassag / 8;
+                elteres = itr.next();
                 x += elteres * Math.cos(Math.toRadians(szog));//Az x koordináta pozícióját eltolja az elteres értékkel a megadott szög irányba.
                 y += elteres * Math.sin(Math.toRadians(szog));
                 vegpont = SzogSzamito.vegpontSzamit(SzogSzamito.foSzogSzamit(jatekterSzelesseg, jatekterMagassag, x, y), jatekterSzelesseg, jatekterMagassag);//kiszámolja az új végontot.
-                elteres = jatekterMagassag / 30;
+                elteres = itr.next();
                 x = vegpont.x + elteres * Math.cos(Math.toRadians(SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y)));//Az új végpont x értékét eltolja az eltérés értékkel a megadott irányba.
                 y = vegpont.y + elteres * Math.sin(Math.toRadians(SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y)));
                 szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y);//Kiszámolja az x,y értékekhez tartozó szöget és hozzáad 90 fokot;
@@ -82,8 +94,8 @@ public class ZsetonMozgato extends Thread {
                 y += elteres * Math.sin(Math.toRadians(szog)) + szoras;
                 zseton.setKx(x);
                 zseton.setKy(y);
-                zseton.setKorongKepSzelesseg(jatekterSzelesseg / 53.5);
-                zseton.setKorongKepMagassag(jatekterSzelesseg / 53.5);
+                zseton.setKorongKepSzelesseg(jatekterMagassag / 40);
+                zseton.setKorongKepMagassag(jatekterMagassag / 40);
                 zseton.setForgat(veletlenForgSzog);
             }
         }
@@ -96,16 +108,17 @@ public class ZsetonMozgato extends Thread {
      */
     private void zsetonokUjratolt(List<Zseton> zsetonok) {        
         for (Zseton zseton : zsetonok) {
+            itr = xmlAdatok.get("ZsetonokUjratolt").iterator();
             veletlenForgSzog = Math.random() * 360;
-            szoras = -jatekterSzelesseg / 800 + Math.random() * jatekterSzelesseg / 400;
+            szoras = szorasMin + Math.random() * szorasMax;
             x = vegpontLista.get(jatekosSorszam).x;
             y = vegpontLista.get(jatekosSorszam).y;
             szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y) + 90;
-            elteres = jatekterMagassag / 8;
+            elteres = itr.next();
             x += elteres * Math.cos(Math.toRadians(szog));
             y += elteres * Math.sin(Math.toRadians(szog));
             vegpont = SzogSzamito.vegpontSzamit(SzogSzamito.foSzogSzamit(jatekterSzelesseg, jatekterMagassag, x, y), jatekterSzelesseg, jatekterMagassag);//kiszámolja az új végontot.
-            elteres = jatekterMagassag / 30;
+            elteres = itr.next();
             x = vegpont.x + elteres * Math.cos(Math.toRadians(SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y)));
             y = vegpont.y + elteres * Math.sin(Math.toRadians(SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y)));
             szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y);            
@@ -114,8 +127,8 @@ public class ZsetonMozgato extends Thread {
             y += elteres * Math.sin(Math.toRadians(szog)) + szoras;
             zseton.setKx(x);
             zseton.setKy(y);
-            zseton.setKorongKepSzelesseg(jatekterSzelesseg / 53.5);
-            zseton.setKorongKepMagassag(jatekterSzelesseg / 53.5);
+            zseton.setKorongKepSzelesseg(jatekterMagassag / 40);
+            zseton.setKorongKepMagassag(jatekterMagassag / 40);
             zseton.setForgat(veletlenForgSzog);
         }
         
@@ -147,9 +160,10 @@ public class ZsetonMozgato extends Thread {
         }
         
         for (Zseton zseton : jatekosTetje) { 
+            itr = xmlAdatok.get("JatekosTetMozgat").iterator();
             szoras = -jatekterSzelesseg / 800 + Math.random() * jatekterSzelesseg / 400;
-            x = jatekterSzelesseg * 0.59375;
-            y = jatekterSzelesseg * 0.46875;      
+            x = itr.next();
+            y = itr.next();      
             potZsetonPoziciok(zseton.getErtek());
             x += elteres * Math.cos(Math.toRadians(szog)) + szoras;
             y += elteres * Math.sin(Math.toRadians(szog)) + szoras;
@@ -235,15 +249,16 @@ public class ZsetonMozgato extends Thread {
             jatekosZsetonNyeremeny = szetvalogatottZsetonok.get(i);
 
             for (Zseton zseton : jatekosZsetonNyeremeny) {
-                szoras = -jatekterSzelesseg / 800 + Math.random() * jatekterSzelesseg / 400;
+                itr = xmlAdatok.get("PotNyertesekhezMozgat").iterator();
+                szoras = szorasMin + Math.random() * szorasMax;
                 x = vegpontLista.get(jatekosSorszam).x;
                 y = vegpontLista.get(jatekosSorszam).y;
                 szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y) + 90;
-                elteres = jatekterMagassag / 8;
+                elteres = itr.next();
                 x += elteres * Math.cos(Math.toRadians(szog));
                 y += elteres * Math.sin(Math.toRadians(szog));
                 vegpont = SzogSzamito.vegpontSzamit(SzogSzamito.foSzogSzamit(jatekterSzelesseg, jatekterMagassag, x, y), jatekterSzelesseg, jatekterMagassag);//kiszámolja az új végontot.
-                elteres = jatekterMagassag / 30;
+                elteres = itr.next();
                 x = vegpont.x + elteres * Math.cos(Math.toRadians(SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y)));
                 y = vegpont.y + elteres * Math.sin(Math.toRadians(SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y)));
                 szog = SzogSzamito.szogSzamit(jatekterSzelesseg, jatekterMagassag, x, y);
@@ -306,11 +321,13 @@ public class ZsetonMozgato extends Thread {
     private void jatekosZsetonPoziciok(byte zsetonErtek) {
         switch (zsetonErtek) {
             case 1:
-                elteres = jatekterMagassag / 30;
+                itr = xmlAdatok.get("JatekosZsetonPoziciok").iterator();
+                elteres = itr.next();
                 szog += 150;
                 break;
             case 5:
-                elteres = jatekterMagassag / 30;
+                itr = xmlAdatok.get("JatekosZsetonPoziciok").iterator();
+                elteres = itr.next();
                 szog += 90;
                 break;
             case 10:
@@ -318,11 +335,13 @@ public class ZsetonMozgato extends Thread {
                 szog += 90;
                 break;
             case 25:
-                elteres = jatekterMagassag / 30;
+                itr = xmlAdatok.get("JatekosZsetonPoziciok").iterator();
+                elteres = itr.next();
                 szog += 270;
                 break;
             case 100:
-                elteres = jatekterMagassag / 30;
+                itr = xmlAdatok.get("JatekosZsetonPoziciok").iterator();
+                elteres = itr.next();
                 szog += 210;
         }
     }
@@ -336,11 +355,13 @@ public class ZsetonMozgato extends Thread {
     private void potZsetonPoziciok(byte zsetonErtek) {
         switch (zsetonErtek) {
             case 1:
-                elteres = jatekterSzelesseg/40;
+                itr = xmlAdatok.get("PotZsetonPoziciok").iterator();
+                elteres = itr.next();
                 szog = 225;
                 break;
             case 5:
-                elteres = jatekterSzelesseg/40;
+                itr = xmlAdatok.get("PotZsetonPoziciok").iterator();
+                elteres = itr.next();
                 szog = 135;
                 break;
             case 10:
@@ -348,11 +369,13 @@ public class ZsetonMozgato extends Thread {
                 szog = 0;
                 break;
             case 25:
-                elteres = jatekterSzelesseg/40;
+                itr = xmlAdatok.get("PotZsetonPoziciok").iterator();
+                elteres = itr.next();
                 szog = 45;
                 break;
             case 100:
-                elteres = jatekterSzelesseg/40;
+                itr = xmlAdatok.get("PotZsetonPoziciok").iterator();
+                elteres = itr.next();
                 szog = 315;
         }
     }

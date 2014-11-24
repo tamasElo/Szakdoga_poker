@@ -1,9 +1,13 @@
 package hu.szakdolgozat.poker.vezerloOsztalyok;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class SzogSzamito {
 
@@ -11,7 +15,9 @@ public class SzogSzamito {
     private static double ky;
     private static double szog;
     private static double foSzog;
-
+    private static Map<String, List<Double>> xmlAdatok;
+    private static Iterator<Double> itr;
+    
     private SzogSzamito() {
     }
 
@@ -44,7 +50,11 @@ public class SzogSzamito {
      * @return
      */
     public synchronized static Point vegpontSzamit(double szog, int szelesseg, int magassag) {
-        RoundRectangle2D roundRectangle = new RoundRectangle2D.Double(szelesseg / 5.517, magassag / 4, szelesseg/1.569, magassag/2, magassag/2, magassag/2);
+        xmlAdatokBetolt(szelesseg, magassag);
+        
+        itr = xmlAdatok.get("KerekitettTeglalap").iterator();
+        RoundRectangle2D roundRectangle = new RoundRectangle2D.Double(itr.next(), itr.next(), 
+                itr.next(), itr.next(), itr.next(), itr.next());
         kx = szelesseg / 2;
         ky = magassag / 2;
         double lepes = 1;
@@ -70,19 +80,23 @@ public class SzogSzamito {
      * @param vy
      * @return
      */
-    public synchronized static double szogSzamit(int szelesseg, int magassag, double vx, double vy) {
+    public synchronized static double szogSzamit(int szelesseg, int magassag, double vx, double vy) {        
+        xmlAdatokBetolt(szelesseg, magassag);
+                
         szog = 0;
         
         foSzogSzamit(szelesseg, magassag, vx, vy);
         if (foSzog <= 235 && foSzog >= 135) {
-            kx = szelesseg / 2.726;
-            ky = magassag / 2;
+            itr = xmlAdatok.get("BalKor").iterator();
+            kx = itr.next();
+            ky = itr.next();
             szog = Math.atan2(vy - ky, vx - kx);
             szog = Math.toDegrees(szog);
         }
         if (foSzog <= 45 || foSzog >= 300) {
-            kx = szelesseg / 1.579;
-            ky = magassag / 2;
+            itr = xmlAdatok.get("JobbKor").iterator();
+            kx = itr.next();
+            ky = itr.next();
             szog = Math.atan2(vy - ky, vx - kx);
             szog = Math.toDegrees(szog);
         }
@@ -110,23 +124,27 @@ public class SzogSzamito {
      * @param vy
      * @return
      */
-    public synchronized static double forgasSzogSzamit(int szelesseg, int magassag, double vx, double vy) {
+    public synchronized static double forgasSzogSzamit(int szelesseg, int magassag, double vx, double vy) {        
+        xmlAdatokBetolt(szelesseg, magassag);
+        
         double kulonbseg;
         szog = 0;
 
         foSzogSzamit(szelesseg, magassag, vx, vy);
 
         if (foSzog <= 245 && foSzog >= 135) {
-            kx = szelesseg / 2.726;
-            ky = magassag / 2;
+            itr = xmlAdatok.get("BalKor").iterator();
+            kx = itr.next();
+            ky = itr.next();
             szog = Math.atan2(vy - ky, vx - kx);
             szog = Math.toDegrees(szog);
             kulonbseg = (foSzog <= 180) ? -90 : 90;
             szog += kulonbseg;
         }
         if (foSzog <= 45 || foSzog >= 300) {
-            kx = szelesseg / 1.579;
-            ky = magassag / 2;
+            itr = xmlAdatok.get("JobbKor").iterator();
+            kx = itr.next();
+            ky = itr.next();
             szog = Math.atan2(vy - ky, vx - kx);
             szog = Math.toDegrees(szog);
             kulonbseg = (foSzog <= 360 && foSzog> 45) ? 90 : -90;
@@ -151,5 +169,15 @@ public class SzogSzamito {
             foSzog += 360;
         }
         return foSzog;
+    }
+    
+    private synchronized static void xmlAdatokBetolt(int szelesseg, int magassag) {
+        if (xmlAdatok == null) {
+            xmlAdatok = AdatKezelo.aranyErtekekBetolt("Alakzatok", new Dimension(szelesseg, magassag));
+        }
+    }
+
+    public static void xmlAdatokTorol() {
+        xmlAdatok = null;
     }
 }

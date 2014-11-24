@@ -1,6 +1,5 @@
 package hu.szakdolgozat.poker.vezerloOsztalyok;
 
-import hu.szakdolgozat.poker.alapOsztalyok.Gomb;
 import hu.szakdolgozat.poker.felulet.KepernyoKezelo;
 import java.awt.Dimension;
 import java.io.File;
@@ -19,7 +18,9 @@ import org.w3c.dom.ls.LSOutput;
 import java.awt.DisplayMode;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -29,11 +30,10 @@ import org.xml.sax.SAXException;
 public final class AdatKezelo {
 
     private static Document doc;
+    private static final File ARANY_ERTEKEK = new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/arany_ertekek.xml");
     public static final File GRAFIKA = new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/grafika.xml");
     public static final File AUDIO = new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/audio.xml");
-    public static final File JATEKMENET = new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/jatekmenet.xml");
-    public static final File JATEK_MENU_PANEL = new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/jatek_menu_panel.xml");
-    public static final File JATEKTER_PANEL = new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/jatekter_panel.xml");
+    public static final File JATEKMENET = new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/jatekmenet.xml");    
 
     private AdatKezelo() {
     }
@@ -210,10 +210,17 @@ public final class AdatKezelo {
         return adatok;
     }
     
-    public static HashMap<String, List<Double>> aranyErtekekBetolt(File eleresiUt, String elemNev, Dimension felbontas) {
-        dokumentumLetrehozas(eleresiUt);
+    /**
+     * Betölti az arány értékeket tartalmazó xml dokumentumot.
+     * 
+     * @param elemNev
+     * @param felbontas
+     * @return 
+     */
+    public static Map<String, List<Double>> aranyErtekekBetolt(String elemNev, Dimension felbontas) {
+        dokumentumLetrehozas(ARANY_ERTEKEK);
         List<Double> ertekek;
-        HashMap<String,List<Double>> adatok = new HashMap<>();
+        Map<String,List<Double>> adatok = new HashMap<>();
         double szelesseg = felbontas.getWidth(), magassag = felbontas.getHeight();
         double ertek, aranyErtek;
         Element docEle = doc.getDocumentElement();         
@@ -245,47 +252,5 @@ public final class AdatKezelo {
         }
 
         return adatok;
-    }
-
-    public static void ideiglenesCucc(List<Gomb> gombok, double szelesseg, double magassag) {
-        dokumentumLetrehozas(null);
-
-        Element rootEle = doc.createElement("JatekterPanel");
-        Element elem, elem2, elem3, elem4;
-        Text text;
-
-        doc.appendChild(rootEle);
-        elem = doc.createElement("Gombok");
-        elem2 = doc.createElement("Szeles");
-        rootEle.appendChild(elem);
-        elem.appendChild(elem2);
-
-        for (int i = 0; i < gombok.size(); i++) {
-            Gomb gomb = gombok.get(i);
-            elem3 = doc.createElement(gomb.getNev());
-            elem4 = doc.createElement("X");
-            elem4.setAttribute("Arany", "szelesseg");
-            text = doc.createTextNode(String.valueOf(szelesseg / gomb.getKx()));
-            elem4.appendChild(text);
-            elem3.appendChild(elem4);
-            elem4 = doc.createElement("Y");
-            elem4.setAttribute("Arany", "magassag");
-            text = doc.createTextNode(String.valueOf(magassag / gomb.getKy()));
-            elem4.appendChild(text);
-            elem3.appendChild(elem4);
-            elem4 = doc.createElement("Szelesseg");
-            elem4.setAttribute("Arany", "magassag");
-            text = doc.createTextNode(String.valueOf(magassag / gomb.getSzelesseg()));
-            elem4.appendChild(text);
-            elem3.appendChild(elem4);
-            elem4 = doc.createElement("Magassag");
-            elem4.setAttribute("Arany", "magassag");
-            text = doc.createTextNode(String.valueOf(magassag / gomb.getMagassag()));
-            elem4.appendChild(text);
-            elem3.appendChild(elem4);
-            elem2.appendChild(elem3);
-        }
-        
-        fajlbaKiiras(new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/proba.xml"));
     }
 }
