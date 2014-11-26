@@ -1,14 +1,15 @@
 package hu.szakdolgozat.poker.alapOsztalyok;
 
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.ImageObserver;
+import java.io.Serializable;
+import javax.swing.ImageIcon;
 
-public abstract class Korong {
+public abstract class Korong implements Serializable{
 
-    private Image korongKep;
-    private Image elmosodottKorongKep;
+    private ImageIcon korongKep;
+    private ImageIcon elmosodottKorongKep;
     private double kx;
     private double ky;
     private double korongKepSzelesseg;
@@ -16,14 +17,14 @@ public abstract class Korong {
     private double forgat;
     private boolean elmosas;
 
-    public Korong(Image korongKep, Image elmosodottKorongKep) {
+    public Korong(ImageIcon korongKep, ImageIcon elmosodottKorongKep) {
         this.korongKep = korongKep;
         this.elmosodottKorongKep = elmosodottKorongKep;
     }   
 
     public void rajzol(Graphics2D g2D, ImageObserver o) {
         AffineTransform at = g2D.getTransform();
-        Image kep;
+        ImageIcon kep;
         
         kep = elmosas ? elmosodottKorongKep : korongKep;
         
@@ -31,11 +32,19 @@ public abstract class Korong {
             g2D.rotate(Math.toRadians(forgat), kx, ky);
         }
         
-        g2D.drawImage(kep, (int)(kx-korongKepSzelesseg/2), (int) (ky-korongKepMagassag/2), (int)korongKepSzelesseg, (int)korongKepMagassag, o);
+        g2D.drawImage(kep.getImage(), (int)(kx-korongKepSzelesseg/2), (int) (ky-korongKepMagassag/2), (int)korongKepSzelesseg, (int)korongKepMagassag, o);
         
         if (forgat != 0) {
             g2D.setTransform(at);
         }
+    }
+
+    public void setKorongKep(ImageIcon korongKep) {
+        this.korongKep = korongKep;
+    }
+
+    public void setElmosodottKorongKep(ImageIcon elmosodottKorongKep) {
+        this.elmosodottKorongKep = elmosodottKorongKep;
     }
 
     public void setKx(double kx) {

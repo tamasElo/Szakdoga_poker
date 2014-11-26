@@ -11,7 +11,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JOptionPane;
 
-public class AudioLejatszo {
+public final class AudioLejatszo {
     private static AudioInputStream ais;
     private static Clip clip;
     private static boolean menuZene;
@@ -26,6 +26,8 @@ public class AudioLejatszo {
     public static final File ELOUGRO_FELHO = new File("src/hu/szakdolgozat/poker/adatFajlok/audio/elougro_felho.wav");
     public static final File MENUPONT_HANG = new File("src/hu/szakdolgozat/poker/adatFajlok/audio/menupont_hang.wav");
 
+    private AudioLejatszo(){}
+    
     /**
      * Hangok lejátszását teszi lehetővé
      * 

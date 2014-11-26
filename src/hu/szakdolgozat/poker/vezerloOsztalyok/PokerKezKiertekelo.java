@@ -1,20 +1,22 @@
 package hu.szakdolgozat.poker.vezerloOsztalyok;
 
 import hu.szakdolgozat.poker.alapOsztalyok.Kartyalap;
-import hu.szakdolgozat.poker.alapOsztalyok.PokerKez;
+import hu.szakdolgozat.poker.burkoloOsztalyok.PokerKez;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PokerKezKiertekelo {
+public final class PokerKezKiertekelo {
 
     private static List<Byte> nyertesJatekosokSorszama;
     private static Map<Byte, PokerKez> jatekosokPokerKeze;
     private static byte legmagasabbPokerKezErtek;
     private static byte aktPokerKezErtek;
 
+    private PokerKezKiertekelo(){}
+    
     /**
      * Megkeresi a nyertes póker kezeket.
      *

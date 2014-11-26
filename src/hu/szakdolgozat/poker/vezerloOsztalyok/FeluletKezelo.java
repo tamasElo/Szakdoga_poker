@@ -2,7 +2,6 @@ package hu.szakdolgozat.poker.vezerloOsztalyok;
 
 import hu.szakdolgozat.poker.felulet.JatekMenuPanel;
 import hu.szakdolgozat.poker.felulet.JatekterPanel;
-import hu.szakdolgozat.poker.felulet.KepernyoKezelo;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,6 +9,7 @@ import java.awt.DisplayMode;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class FeluletKezelo {
 
@@ -52,7 +52,7 @@ public class FeluletKezelo {
      */
     public void jatekMenuPanelBetolt(FeluletKezelo feluletKezelo) {
         if (jatekMenuPanel != null) {
-            szalVezerlo.jatekMenuAnimacioMegallit();
+            szalVezerlo.jatekMenuAnimacioLegallit();
         }
         
         szalVezerlo = new SzalVezerlo();
@@ -67,9 +67,12 @@ public class FeluletKezelo {
         if (jatekterPanel != null) {
             pokerFrame.remove(jatekterPanel);
         }
-        
-        pokerFrame.getContentPane().add(jatekMenuPanel);
+        JPanel panel = new JPanel(); panel.setSize(felbontas);
+        pokerFrame.getContentPane().add(panel);        
         pokerFrame.setResizable(false);
+        pokerFrame.pack();
+        pokerFrame.remove(panel);
+        pokerFrame.getContentPane().add(jatekMenuPanel);
         pokerFrame.pack();
         pokerFrame.setLocationRelativeTo(null);
         AudioLejatszo.audioLejatszas(AudioLejatszo.MENU_ZENE, true);
@@ -77,10 +80,16 @@ public class FeluletKezelo {
     
     /**
      * Betölti a játék tér panelt.
+     * 
+     * @param jatekFolytat
      */
-    public void jatekTerPanelBetolt() {
+    public void jatekTerPanelBetolt(boolean jatekFolytat) {
         AudioLejatszo.audioMegallit();
-        szalVezerlo = new SzalVezerlo();
+        
+        if (!jatekFolytat) {
+            szalVezerlo = new SzalVezerlo();
+        }
+        
         jatekterPanel = new JatekterPanel();
         jatekterPanel.setBackground(Color.black);
         jatekterPanel.setSize(felbontas);
@@ -91,7 +100,7 @@ public class FeluletKezelo {
         pokerFrame.remove(jatekMenuPanel);
         pokerFrame.getContentPane().add(BorderLayout.CENTER, jatekterPanel);
         pokerFrame.pack();
-    }
+    } 
 
     /**
      * Alkalmazza a betöltött beállításokat.
@@ -139,7 +148,15 @@ public class FeluletKezelo {
         elsimitas = Boolean.parseBoolean(itr.next());
         felbontas = new Dimension(kepernyoMod.getWidth(), kepernyoMod.getHeight());
     }
-
+    
+    /**
+     * Elindítja az előzőleg elkezdett játékot.
+     */
+    public void jatekFolytat(){
+        szalVezerlo = AdatKezelo.jatekAllasBetolt();
+        jatekTerPanelBetolt(true);
+    }
+    
     public void setKepernyoMod(DisplayMode kepernyoMod) {
         this.kepernyoMod = kepernyoMod;
     }

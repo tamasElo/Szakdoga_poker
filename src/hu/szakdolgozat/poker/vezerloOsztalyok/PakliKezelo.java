@@ -36,7 +36,7 @@ public final class PakliKezelo {
             
             pakli.add(new Kartyalap(new ImageIcon(PakliKezelo.class.
                     getResource("/hu/szakdolgozat/poker/adatFajlok/kartyaPakli/" + String.valueOf(l) 
-                            + "_of_"+ adatok[0][j] +".png")).getImage(), 
+                            + "_of_"+ adatok[0][j] +".png")), 
                     adatok[1][k],adatok[0][j], l));                
             j++;
         }

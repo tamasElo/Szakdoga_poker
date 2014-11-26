@@ -28,10 +28,10 @@ public final class ZsetonKezelo {
          int maradek;
          int hanyados;
          int arany;
-         
-        if (aranySzamok == null) {
-            aranySzamok = new byte[]{3, 3, 3, 3, 8};
-        }
+
+         if (aranySzamok == null) {
+             aranySzamok = new byte[]{3, 3, 3, 3, 8};
+         }
 
         /*Végig megy az aranySzamok tömbön és egy feltételt vizsgál a ciklustörzsben. 
           Ha i nem egyenlő az aranySzamok tömb méretével, akkor az arany változót 
@@ -52,10 +52,10 @@ public final class ZsetonKezelo {
                 for (int j = 0; j < hanyados; j++) {
                     zsetonLista.add(new Zseton(zsetonErtekek[i], new ImageIcon(ZsetonKezelo.class.
                             getResource("/hu/szakdolgozat/poker/adatFajlok/zsetonok/zseton"
-                                    + zsetonErtekek[i] + ".png")).getImage(), 
+                                    + zsetonErtekek[i] + ".png")), 
                             new ImageIcon(ZsetonKezelo.class.
                             getResource("/hu/szakdolgozat/poker/adatFajlok/zsetonok/zseton"
-                                    + zsetonErtekek[i] + "_blur.png")).getImage()));
+                                    + zsetonErtekek[i] + "_blur.png"))));
                 }
             } else {
                 for (byte j = 0; j < zsetonErtekek.length; j++) {
@@ -66,10 +66,10 @@ public final class ZsetonKezelo {
                     for (int k = 0; k < hanyados; k++) {
                         zsetonLista.add(new Zseton(zsetonErtekek[j], new ImageIcon(ZsetonKezelo.class.
                                 getResource("/hu/szakdolgozat/poker/adatFajlok/zsetonok/zseton"
-                                        + zsetonErtekek[j] + ".png")).getImage(),
+                                        + zsetonErtekek[j] + ".png")),
                                 new ImageIcon(ZsetonKezelo.class.
                                 getResource("/hu/szakdolgozat/poker/adatFajlok/zsetonok/zseton"
-                                        + zsetonErtekek[j] + "_blur.png")).getImage()));
+                                        + zsetonErtekek[j] + "_blur.png"))));
                     }
                 }
             }
@@ -126,6 +126,9 @@ public final class ZsetonKezelo {
                 zsetonKioszt(osszeg2);
             }
         }
+        
+        aranySzamok = null;
+        
         return potZsetonok;
     }
     

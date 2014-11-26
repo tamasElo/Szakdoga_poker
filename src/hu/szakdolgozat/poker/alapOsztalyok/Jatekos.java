@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.ImageObserver;
-import java.util.List;
+import java.io.Serializable;
 
-public class Jatekos {
+public class Jatekos implements Serializable{
 
     private String nev;
     private Font font;
@@ -17,8 +17,6 @@ public class Jatekos {
     private double kx;
     private double ky;
     private String pokerKezNev;
-    private List<Kartyalap> pokerKezLapok;
-    private List<Zseton> jatekosZsetonok;  
 
     public Jatekos(String nev) {
         this.nev = nev;
@@ -59,14 +57,6 @@ public class Jatekos {
         this.aktiv = aktiv;
     }
 
-    public void setPokerKezLapok(List<Kartyalap> pokerKezLapok) {
-        this.pokerKezLapok = pokerKezLapok;
-    }
-
-    public void setJatekosZsetonok(List<Zseton> jatekosZsetonok) {
-        this.jatekosZsetonok = jatekosZsetonok;
-    }
-
     public String getNev() {
         return nev;
     }
@@ -88,14 +78,6 @@ public class Jatekos {
 
     public Font getFont() {
         return font;
-    }
-    
-    public List<Zseton> getJatekosZsetonok() {
-        return jatekosZsetonok;
-    }
-
-    public List<Kartyalap> getPokerKezLapok() {
-        return pokerKezLapok;
     }
 
     public String getPokerKezNev() {

@@ -1,10 +1,10 @@
 package hu.szakdolgozat.poker.alapOsztalyok;
 
-import java.awt.Image;
+import javax.swing.ImageIcon;
 
 public class Dealer extends Korong {
 
-    public Dealer(Image korongKep, Image elmosodottKorongKep) {
+    public Dealer(ImageIcon korongKep, ImageIcon elmosodottKorongKep) {
         super(korongKep, elmosodottKorongKep);
     }
 }

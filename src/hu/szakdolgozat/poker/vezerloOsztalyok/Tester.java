@@ -2,9 +2,8 @@ package hu.szakdolgozat.poker.vezerloOsztalyok;
 
 import hu.szakdolgozat.poker.alapOsztalyok.Jatekos;
 import hu.szakdolgozat.poker.alapOsztalyok.Kartyalap;
-import hu.szakdolgozat.poker.alapOsztalyok.PokerKez;
+import hu.szakdolgozat.poker.burkoloOsztalyok.PokerKez;
 import hu.szakdolgozat.poker.alapOsztalyok.Zseton;
-import hu.szakdolgozat.poker.vezerloOsztalyok.ZsetonKezelo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

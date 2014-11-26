@@ -1,5 +1,6 @@
-package hu.szakdolgozat.poker.alapOsztalyok;
+package hu.szakdolgozat.poker.burkoloOsztalyok;
 
+import hu.szakdolgozat.poker.alapOsztalyok.Kartyalap;
 import java.util.List;
 
 /*Ez az osztály egy burkoló osztály ami arra szolgál, hogy a póker kéz

@@ -1,6 +1,5 @@
 package hu.szakdolgozat.poker.vezerloOsztalyok;
 
-import hu.szakdolgozat.poker.felulet.KepernyoKezelo;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,13 +15,14 @@ import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 import org.w3c.dom.ls.LSOutput;
 import java.awt.DisplayMode;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -30,10 +30,11 @@ import org.xml.sax.SAXException;
 public final class AdatKezelo {
 
     private static Document doc;
-    private static final File ARANY_ERTEKEK = new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/arany_ertekek.xml");
-    public static final File GRAFIKA = new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/grafika.xml");
-    public static final File AUDIO = new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/audio.xml");
-    public static final File JATEKMENET = new File("src/hu/szakdolgozat/poker/adatFajlok/beallitasok/jatekmenet.xml");    
+    public static final File GRAFIKA = new File("src/hu/szakdolgozat/poker/adatFajlok/mentesek/beallitasok/grafika.xml");
+    public static final File AUDIO = new File("src/hu/szakdolgozat/poker/adatFajlok/mentesek/beallitasok/audio.xml");
+    public static final File JATEKMENET = new File("src/hu/szakdolgozat/poker/adatFajlok/mentesek/beallitasok/jatekmenet.xml"); 
+    private static final File ARANY_ERTEKEK = new File("src/hu/szakdolgozat/poker/adatFajlok/mentesek/beallitasok/arany_ertekek.xml");   
+    private static final File JATEK_ALLAS = new File("src/hu/szakdolgozat/poker/adatFajlok/mentesek/jatek/jatek_allas.ser");   
 
     private AdatKezelo() {
     }
@@ -55,7 +56,7 @@ public final class AdatKezelo {
         } catch (ParserConfigurationException pce) {
             JOptionPane.showMessageDialog(null, pce.getMessage());
         } catch (SAXException | IOException ex) {
-            Logger.getLogger(AdatKezelo.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }
 
@@ -99,7 +100,7 @@ public final class AdatKezelo {
         elem.appendChild(text);
         rootEle.appendChild(elem);
 
-        fajlbaKiiras(GRAFIKA);
+        xmlFajlbaKiiras(GRAFIKA);
     }
 
     /**
@@ -125,7 +126,7 @@ public final class AdatKezelo {
         elem.appendChild(text);
         rootEle.appendChild(elem);
 
-        fajlbaKiiras(AUDIO);
+        xmlFajlbaKiiras(AUDIO);
     }
 
     /**
@@ -167,7 +168,7 @@ public final class AdatKezelo {
         elem.appendChild(text);
         rootEle.appendChild(elem);
 
-        fajlbaKiiras(JATEKMENET);
+        xmlFajlbaKiiras(JATEKMENET);
     }
 
     /**
@@ -175,7 +176,7 @@ public final class AdatKezelo {
      * 
      * @param file 
      */
-    private static void fajlbaKiiras(File file) {
+    private static void xmlFajlbaKiiras(File file) {
         try {
             DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
 
@@ -217,7 +218,7 @@ public final class AdatKezelo {
      * @param felbontas
      * @return 
      */
-    public static Map<String, List<Double>> aranyErtekekBetolt(String elemNev, Dimension felbontas) {
+    public synchronized static Map<String, List<Double>> aranyErtekekBetolt(String elemNev, Dimension felbontas) {
         dokumentumLetrehozas(ARANY_ERTEKEK);
         List<Double> ertekek;
         Map<String,List<Double>> adatok = new HashMap<>();
@@ -252,5 +253,45 @@ public final class AdatKezelo {
         }
 
         return adatok;
+    }
+    
+    public static void jatekAllasMent(SzalVezerlo szalVezerlo){        
+ 
+        try {
+            FileOutputStream fs;
+            fs = new FileOutputStream(JATEK_ALLAS);
+            ObjectOutputStream os;
+
+            os = new ObjectOutputStream(fs);
+            os.writeObject(szalVezerlo);
+            os.close();
+        } catch (FileNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+    }
+    
+    public static SzalVezerlo jatekAllasBetolt(){
+        SzalVezerlo szalVezerlo = null;
+
+        try {
+            FileInputStream fs = new FileInputStream(JATEK_ALLAS);
+            ObjectInputStream os = new ObjectInputStream(fs);
+            szalVezerlo = (SzalVezerlo)os.readObject();
+            os.close();
+        } catch (IOException | ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+        
+        return szalVezerlo;
+    }
+    
+    public static void jatekAllasTorol(){
+        JATEK_ALLAS.delete();
+    }
+    
+    public static boolean jatekAllasEllenorzes(){
+        return JATEK_ALLAS.exists();
     }
 }

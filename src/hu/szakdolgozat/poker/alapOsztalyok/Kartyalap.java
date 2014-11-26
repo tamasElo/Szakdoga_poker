@@ -1,17 +1,17 @@
 package hu.szakdolgozat.poker.alapOsztalyok;
 
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.ImageObserver;
+import java.io.Serializable;
 import javax.swing.ImageIcon;
 
-public class Kartyalap implements Comparable<Kartyalap> {
+public class Kartyalap implements Serializable, Comparable<Kartyalap> {
 
-    private Image elolap;
-    private final Image hatlap;
-    private final Image elmosodottHatlap;
-    private final Image keret;
+    private ImageIcon elolap;
+    private final ImageIcon hatlap;
+    private final ImageIcon elmosodottHatlap;
+    private final ImageIcon keret;
     private double kx;
     private double ky;
     private double kartyaKepSzelesseg;
@@ -26,19 +26,19 @@ public class Kartyalap implements Comparable<Kartyalap> {
     private boolean elmosas;
     private double forgat;
 
-    public Kartyalap(Image elolap, String kartyaNev, String kartyaSzin, byte kartyaErtek) {
+    public Kartyalap(ImageIcon elolap, String kartyaNev, String kartyaSzin, byte kartyaErtek) {
         this.elolap = elolap;
         this.kartyaNev = kartyaNev;
         this.kartyaSzin = kartyaSzin;
         this.kartyaErtek = kartyaErtek;
-        hatlap = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/kartyaPakli/hatlap.png")).getImage();
-        elmosodottHatlap = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/kartyaPakli/hatlap_blur.png")).getImage();
-        keret = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/kartyaPakli/keret.png")).getImage(); 
+        hatlap = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/kartyaPakli/hatlap.png"));
+        elmosodottHatlap = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/kartyaPakli/hatlap_blur.png"));
+        keret = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/kartyaPakli/keret.png"));
     }
     
     public void rajzol(Graphics2D g2D, ImageObserver o){
         AffineTransform at = g2D.getTransform();          
-        Image kep;
+        ImageIcon kep;
         kep = elmosas ? elmosodottHatlap : hatlap;
         
         if (forgat != 0) {
@@ -47,17 +47,17 @@ public class Kartyalap implements Comparable<Kartyalap> {
         
         if (mutat) {
             if (keretRajzol) {
-                g2D.drawImage(keret, (int) (kx - keretKepSzelesseg / 2),
+                g2D.drawImage(keret.getImage(), (int) (kx - keretKepSzelesseg / 2),
                         (int) (ky - keretKepMagassag / 2),
                         (int) keretKepSzelesseg, (int) keretKepMagassag, o);
             }
 
-            g2D.drawImage(elolap, (int) (kx - kartyaKepSzelesseg / 2),
+            g2D.drawImage(elolap.getImage(), (int) (kx - kartyaKepSzelesseg / 2),
                     (int) (ky - kartyaKepMagassag / 2),
                     (int) kartyaKepSzelesseg, (int) kartyaKepMagassag, o);
         } else {
 
-            g2D.drawImage(kep, (int) (kx - kartyaKepSzelesseg / 2),
+            g2D.drawImage(kep.getImage(), (int) (kx - kartyaKepSzelesseg / 2),
                     (int) (ky - kartyaKepMagassag / 2),
                     (int) kartyaKepSzelesseg, (int) kartyaKepMagassag, o);
         }
@@ -70,6 +70,10 @@ public class Kartyalap implements Comparable<Kartyalap> {
     @Override
     public int compareTo(Kartyalap t) {
         return this.kartyaErtek-t.getKartyaErtek();
+    }
+
+    public void setElolap(ImageIcon elolap) {
+        this.elolap = elolap;
     }
     
     public void setKx(double kx) {
@@ -109,14 +113,6 @@ public class Kartyalap implements Comparable<Kartyalap> {
 
     public void setForgat(double forgat) {
         this.forgat = forgat;
-    }
-
-    public Image getElolap() {
-        return elolap;
-    }
-
-    public Image getHatlap() {
-        return hatlap;
     }
 
     public double getKx() {

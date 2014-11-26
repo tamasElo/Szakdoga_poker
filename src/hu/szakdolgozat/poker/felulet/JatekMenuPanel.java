@@ -1,10 +1,12 @@
 package hu.szakdolgozat.poker.felulet;
 
+import hu.szakdolgozat.poker.vezerloOsztalyok.KepernyoKezelo;
 import hu.szakdolgozat.poker.alapOsztalyok.Menupont;
 import hu.szakdolgozat.poker.vezerloOsztalyok.AdatKezelo;
 import hu.szakdolgozat.poker.vezerloOsztalyok.FeluletKezelo;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
 import hu.szakdolgozat.poker.vezerloOsztalyok.AudioLejatszo;
+import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
@@ -40,7 +42,6 @@ import java.io.IOException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
 
@@ -51,6 +52,7 @@ public class JatekMenuPanel extends JPanel{
     private Iterator<Double> itr;
     private JScrollPane scpPokerSzabaly;
     private List<Menupont> menupontok;  
+    private Menupont aktMenupont;
     private List<JComponent> beallitasKomponensek;
     private JTextField txtNev;
     private JLabel lblFelbontasE;
@@ -433,15 +435,23 @@ public class JatekMenuPanel extends JPanel{
      * @param elemNev
      * @param menupontNev 
      */
-    private void menupontHozzaad(String elemNev, String menupontNev){     
+    private void menupontHozzaad(String elemNev, String menupontNev) {
         xmlAdatok = AdatKezelo.aranyErtekekBetolt("Menupontok", new Dimension(szelesseg, magassag));
         itr = xmlAdatok.get(elemNev).iterator();
         Menupont menupont;
         menupont = new Menupont(menupontNev);
         menupont.setKx(itr.next());
         menupont.setKy(itr.next());
-        menupont.setBetuMeret(kisBetuMeret);
-        menupont.setBetuTipus("Copperplate Gothic Bold");
+        
+        if (menupontNev.equals(JATEK_FOLYTAT) && !AdatKezelo.jatekAllasEllenorzes()) {
+            menupont.setBetuMeret(kisBetuMeret);
+            menupont.setBetuTipus("Copperplate Gothic Bold");
+            menupont.setPassziv(true);
+        } else {
+            menupont.setBetuMeret(kisBetuMeret);
+            menupont.setBetuTipus("Copperplate Gothic Bold");
+        }
+        
         menupontok.add(menupont);
     }
     
@@ -500,8 +510,9 @@ public class JatekMenuPanel extends JPanel{
             szovegMagassag = menupont.getSzovegMagassag();
             negyszog = new Rectangle2D.Double(kx - szovegSzelesseg / 2, ky - szovegMagassag / 2, szovegSzelesseg, szovegMagassag);
 
-            if (negyszog.contains(me.getX(), me.getY())) {
+            if (negyszog.contains(me.getX(), me.getY()) && !menupont.isPassziv()) {
                 menupontNev = menupont.getNev();
+                aktMenupont = menupont;
                 menupont.setBetuMeret(nagyBetuMeret);
             } else {
                 menupont.setBetuMeret(kisBetuMeret);
@@ -513,9 +524,15 @@ public class JatekMenuPanel extends JPanel{
     
     private void jatekMenuMouseReleased(MouseEvent me) {
         switch (menupontNev) {
+            case JATEK_FOLYTAT:
+                if (!aktMenupont.isPassziv()) {
+                    feluletKezelo.jatekFolytat();
+                }
+                
+                break;
             case UJ_JATEK:
-                szalVezerlo.jatekMenuAnimacioMegallit();
-                feluletKezelo.jatekTerPanelBetolt();
+                szalVezerlo.jatekMenuAnimacioLegallit();
+                feluletKezelo.jatekTerPanelBetolt(false);
                 break;
             case BEALLITASOK:
                 beallitasokMenuBetolt();

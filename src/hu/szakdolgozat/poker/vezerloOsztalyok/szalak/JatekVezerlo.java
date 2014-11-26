@@ -1,11 +1,13 @@
 package hu.szakdolgozat.poker.vezerloOsztalyok.szalak;
 
+import hu.szakdolgozat.poker.vezerloOsztalyok.AdatKezelo;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import hu.szakdolgozat.poker.vezerloOsztalyok.Mi;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
+import java.io.Serializable;
 
-public class JatekVezerlo extends Thread {
+public class JatekVezerlo extends Thread implements Serializable{
 
     public static final byte EMBER_JATEKOS_SORSZAM = 0;
     public static final byte LEOSZTHATO_KARTYALAPOK_SZAMA = 5;
@@ -21,13 +23,14 @@ public class JatekVezerlo extends Thread {
     private int osszeg;
     private int[] jatekosokTetje;
     private byte licitSzamlalo;
-    private Mi mi;
+    private transient Mi mi;
     private boolean nyithat;
     private boolean passzolhat;
     private boolean megadhat;
     private boolean emelhet;
     private boolean ujkorIndit;
     private boolean korVege;
+    private boolean jatekosBlokkol;
     private boolean szalStop;
     private int kisVakErtek;
     private int nagyVakErtek;
@@ -53,6 +56,7 @@ public class JatekVezerlo extends Thread {
      * Elindít egy új kört.
      */
     private void ujKor() {       
+        szalVezerlo.setMenthet(false);
         szalVezerlo.jatekosokAktival();
         aktivJatekosokSzama = szalVezerlo.aktivJatekosokKeres();
         
@@ -62,7 +66,6 @@ public class JatekVezerlo extends Thread {
             licitSzamlalo = 0;
             szalVezerlo.korongokMozgatSzalIndit(dealerJatekosSorszam);
             szalVezerlo.kartyalapokKiosztSzalIndit(dealerJatekosSorszam);
-            szalVezerlo.ujPot();
             megallit();
             vakokErtekeBeallit();
             lehetosegekBeallit();
@@ -70,6 +73,7 @@ public class JatekVezerlo extends Thread {
         } else {
             szalStop = true;
             folytat();
+            AdatKezelo.jatekAllasTorol();
             szalVezerlo.nyertesSzalIndit();            
         }
     }
@@ -166,9 +170,11 @@ public class JatekVezerlo extends Thread {
         /*----------*/
 
         if (gepiJatekos()) {
-            mi.kovetkezoJatekos(jatekosSorszam);
-            mi.setLehetosegek(nyithat, emelhet, megadhat, passzolhat);
+//            mi.kovetkezoJatekos(jatekosSorszam);
+//            mi.setLehetosegek(nyithat, emelhet, megadhat, passzolhat);
         } else szalVezerlo.gombSorAllapotvalt();
+        
+        szalVezerlo.setMenthet(true);
     }
         
     /**
@@ -176,7 +182,10 @@ public class JatekVezerlo extends Thread {
      */
     public void kovetkezoJatekos() {
         jatekosAllapotEllenorzes();
-        if(!ujkorIndit)lehetosegekBeallit();
+        
+        if (!ujkorIndit) {
+            lehetosegekBeallit();
+        }
     }
     
     /**
@@ -208,6 +217,7 @@ public class JatekVezerlo extends Thread {
      * A kör végén a nyertes játékosok keresését indítja el.
      */
     private void korVege(){ 
+        szalVezerlo.setMenthet(false);
         szalVezerlo.nyertesJatekosKeres();
         korVege = false;
         ujkorIndit = true;
@@ -368,8 +378,14 @@ public class JatekVezerlo extends Thread {
                 ujKor();
             } else if (korVege) {
                 korVege();
-            } else {
+            } else if(!jatekosBlokkol){
                 kovetkezoJatekos();
+            } else{
+                if (!gepiJatekos()) {
+                    szalVezerlo.gombSorAllapotvalt();
+                }
+                
+                jatekosBlokkol = false;
             }
             
             if(szalStop) break;
@@ -386,6 +402,10 @@ public class JatekVezerlo extends Thread {
         }
     }
 
+    public void setJatekosBlokkol(boolean jatekosBlokkol) {
+        this.jatekosBlokkol = jatekosBlokkol;
+    }
+    
     public boolean isNyithat() {
         return nyithat;
     }
@@ -408,6 +428,10 @@ public class JatekVezerlo extends Thread {
 
     public byte getJatekosSorszam() {
         return jatekosSorszam;
+    }
+
+    public byte getDealerJatekosSorszam() {
+        return dealerJatekosSorszam;
     }
 
     public int[] getJatekosokTetje() {

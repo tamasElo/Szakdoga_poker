@@ -4,17 +4,18 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class SzogSzamito {
+public final class SzogSzamito {
 
     private static double kx;
     private static double ky;
     private static double szog;
     private static double foSzog;
+    private static int elozoSzelesseg;
+    private static int elozoMagassag;
     private static Map<String, List<Double>> xmlAdatok;
     private static Iterator<Double> itr;
     
@@ -86,6 +87,7 @@ public class SzogSzamito {
         szog = 0;
         
         foSzogSzamit(szelesseg, magassag, vx, vy);
+        
         if (foSzog <= 235 && foSzog >= 135) {
             itr = xmlAdatok.get("BalKor").iterator();
             kx = itr.next();
@@ -93,6 +95,7 @@ public class SzogSzamito {
             szog = Math.atan2(vy - ky, vx - kx);
             szog = Math.toDegrees(szog);
         }
+        
         if (foSzog <= 45 || foSzog >= 300) {
             itr = xmlAdatok.get("JobbKor").iterator();
             kx = itr.next();
@@ -100,11 +103,13 @@ public class SzogSzamito {
             szog = Math.atan2(vy - ky, vx - kx);
             szog = Math.toDegrees(szog);
         }
+        
         if (foSzog < 300 && foSzog > 235) {
             kx = szelesseg / 2;
             ky = magassag / 2;
             szog = -90;
         }
+        
         if (foSzog > 45 && foSzog < 135) {
             kx = szelesseg / 2;
             ky = magassag / 2;
@@ -131,16 +136,22 @@ public class SzogSzamito {
         szog = 0;
 
         foSzogSzamit(szelesseg, magassag, vx, vy);
-
+        
         if (foSzog <= 245 && foSzog >= 135) {
             itr = xmlAdatok.get("BalKor").iterator();
             kx = itr.next();
             ky = itr.next();
             szog = Math.atan2(vy - ky, vx - kx);
             szog = Math.toDegrees(szog);
+            
+            if (szog < -175) {//Ez azért kell, mert néha a bal oldali koordinátához számolt szog nem pont 180 fok lesz, hanem -180 vagy annál kisebb.
+                szog += 360;
+            }
+            
             kulonbseg = (foSzog <= 180) ? -90 : 90;
             szog += kulonbseg;
         }
+        
         if (foSzog <= 45 || foSzog >= 300) {
             itr = xmlAdatok.get("JobbKor").iterator();
             kx = itr.next();
@@ -150,6 +161,7 @@ public class SzogSzamito {
             kulonbseg = (foSzog <= 360 && foSzog> 45) ? 90 : -90;
             szog += kulonbseg;
         }
+        
         return szog;
     }
     
@@ -165,19 +177,22 @@ public class SzogSzamito {
     public synchronized static double foSzogSzamit(int szelesseg, int magassag, double vx, double vy) {
         foSzog = Math.atan2(vy - magassag / 2, vx - szelesseg / 2);
         foSzog = Math.toDegrees(foSzog);
+        
         if (foSzog < 0) {
             foSzog += 360;
         }
+        
         return foSzog;
     }
     
     private synchronized static void xmlAdatokBetolt(int szelesseg, int magassag) {
         if (xmlAdatok == null) {
             xmlAdatok = AdatKezelo.aranyErtekekBetolt("Alakzatok", new Dimension(szelesseg, magassag));
+        } else if (szelesseg != elozoSzelesseg || magassag != elozoMagassag) {
+            xmlAdatok = AdatKezelo.aranyErtekekBetolt("Alakzatok", new Dimension(szelesseg, magassag));
         }
-    }
 
-    public static void xmlAdatokTorol() {
-        xmlAdatok = null;
+        elozoSzelesseg = szelesseg;
+        elozoMagassag = magassag;
     }
 }

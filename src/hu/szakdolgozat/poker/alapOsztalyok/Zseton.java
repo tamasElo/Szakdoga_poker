@@ -1,12 +1,12 @@
 package hu.szakdolgozat.poker.alapOsztalyok;
 
-import java.awt.Image;
+import javax.swing.ImageIcon;
 
 public class Zseton extends Korong implements Comparable<Zseton>{
 
     private byte ertek;
 
-    public Zseton(byte ertek, Image korongKep, Image elmosodottKorongKep) {
+    public Zseton(byte ertek, ImageIcon korongKep, ImageIcon elmosodottKorongKep) {
         super(korongKep, elmosodottKorongKep);
         this.ertek = ertek;
     } 

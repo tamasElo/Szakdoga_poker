@@ -7,7 +7,8 @@ import hu.szakdolgozat.poker.alapOsztalyok.Jatekos;
 import hu.szakdolgozat.poker.alapOsztalyok.Kartyalap;
 import hu.szakdolgozat.poker.alapOsztalyok.Korong;
 import hu.szakdolgozat.poker.alapOsztalyok.Nyertes;
-import hu.szakdolgozat.poker.alapOsztalyok.PokerKez;
+import hu.szakdolgozat.poker.alapOsztalyok.Toltes;
+import hu.szakdolgozat.poker.burkoloOsztalyok.PokerKez;
 import hu.szakdolgozat.poker.alapOsztalyok.Vak;
 import hu.szakdolgozat.poker.alapOsztalyok.Zseton;
 import hu.szakdolgozat.poker.felulet.JatekMenuPanel;
@@ -31,39 +32,43 @@ import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.FelhoMozgato;
 import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.KartyaMozgato;
 import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.KorongMozgato;
 import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.NyertesMozgato;
+import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.VarakozasMozgato;
 import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.ZsetonMozgato;
 import java.awt.Dimension;
-import java.util.HashMap;
+import java.io.Serializable;
 import java.util.Iterator;
 
-public class SzalVezerlo {
+public class SzalVezerlo implements Serializable {
 
-    private FeluletKezelo feluletKezelo;
-    private JatekterPanel jatekterPanel;
-    private JatekMenuPanel jatekMenuPanel;
-    private Map<String, List<Double>> xmlAdatok;
-    private Iterator<Double> itr;
-    private List<Kartyalap> kartyalapok;  
+    private transient FeluletKezelo feluletKezelo;
+    private transient JatekterPanel jatekterPanel;
+    private transient JatekMenuPanel jatekMenuPanel;
+    private transient Map<String, List<Double>> xmlAdatok;
+    private transient Iterator<Double> itr;
+    private boolean menthet;
+    private List<Kartyalap> kartyalapok;
     private List<Kartyalap> leosztottKartyalapok;
     private List<Jatekos> jatekosok;
     private List<Korong> korongok;
     private Map<Byte, List<Kartyalap>> jatekosokKartyalapjai;
     private Map<Byte, List<Kartyalap>> kiszalltJatekosokKartyalapjai;
-    private Map<Byte, List<Zseton>> jatekosokZsetonjai;    
-    private Map<Byte, PokerKez> nyertesPokerKezek;
+    private Map<Byte, List<Zseton>> jatekosokZsetonjai;
+    private transient Map<Byte, PokerKez> nyertesPokerKezek;
     private List<Zseton> pot;
     private boolean kartyaGrafikaElore;
     private JatekVezerlo jatekVezerlo;
     private Vak kisVak;
     private Vak nagyVak;
     private Dealer dealer;
-    private Image keveresAnimacio;
-    private ZsetonMozgato zsetonMozgato;
-    private KartyaMozgato kartyaMozgato;
-    private FelhoMozgato felhoMozgato;
-    private NyertesMozgato nyertesMozgato;
-    private Felho felho;
-    private Nyertes nyertes;
+    private transient Image keveresAnimacio; //Ezt valamiért nem lehet menteni, mert utánna nem frissít rendesen a jatekterpanel paint component-je.
+    private transient ZsetonMozgato zsetonMozgato;
+    private transient KartyaMozgato kartyaMozgato;
+    private transient FelhoMozgato felhoMozgato;
+    private transient NyertesMozgato nyertesMozgato;
+    private transient VarakozasMozgato varakozasMozgato;
+    private transient Felho felho;
+    private transient Nyertes nyertes;
+    private transient Toltes toltes;
     private String emberJatekosNev;
     private byte jatekosokSzama;
     private int zsetonOsszeg;
@@ -73,18 +78,16 @@ public class SzalVezerlo {
     public SzalVezerlo() {
         KorongMozgato.setKorongokBetoltve(false);
         Jatekos.sorszamIndexNullaz();
-        SzogSzamito.xmlAdatokTorol();
         beallitasokBetolt();
-        
         keveresAnimacio = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/kartyaPakli/keveresAnimacio.gif")).getImage();
-        kisVak = new Vak(new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/korongok/small_blind.png")).getImage(), 
-                         new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/korongok/small_blind_blur.png")).getImage());
+        kisVak = new Vak(new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/korongok/small_blind.png")), 
+                         new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/korongok/small_blind_blur.png")));
         kisVak.setErtek(nagyVakErtek / 2);
-        nagyVak = new Vak(new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/korongok/big_blind.png")).getImage(), 
-                          new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/korongok/big_blind_blur.png")).getImage());
+        nagyVak = new Vak(new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/korongok/big_blind.png")), 
+                          new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/korongok/big_blind_blur.png")));
         nagyVak.setErtek(nagyVakErtek);
-        dealer = new Dealer(new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/korongok/dealer.png")).getImage(), 
-                            new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/korongok/dealer_blur.png")).getImage());
+        dealer = new Dealer(new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/korongok/dealer.png")), 
+                            new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/korongok/dealer_blur.png")));
     } 
 
     /**
@@ -217,6 +220,12 @@ public class SzalVezerlo {
             nyertes.rajzol(g2D, jatekterPanel);
         }
     }
+    
+    public void toltesRajzol(Graphics2D g2D){
+        if(varakozasMozgato != null && varakozasMozgato.isAlive()){
+            toltes.rajzol(g2D, jatekterPanel);
+        }
+    }
 
     /**
      * Be vagy kikapcsolja az átadott paraméter szerint a grafikai elemek
@@ -274,57 +283,48 @@ public class SzalVezerlo {
         String[] jatekosNevek = {"Sanyi", "Pityu", "Géza", "András", "Eszti", "Szabi", "Reni", "Józsi", "Kriszti"};
         String jatekosNev;
         boolean talalat = false;
-        jatekosok = new ArrayList<>();        
-        jatekosok.add(new Jatekos(emberJatekosNev));
-        
-        while (jatekosok.size() != jatekosokSzama) {
-            jatekosNev = jatekosNevek[(int) (Math.random() * (jatekosNevek.length - 1))];
-            for (Jatekos jatekos : jatekosok) {
-                if (jatekos.getNev().equals(jatekosNev)) {
-                    talalat = true;
+
+        if (jatekosok == null) {//A játékállás betöltésekor nem null.
+            jatekosok = new ArrayList<>();
+            jatekosok.add(new Jatekos(emberJatekosNev));
+
+            while (jatekosok.size() != jatekosokSzama) {
+                jatekosNev = jatekosNevek[(int) (Math.random() * (jatekosNevek.length - 1))];
+                for (Jatekos jatekos : jatekosok) {
+                    if (jatekos.getNev().equals(jatekosNev)) {
+                        talalat = true;
+                    }
                 }
+
+                if (!talalat) {
+                    jatekosok.add(new Jatekos(jatekosNev));
+                }
+
+                talalat = false;
             }
-            
-            if (!talalat) {
-                jatekosok.add(new Jatekos(jatekosNev));
-            }
-            
-            talalat = false;
         }
-        
+
         int i = 0;
         double elteres = jatekterPanelMagassag() / 8.275862;
         List<Point> vegpontLista = SzogSzamito.vegpontLista(jatekosokSzama, jatekterPanelSzelesseg(), jatekterPanelMagassag());
         Point vegpont;
-        
+
         for (Jatekos jatekos : jatekosok) {
             vegpont = vegpontLista.get(i++);
             jatekos.setKx(vegpont.getX() + elteres * Math.cos(Math.toRadians(SzogSzamito.szogSzamit(jatekterPanelSzelesseg(), jatekterPanelMagassag(), vegpont.getX(), vegpont.getY()))));
             jatekos.setKy(vegpont.getY() + elteres * Math.sin(Math.toRadians(SzogSzamito.szogSzamit(jatekterPanelSzelesseg(), jatekterPanelMagassag(), vegpont.getX(), vegpont.getY()))));
             jatekos.setFont(new Font("Arial", 1, jatekterPanelMagassag() / 60));
-            jatekos.setAktiv(true);
         }
     }
-    
-    /**
-     * Létrehoz egy jatekVezerlo objektumot.
-     */
-    public void jatekVezerloIndit() {
-        jatekVezerlo = new JatekVezerlo(this, nagyVakErtek, vakErtekEmeles);
-        jatekVezerlo.start();
-    }
-    
-    /**
-     * Folytatja a jatekVezerlo szal futását.
-     */
-    public void jatekVezerlesFolytat(){
-        jatekVezerlo.folytat();
-    }
-    
+
     /**
      * Kiosztja a játékosoknak a zsetonokat és létre hoz egy pot-ot.
      */
-    public void zsetonokKioszt(){        
+    public void zsetonokKioszt() {
+        if (pot == null) {
+            pot = new CopyOnWriteArrayList<>();
+        }
+        
         zsetonMozgato = new ZsetonMozgato(this);
         zsetonMozgato.zsetonokBetolt();     
     }
@@ -345,14 +345,54 @@ public class SzalVezerlo {
     }
     
     /**
-     * Létrehoz egy új potot.
+     * Elindítja a játék panel szálat.
      */
-    public void ujPot(){
-        pot = new CopyOnWriteArrayList<>();
+    public void jatekterSzalIndit(){
+        Thread jatekterSzal = new Thread(jatekterPanel);
+        jatekterSzal.start();
     }
     
     /**
-     * Megkeveri a paklit és kiosztja a játékosoknak.
+     * Leállítja a játék panel szálat.
+     */
+    public void jatekterSzalLeallit(){
+        jatekterPanel.setSzalStop(true);
+    }
+    
+    /**
+     * Létrehoz egy jatekVezerlo objektumot.
+     */
+    public void jatekVezerloIndit() {
+        if (jatekVezerlo == null) { //A játékállás betöltésekor nem null.
+            jatekVezerlo = new JatekVezerlo(this, nagyVakErtek, vakErtekEmeles);
+        } else {
+            betoltottAdatokFrissit();
+        }
+        
+        jatekVezerlo.start();
+    }
+    
+    /**
+     * Folytatja a jatekVezerlo szal futását.
+     */
+    public void jatekVezerlesFolytat(){
+        jatekVezerlo.folytat();
+    }
+    
+    
+    /**
+     * Betölti a kártya paklit.
+     * 
+     * @param dealer
+     */
+    public void kartyaPakliBetolt(byte dealer){    
+        kartyaMozgato = new KartyaMozgato(this);
+        kartyaMozgato.setDealer(dealer);
+        kartyaMozgato.pakliBetolt();
+    }
+    
+    /**
+     * Kiosztja a kártyalapokat a játékosoknak.
      * 
      * @param dealer 
      */
@@ -363,11 +403,10 @@ public class SzalVezerlo {
         leosztottKartyalapok = new CopyOnWriteArrayList<>();
         jatekosokKartyalapjai = new ConcurrentHashMap<>();
         kiszalltJatekosokKartyalapjai = new ConcurrentHashMap<>();
-        kartyaMozgato = new KartyaMozgato(this);
+        
+        kartyaPakliBetolt(dealer);
         kartyaMozgato.setKartyalapokKiosztasa(true);
-        kartyaMozgato.setDealer(dealer);
         kartyaMozgato.start();
-        frissit();
     }
     
     /**
@@ -404,8 +443,8 @@ public class SzalVezerlo {
     /**
      * Megállítja a játék menü háttér animációt
      */
-    public void jatekMenuAnimacioMegallit() {
-        kartyaMozgato.setSzalStop(true);
+    public void jatekMenuAnimacioLegallit() {
+        if(kartyaMozgato != null) kartyaMozgato.setSzalStop(true);//akkor null, ha a játékmenüböl betöltünk egy játékállást és utánna egyből kilépünk
     }
     
     /**
@@ -440,16 +479,8 @@ public class SzalVezerlo {
     public void nyertesSzalIndit(){
         byte jatekosSorszam = aktivJatekosSorszamKeres((byte)0);
         Image nyertesKep = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/nyertes/nyertes.png")).getImage();
-        xmlAdatok = AdatKezelo.aranyErtekekBetolt("GrafikaElemek", new Dimension(jatekterPanelSzelesseg(), jatekterPanelMagassag()));
-        itr = xmlAdatok.get("Nyertes").iterator();
-        double kx = itr.next(), ky = itr.next();
-        double nyertesKepSzelesseg = itr.next(), nyertesKepMagassag = itr.next();
         Jatekos jatekos = getJatekosok().get(jatekosSorszam);
         nyertes = new Nyertes(jatekos.getNev(), nyertesKep);
-        nyertes.setKx(kx);
-        nyertes.setKy(ky);
-        nyertes.setNyertesKepSzelesseg(nyertesKepSzelesseg);
-        nyertes.setNyertesKepMagassag(nyertesKepMagassag);
         nyertesMozgato = new NyertesMozgato(nyertes, this);
         nyertesMozgato.start();
     }
@@ -470,6 +501,30 @@ public class SzalVezerlo {
         executor.submit(kartyaMozgato);
         executor.submit(zsetonMozgato);
         executor.shutdown();
+    }
+    
+    /**
+     * Elindítja a várakozás animációt. 
+     */
+    public void varakozasSzalIndit(){
+        varakozasMozgato = new VarakozasMozgato(this);
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("GrafikaElemek", new Dimension(jatekterPanelSzelesseg(), jatekterPanelMagassag()));
+        itr = xmlAdatok.get("Toltes").iterator();
+        toltes = new Toltes();
+        toltes.setKx(itr.next());
+        toltes.setKy(itr.next());
+        toltes.setToltoKepMagassag(itr.next());
+        toltes.setToltoKepSzelesseg(itr.next());
+        varakozasMozgato.start();
+    }
+    
+    /**
+     * Leállítja a várakozás animáció szálat.
+     */
+    private void varakozasSzalLeallit() {
+        if (varakozasMozgato != null) {
+            varakozasMozgato.setSzalStop(true);
+        }
     }
 
     /**
@@ -600,61 +655,7 @@ public class SzalVezerlo {
         jatekterPanel.setMinOsszeg(jatekVezerlo.getOsszeg() == 0 ? nagyVakErtekVisszaad() : jatekVezerlo.getOsszeg());
         jatekterPanel.setMaxOsszeg(getJatekosZsetonOsszeg(JatekVezerlo.EMBER_JATEKOS_SORSZAM));
     }
-    
-    /**
-     * Frissíti a játéktér panelt.
-     */
-    public void frissit() {
-        if (isJatekterPanelBetoltve()) {
-            jatekterPanel.repaint();
-        } else {
-            jatekMenuPanel.repaint();
-        }
-    }
-      
-    /**
-     * Kilép a főmenübe.
-     */
-    public void kilepes(){
-        feluletKezelo.jatekMenuPanelBetolt(feluletKezelo);
-    }
-    
-    /**
-     * Visszaadja a játéktér panel szélességét.
-     * 
-     * @return 
-     */
-    public int jatekterPanelSzelesseg(){
-        return jatekterPanel.getWidth();
-    }
-    
-    /**
-     * Visszaadja a játéktér panel magasságát.
-     * 
-     * @return 
-     */
-    public int jatekterPanelMagassag(){
-        return jatekterPanel.getHeight();
-    }
- 
-    /**
-     * Visszaadja a játék menü panel szélességét.
-     *
-     * @return
-     */
-    public int jatekMenuPanelSzelesseg() {
-        return jatekMenuPanel.getWidth();
-    }
-
-    /**
-     * Visszaadja a játék menü panel magasságát.
-     *
-     * @return
-     */
-    public int jatekMenuPanelMagassag() {
-        return jatekMenuPanel.getHeight();
-    }
-    
+        
     /**
      * Aktiválja azokat a játékosokat, akiknek vannak még zsetonjaik.
      */
@@ -721,6 +722,25 @@ public class SzalVezerlo {
     public void emberiJatekosBedob() {
         jatekVezerlo.bedob();
     }
+    
+    /**
+     * Frissíti a menü panelt.
+     */
+    public void menuPanelFrissit() {
+        jatekMenuPanel.repaint();
+    }
+
+    /**
+     * Az beállítja a grafika elemek méreteit és pozícióit a felbontáshoz igazítva és korrigál néhány eltérést.
+     */
+    public void betoltottAdatokFrissit(){
+        byte dealerJatekosSorszam = jatekVezerlo.getDealerJatekosSorszam();
+        keveresAnimacio = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/kartyaPakli/keveresAnimacio.gif")).getImage();
+        jatekVezerlo.setJatekosBlokkol(true); 
+        kartyaPakliBetolt(dealerJatekosSorszam);
+        korongokMozgatSzalIndit(dealerJatekosSorszam);
+        zsetonokKioszt();
+    }      
    
     /**
      * Betölti az audió és játékmenet beállításokat.
@@ -736,6 +756,51 @@ public class SzalVezerlo {
         zsetonOsszeg = Integer.parseInt(itr.next());
         nagyVakErtek = Integer.parseInt(itr.next());
         vakErtekEmeles = Byte.parseByte(itr.next());
+    }
+    
+    /**
+     * Kilép a főmenübe.
+     */
+    public void kilepes(){        
+        jatekterSzalLeallit();
+        varakozasSzalLeallit();
+        feluletKezelo.jatekMenuPanelBetolt(feluletKezelo);
+    }
+    
+    /**
+     * Visszaadja a játéktér panel szélességét.
+     * 
+     * @return 
+     */
+    public int jatekterPanelSzelesseg(){
+        return jatekterPanel.getWidth();
+    }
+    
+    /**
+     * Visszaadja a játéktér panel magasságát.
+     * 
+     * @return 
+     */
+    public int jatekterPanelMagassag(){
+        return jatekterPanel.getHeight();
+    }
+ 
+    /**
+     * Visszaadja a játék menü panel szélességét.
+     *
+     * @return
+     */
+    public int jatekMenuPanelSzelesseg() {
+        return jatekMenuPanel.getWidth();
+    }
+
+    /**
+     * Visszaadja a játék menü panel magasságát.
+     *
+     * @return
+     */
+    public int jatekMenuPanelMagassag() {
+        return jatekMenuPanel.getHeight();
     }
     
     public void setKartyalapok(List<Kartyalap> kartyalapok) {
@@ -768,6 +833,10 @@ public class SzalVezerlo {
 
     public void setFeluletKezelo(FeluletKezelo feluletKezelo) {
         this.feluletKezelo = feluletKezelo;
+    }
+
+    public void setMenthet(boolean menthet) {
+        this.menthet = menthet;
     }
 
     public Map<Byte, List<Kartyalap>> getJatekosokKartyalapjai() {
@@ -844,9 +913,17 @@ public class SzalVezerlo {
     public Nyertes getNyertes() {
         return nyertes;
     }
+
+    public Toltes getToltes() {
+        return toltes;
+    }
     
     public boolean isJatekterPanelBetoltve(){
             return jatekterPanel != null;
+    }    
+
+    public boolean isMenthet() {
+        return menthet;
     }
     
     public boolean isJatekosAktiv(byte jatekosSorszam) {

@@ -1,6 +1,5 @@
-package hu.szakdolgozat.poker.felulet;
+package hu.szakdolgozat.poker.vezerloOsztalyok;
 
-import hu.szakdolgozat.poker.vezerloOsztalyok.FeluletKezelo;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;

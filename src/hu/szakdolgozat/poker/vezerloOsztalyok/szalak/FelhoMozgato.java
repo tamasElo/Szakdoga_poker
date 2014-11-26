@@ -66,13 +66,11 @@ public class FelhoMozgato extends Thread {
                 felho.setKx(aktx);
                 felho.setKy(akty);
                 felho.setFelhoKepSzelesseg(felhoKepSzelesseg);
-                felho.setFelhoKepMagassag(felhoKepMagassag);
-                szalVezerlo.frissit();
+                felho.setFelhoKepMagassag(felhoKepMagassag);                
                 sleep(ido);
-            }
+            }       
             
-            ido = 1500;
-            szalVezerlo.frissit();
+            ido = 1500;            
             sleep(ido);
         } catch (InterruptedException ex) {
             Logger.getLogger(FelhoMozgato.class.getName()).log(Level.SEVERE, null, ex);

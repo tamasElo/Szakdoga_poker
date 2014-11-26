@@ -16,8 +16,8 @@ import java.util.Map;
 
 public class KorongMozgato extends Thread {
 
-    private static List<Point> vegpontLista;
     private static boolean korongokBetoltve;
+    private List<Point> vegpontLista;
     private Map<String, List<Double>> xmlAdatok;
     private Iterator<Double> itr;
     private List<Korong> korongok;
@@ -34,23 +34,25 @@ public class KorongMozgato extends Thread {
         jatekterSzelesseg = szalVezerlo.jatekterPanelSzelesseg();
         jatekterMagassag = szalVezerlo.jatekterPanelMagassag();
         jatekosokSzama = szalVezerlo.getJatekosokSzama();
+        vegpontLista = SzogSzamito.vegpontLista(jatekosokSzama, jatekterSzelesseg, jatekterMagassag);    
         xmlAdatok = AdatKezelo.aranyErtekekBetolt("KorongMozgato", new Dimension(jatekterSzelesseg, jatekterMagassag));
         itr = xmlAdatok.get("Konstruktor").iterator();
         elteres = itr.next();
     }
 
-    private void korongokBetolt() {
-        korongok = new ArrayList<>();
-        vegpontLista = SzogSzamito.vegpontLista(jatekosokSzama, jatekterSzelesseg, jatekterMagassag);        
+    private void korongokBetolt() { 
         double meret;
         byte i = dealerJatekosSorszam;
         double x, y;
         double veletlenForgSzog;
         
-        korongok.add(szalVezerlo.getDealer());
-        korongok.add(szalVezerlo.getKisVak());
-        korongok.add(szalVezerlo.getNagyVak());
-        
+        if ((korongok = szalVezerlo.getKorongok()) == null) {
+            korongok = new ArrayList<>();
+            korongok.add(szalVezerlo.getDealer());
+            korongok.add(szalVezerlo.getKisVak());
+            korongok.add(szalVezerlo.getNagyVak());
+        }
+
         for (Korong korong : korongok) {
             veletlenForgSzog = Math.random()*360; //Létrehoz egy véletlen szöget 0 és 360 fok között. A létrehozott értéknek megfelelően fognak elfordulni a zsetonok.                
 
@@ -127,8 +129,6 @@ public class KorongMozgato extends Thread {
             } catch (InterruptedException ex) {
                 Logger.getLogger(KorongMozgato.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-            szalVezerlo.frissit();
         }
     }
     
@@ -148,4 +148,5 @@ public class KorongMozgato extends Thread {
     public void setDealer(byte dealer) {
         this.dealerJatekosSorszam = dealer;
     }
+    
 }

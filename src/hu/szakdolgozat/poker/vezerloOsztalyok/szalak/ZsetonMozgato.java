@@ -1,6 +1,6 @@
 package hu.szakdolgozat.poker.vezerloOsztalyok.szalak;
 
-import hu.szakdolgozat.poker.alapOsztalyok.PokerKez;
+import hu.szakdolgozat.poker.burkoloOsztalyok.PokerKez;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
 import hu.szakdolgozat.poker.alapOsztalyok.Zseton;
 import hu.szakdolgozat.poker.vezerloOsztalyok.AdatKezelo;
@@ -21,7 +21,8 @@ import java.util.Iterator;
 public class ZsetonMozgato extends Thread {
 
     private SzalVezerlo szalVezerlo;
-    private Map<String, List<Double>> xmlAdatok;
+    private Map<String, List<Double>> zsetonMozgatoXmlAdatok;    
+    private Map<String, List<Double>> zsetonXmlAdatok;
     private Iterator<Double> itr;
     private byte jatekosokSzama;
     private int jatekterSzelesseg;
@@ -55,8 +56,9 @@ public class ZsetonMozgato extends Thread {
         jatekterMagassag = szalVezerlo.jatekterPanelMagassag();
         jatekosokSzama = szalVezerlo.getJatekosokSzama();
         vegpontLista = SzogSzamito.vegpontLista(jatekosokSzama, jatekterSzelesseg, jatekterMagassag);
-        xmlAdatok = AdatKezelo.aranyErtekekBetolt("ZsetonMozgato", new Dimension(jatekterSzelesseg, jatekterMagassag));
-        itr = xmlAdatok.get("Konstruktor").iterator();
+        zsetonXmlAdatok =  AdatKezelo.aranyErtekekBetolt("GrafikaElemek", new Dimension(jatekterSzelesseg, jatekterMagassag));
+        zsetonMozgatoXmlAdatok = AdatKezelo.aranyErtekekBetolt("ZsetonMozgato", new Dimension(jatekterSzelesseg, jatekterMagassag));
+        itr = zsetonMozgatoXmlAdatok.get("Konstruktor").iterator();
         lepes = itr.next();
         szorasMin = itr.next();
         szorasMax = itr.next();
@@ -66,16 +68,25 @@ public class ZsetonMozgato extends Thread {
      * Betölti a zsetonokat és megfelelően elrendezi a játéktéren.
      */
     public void zsetonokBetolt() {
-        Map<Byte, List<Zseton>> jatekosokZsetonjai = new ConcurrentHashMap<>();
+        Map<Byte, List<Zseton>> jatekosokZsetonjai;
         List<Zseton> zsetonok;
-        int zsetonOsszeg = szalVezerlo.getZsetonOsszeg();
-
+        int zsetonOsszeg = 0;
+        
+        if ((jatekosokZsetonjai = szalVezerlo.getJatekosokZsetonjai()) == null) {
+            jatekosokZsetonjai = new ConcurrentHashMap<>();
+            zsetonOsszeg = szalVezerlo.getZsetonOsszeg();
+        }
+        
         for (byte i = 0; i < jatekosokSzama; i++) {
-            zsetonok = ZsetonKezelo.zsetonKioszt(zsetonOsszeg);
-            jatekosokZsetonjai.put(i, zsetonok);
-
+            if (zsetonOsszeg > 0) {
+                zsetonok = ZsetonKezelo.zsetonKioszt(zsetonOsszeg);
+                jatekosokZsetonjai.put(i, zsetonok);
+            } else {
+                zsetonok = jatekosokZsetonjai.get(i);
+            }
+            
             for (Zseton zseton : zsetonok) {    
-                itr = xmlAdatok.get("ZsetonokBetolt").iterator();
+                itr = zsetonMozgatoXmlAdatok.get("ZsetonokBetolt").iterator();
                 veletlenForgSzog = Math.random() * 360;//Létrehoz egy véletlen szöget 0 és 360 fok között. A létrehozott értéknek megfelelően fognak elfordulni a zsetonok.                
                 szoras = szorasMin + Math.random() * szorasMax;//Létrehoz egy véletlen számot. Ennyivel fognak a zsetonok eltérni az aktuális x,y középponttól.
                 x = vegpontLista.get(i).x;
@@ -93,14 +104,32 @@ public class ZsetonMozgato extends Thread {
                 x += elteres * Math.cos(Math.toRadians(szog)) + szoras;
                 y += elteres * Math.sin(Math.toRadians(szog)) + szoras;
                 zseton.setKx(x);
-                zseton.setKy(y);
-                zseton.setKorongKepSzelesseg(jatekterMagassag / 40);
-                zseton.setKorongKepMagassag(jatekterMagassag / 40);
+                zseton.setKy(y);                
+                itr = zsetonXmlAdatok.get("Zseton").iterator();
+                zseton.setKorongKepSzelesseg(itr.next());
+                zseton.setKorongKepMagassag(itr.next());
                 zseton.setForgat(veletlenForgSzog);
             }
         }
-        szalVezerlo.setJatekosokZsetonjai(jatekosokZsetonjai);//Átadja a szálvezérlőnek a jatekosokZsetonjai HashMap-et.
-        szalVezerlo.frissit();
+
+        if (szalVezerlo.getJatekosokZsetonjai() == null) {
+            szalVezerlo.setJatekosokZsetonjai(jatekosokZsetonjai);//Átadja a szálvezérlőnek a jatekosokZsetonjai HashMap-et.
+        } else {
+            for (Zseton zseton : szalVezerlo.getPot()) {
+                itr = zsetonMozgatoXmlAdatok.get("JatekosTetMozgat").iterator();
+                szoras = -jatekterSzelesseg / 800 + Math.random() * jatekterSzelesseg / 400;
+                x = itr.next();
+                y = itr.next();
+                potZsetonPoziciok(zseton.getErtek());
+                x += elteres * Math.cos(Math.toRadians(szog)) + szoras;
+                y += elteres * Math.sin(Math.toRadians(szog)) + szoras;
+                zseton.setKx(x);
+                zseton.setKy(y);
+                itr = zsetonXmlAdatok.get("Zseton").iterator();
+                zseton.setKorongKepSzelesseg(itr.next());
+                zseton.setKorongKepMagassag(itr.next());
+            }
+        }
     }
 
     /**
@@ -108,7 +137,7 @@ public class ZsetonMozgato extends Thread {
      */
     private void zsetonokUjratolt(List<Zseton> zsetonok) {        
         for (Zseton zseton : zsetonok) {
-            itr = xmlAdatok.get("ZsetonokUjratolt").iterator();
+            itr = zsetonMozgatoXmlAdatok.get("ZsetonokUjratolt").iterator();
             veletlenForgSzog = Math.random() * 360;
             szoras = szorasMin + Math.random() * szorasMax;
             x = vegpontLista.get(jatekosSorszam).x;
@@ -127,23 +156,24 @@ public class ZsetonMozgato extends Thread {
             y += elteres * Math.sin(Math.toRadians(szog)) + szoras;
             zseton.setKx(x);
             zseton.setKy(y);
-            zseton.setKorongKepSzelesseg(jatekterMagassag / 40);
-            zseton.setKorongKepMagassag(jatekterMagassag / 40);
+            itr = zsetonXmlAdatok.get("Zseton").iterator();
+            zseton.setKorongKepSzelesseg(itr.next());
+            zseton.setKorongKepMagassag(itr.next());
             zseton.setForgat(veletlenForgSzog);
         }
-        
-        szalVezerlo.frissit();
     }
     
     /**
      * A játékos tétjét mozgatja a megfelelő pozícióba.
      */
     @SuppressWarnings("SleepWhileInLoop")
-    private void jatekosTetMozgat() {
+    private void jatekosTetMozgat() {               
         List<Point> vegPontok = new ArrayList<>();        
         List<Zseton> jatekosZsetonjai = szalVezerlo.getJatekosokZsetonjai().get(jatekosSorszam);        
         List<Zseton> jatekosTetje = ZsetonKezelo.pot(jatekosZsetonjai, jatekosTetOsszege);
-        szalVezerlo.pothozAd(jatekosTetje);
+        
+        szalVezerlo.pothozAd(jatekosTetje);         
+        szalVezerlo.setMenthet(false);
         
         for (Zseton zseton : jatekosZsetonjai) {
             if (zseton.getKx() == 0) {
@@ -160,7 +190,7 @@ public class ZsetonMozgato extends Thread {
         }
         
         for (Zseton zseton : jatekosTetje) { 
-            itr = xmlAdatok.get("JatekosTetMozgat").iterator();
+            itr = zsetonMozgatoXmlAdatok.get("JatekosTetMozgat").iterator();
             szoras = -jatekterSzelesseg / 800 + Math.random() * jatekterSzelesseg / 400;
             x = itr.next();
             y = itr.next();      
@@ -197,14 +227,14 @@ public class ZsetonMozgato extends Thread {
                 }
             }
             
-            szalVezerlo.frissit();
-            
             try {
                 sleep(ido);
             } catch (InterruptedException ex) {
                 Logger.getLogger(ZsetonMozgato.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
+        szalVezerlo.setMenthet(true);
     }
     
     /**
@@ -247,9 +277,9 @@ public class ZsetonMozgato extends Thread {
             jatekosSorszam = nyertesJatekosSroszamok.get(i);
             jatekosZsetonjai = szalVezerlo.getJatekosokZsetonjai().get(jatekosSorszam);
             jatekosZsetonNyeremeny = szetvalogatottZsetonok.get(i);
-
+            
             for (Zseton zseton : jatekosZsetonNyeremeny) {
-                itr = xmlAdatok.get("PotNyertesekhezMozgat").iterator();
+                itr = zsetonMozgatoXmlAdatok.get("PotNyertesekhezMozgat").iterator();
                 szoras = szorasMin + Math.random() * szorasMax;
                 x = vegpontLista.get(jatekosSorszam).x;
                 y = vegpontLista.get(jatekosSorszam).y;
@@ -283,14 +313,14 @@ public class ZsetonMozgato extends Thread {
                     akty = ky + lepes * Math.sin(szog);
 
                     if (lepes >= tavolsag) {
-
-                        lastIndex = jatekosZsetonjai.lastIndexOf(aktZseton);
+                        lastIndex = jatekosZsetonjai.lastIndexOf(aktZseton) + 1;
                         vegPontok.remove(j);
-
-                        if (lastIndex != -1) {
+                        if (lastIndex != 0) {
                             jatekosZsetonjai.add(lastIndex, jatekosZsetonNyeremeny.remove(j));
+                            pot.remove(pot.indexOf(aktZseton));
                         } else {
                             jatekosZsetonjai.add(jatekosZsetonNyeremeny.remove(j));
+                            pot.remove(pot.indexOf(aktZseton));
                         }
 
                         j--;
@@ -299,8 +329,6 @@ public class ZsetonMozgato extends Thread {
                         aktZseton.setKy(akty);
                     }
                 }
-
-                szalVezerlo.frissit();
 
                 try {
                     sleep(ido);
@@ -321,12 +349,12 @@ public class ZsetonMozgato extends Thread {
     private void jatekosZsetonPoziciok(byte zsetonErtek) {
         switch (zsetonErtek) {
             case 1:
-                itr = xmlAdatok.get("JatekosZsetonPoziciok").iterator();
+                itr = zsetonMozgatoXmlAdatok.get("JatekosZsetonPoziciok").iterator();
                 elteres = itr.next();
                 szog += 150;
                 break;
             case 5:
-                itr = xmlAdatok.get("JatekosZsetonPoziciok").iterator();
+                itr = zsetonMozgatoXmlAdatok.get("JatekosZsetonPoziciok").iterator();
                 elteres = itr.next();
                 szog += 90;
                 break;
@@ -335,12 +363,12 @@ public class ZsetonMozgato extends Thread {
                 szog += 90;
                 break;
             case 25:
-                itr = xmlAdatok.get("JatekosZsetonPoziciok").iterator();
+                itr = zsetonMozgatoXmlAdatok.get("JatekosZsetonPoziciok").iterator();
                 elteres = itr.next();
                 szog += 270;
                 break;
             case 100:
-                itr = xmlAdatok.get("JatekosZsetonPoziciok").iterator();
+                itr = zsetonMozgatoXmlAdatok.get("JatekosZsetonPoziciok").iterator();
                 elteres = itr.next();
                 szog += 210;
         }
@@ -355,12 +383,12 @@ public class ZsetonMozgato extends Thread {
     private void potZsetonPoziciok(byte zsetonErtek) {
         switch (zsetonErtek) {
             case 1:
-                itr = xmlAdatok.get("PotZsetonPoziciok").iterator();
+                itr = zsetonMozgatoXmlAdatok.get("PotZsetonPoziciok").iterator();
                 elteres = itr.next();
                 szog = 225;
                 break;
             case 5:
-                itr = xmlAdatok.get("PotZsetonPoziciok").iterator();
+                itr = zsetonMozgatoXmlAdatok.get("PotZsetonPoziciok").iterator();
                 elteres = itr.next();
                 szog = 135;
                 break;
@@ -369,12 +397,12 @@ public class ZsetonMozgato extends Thread {
                 szog = 0;
                 break;
             case 25:
-                itr = xmlAdatok.get("PotZsetonPoziciok").iterator();
+                itr = zsetonMozgatoXmlAdatok.get("PotZsetonPoziciok").iterator();
                 elteres = itr.next();
                 szog = 45;
                 break;
             case 100:
-                itr = xmlAdatok.get("PotZsetonPoziciok").iterator();
+                itr = zsetonMozgatoXmlAdatok.get("PotZsetonPoziciok").iterator();
                 elteres = itr.next();
                 szog = 315;
         }

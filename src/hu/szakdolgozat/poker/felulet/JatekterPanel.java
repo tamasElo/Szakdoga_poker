@@ -1,5 +1,6 @@
 package hu.szakdolgozat.poker.felulet;
 
+import hu.szakdolgozat.poker.vezerloOsztalyok.KepernyoKezelo;
 import hu.szakdolgozat.poker.alapOsztalyok.Gomb;
 import hu.szakdolgozat.poker.vezerloOsztalyok.AdatKezelo;
 import java.awt.Color;
@@ -23,15 +24,20 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
 import java.awt.Dimension;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class JatekterPanel extends JPanel{
+public class JatekterPanel extends JPanel implements Runnable{
 
     private SzalVezerlo szalVezerlo;
     private Image jatekTer;
     private Image elmosottJatekTer;
+    private Image toltoKep;
     private int szelesseg;
     private int magassag;
     private int megadandoOsszeg; 
@@ -51,10 +57,12 @@ public class JatekterPanel extends JPanel{
     private static final String BEDOB = "Bedob";    
     private boolean elmosas;
     private boolean elsimitas;
+    private boolean ment;
     private static final URL NORMAL_JATEK_TER = JatekterPanel.class.getResource("/hu/szakdolgozat/poker/adatFajlok/jatekTer/jatekTer_normal.png");
     private static final URL SZELES_JATEK_TER = JatekterPanel.class.getResource("/hu/szakdolgozat/poker/adatFajlok/jatekTer/jatekTer_szeles.png");
     private static final URL NORMAL_JATEK_TER_ELMOSOTT = JatekterPanel.class.getResource("/hu/szakdolgozat/poker/adatFajlok/jatekTer/jatekTer_normal_blur.png");
     private static final URL SZELES_JATEK_TER_ELMOSOTT = JatekterPanel.class.getResource("/hu/szakdolgozat/poker/adatFajlok/jatekTer/jatekTer_szeles_blur.png");
+    private boolean szalStop;
 
     public JatekterPanel() {
         inicializal();
@@ -102,6 +110,13 @@ public class JatekterPanel extends JPanel{
             }
         });
         
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent evt) {
+                jatekTerKeyPressed(evt);
+            }
+        });
+
         /*-----tesztelés*/
          migombok();
         /*--*/
@@ -113,8 +128,7 @@ public class JatekterPanel extends JPanel{
      * @param g 
      */
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    protected void paintComponent(Graphics g) {                
         Image kep;
         kep = elmosas ? elmosottJatekTer : jatekTer;
         Graphics2D g2D = (Graphics2D) g;
@@ -127,25 +141,23 @@ public class JatekterPanel extends JPanel{
         }
         
         g2D.drawImage(kep, 0, 0, szelesseg, magassag, this);
-        
-        if (szalVezerlo != null) {
-            szalVezerlo.jatekosokRajzol(g2D);    
-            
-            if (szalVezerlo.isKartyaGrafikaElore()) {
-                szalVezerlo.korongokRajzol(g2D);
-                szalVezerlo.zsetonokRajzol(g2D);
-                szalVezerlo.potRajzol(g2D);
-                szalVezerlo.kartyalapokRajzol(g2D);
-            } else {
-                szalVezerlo.kartyalapokRajzol(g2D);
-                szalVezerlo.korongokRajzol(g2D);
-                szalVezerlo.zsetonokRajzol(g2D);
-                szalVezerlo.potRajzol(g2D);
-            }
-        }        
-        
-        szalVezerlo.felhoRajzol(g);
-        
+
+        szalVezerlo.jatekosokRajzol(g2D);
+
+        if (szalVezerlo.isKartyaGrafikaElore()) {
+            szalVezerlo.korongokRajzol(g2D);
+            szalVezerlo.zsetonokRajzol(g2D);
+            szalVezerlo.potRajzol(g2D);
+            szalVezerlo.kartyalapokRajzol(g2D);
+        } else {
+            szalVezerlo.kartyalapokRajzol(g2D);
+            szalVezerlo.korongokRajzol(g2D);
+            szalVezerlo.zsetonokRajzol(g2D);
+            szalVezerlo.potRajzol(g2D);
+        }
+
+        szalVezerlo.toltesRajzol(g2D);
+        szalVezerlo.felhoRajzol(g);        
         szalVezerlo.nyertesRajzol(g2D);
         
         if (gombok != null) {            
@@ -171,7 +183,7 @@ public class JatekterPanel extends JPanel{
                     g.drawString(osszeg, (int) (gomb.getKx() - szovegSzelesseg / 2.0), (int) (magassag / 1.077 - szovegMagassag / 2.0));
                 } 
             }            
-        }
+        }       
     }
 
     /**
@@ -191,12 +203,12 @@ public class JatekterPanel extends JPanel{
         for (byte i = 0; i < gombNev.length; i++) {
             nev = gombNev[i];
             itr = xmlAdatok.get(nev).iterator();
-            elsoKep = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/iranyitas/"
-                    + gombNev[i] + "_1.png")).getImage();
-            masodikKep = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/iranyitas/"
-                    + gombNev[i] + "_2.png")).getImage();
-            harmadikKep = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/iranyitas/"
-                    + gombNev[i] + "_3.png")).getImage();
+            elsoKep = new ImageIcon("src/hu/szakdolgozat/poker/adatFajlok/iranyitas/"
+                    + gombNev[i] + "_1.png").getImage();
+            masodikKep = new ImageIcon("src/hu/szakdolgozat/poker/adatFajlok/iranyitas/"
+                    + gombNev[i] + "_2.png").getImage();
+            harmadikKep = new ImageIcon("src/hu/szakdolgozat/poker/adatFajlok/iranyitas/"
+                    + gombNev[i] + "_3.png").getImage();
             gomb = new Gomb(nev, elsoKep, masodikKep, harmadikKep, itr.next(),
                     itr.next(), itr.next(), itr.next());
             gomb.setMegjSorszam(3);
@@ -258,8 +270,10 @@ public class JatekterPanel extends JPanel{
           
         gombsorBeallit();
         szalVezerlo.jatekosokBeallit();
-        szalVezerlo.jatekVezerloIndit();
-        repaint();
+        szalVezerlo.jatekVezerloIndit();  
+        szalVezerlo.jatekterSzalIndit();
+        this.setFocusable(true);
+        this.requestFocusInWindow();
     }
     
     /**
@@ -277,7 +291,6 @@ public class JatekterPanel extends JPanel{
                 }  
             }
         }
-        repaint();
     }
 
     /**
@@ -288,11 +301,22 @@ public class JatekterPanel extends JPanel{
      */
     private void jatekTerMouseReleased(MouseEvent me) {
             if (lenyomottGomb != null && lenyomottGomb.getMegjSorszam() == 1) {
+                szalVezerlo.setMenthet(false);
                 lenyomottGomb.setMegjSorszam(2);
                 osszegValtoztat();
                 lehetosegValaszt();
             }
-            repaint();
+    }
+
+    /**
+     * Az escape billentyű lenyomására kilép a játékmenübe és elmenti a játékállást.
+     * 
+     * @param evt 
+     */
+    private void jatekTerKeyPressed(KeyEvent evt) {
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE && szalVezerlo.isMenthet()) {
+            ment = true;
+        }
     }
 
     /**
@@ -351,8 +375,32 @@ public class JatekterPanel extends JPanel{
         }   
     }    
     
+    @Override
+    @SuppressWarnings("SleepWhileInLoop")
+    public void run() {
+        while (!szalStop) {
+            try {
+                if (ment) {
+                    szalVezerlo.varakozasSzalIndit();
+                    AdatKezelo.jatekAllasMent(szalVezerlo);
+                    szalVezerlo.kilepes();
+                    ment = false;
+                }
+                
+                Thread.sleep(10);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(JatekterPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            repaint();
+        }
+    }
+    
     public void setSzalVezerlo(SzalVezerlo szalVezerlo) {
         this.szalVezerlo = szalVezerlo;
+    }
+
+    public void setSzalStop(boolean szalStop) {
+        this.szalStop = szalStop;
     }
 
     public void setElmosas(boolean elmosas) {
