@@ -3,7 +3,6 @@ package hu.szakdolgozat.poker.vezerloOsztalyok.szalak;
 import hu.szakdolgozat.poker.vezerloOsztalyok.AdatKezelo;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import hu.szakdolgozat.poker.vezerloOsztalyok.Mi;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
 import java.io.Serializable;
 
@@ -16,14 +15,13 @@ public class JatekVezerlo extends Thread implements Serializable{
     private byte dealerJatekosSorszam;
     private byte kisVakJatekosSorszam;
     private byte nagyVakJatekosSorszam;
-    private byte jatekosSorszam;
+    private byte aktJatekosSorszam;
     private byte jatekosokSzama;    
     private byte aktivJatekosokSzama;
     private byte allInSzamlalo;
     private int osszeg;
     private int[] jatekosokTetje;
     private byte licitSzamlalo;
-    private transient Mi mi;
     private boolean nyithat;
     private boolean passzolhat;
     private boolean megadhat;
@@ -46,8 +44,7 @@ public class JatekVezerlo extends Thread implements Serializable{
         jatekosokSzama = szalVezerlo.getJatekosokSzama();
         jatekosokTetje = new int[jatekosokSzama];
         dealerJatekosSorszam = (byte) (Math.random() * jatekosokSzama);
-        mi = new Mi();     
-        ido = 1000;
+        ido = 1500;
         ujkorIndit = true;
         szalVezerlo.zsetonokKioszt();   
     }   
@@ -55,12 +52,12 @@ public class JatekVezerlo extends Thread implements Serializable{
     /**
      * Elindít egy új kört.
      */
-    private void ujKor() {       
+    private void ujKor() {   
         szalVezerlo.setMenthet(false);
         szalVezerlo.jatekosokAktival();
         aktivJatekosokSzama = szalVezerlo.aktivJatekosokKeres();
         
-        if (aktivJatekosokSzama > 1) {
+        if (aktivJatekosokSzama > 1 && szalVezerlo.isJatekosAktiv(EMBER_JATEKOS_SORSZAM)) {
             jatekosSorszamokBeallit();
             allInSzamlalo = 0;
             licitSzamlalo = 0;
@@ -68,16 +65,22 @@ public class JatekVezerlo extends Thread implements Serializable{
             szalVezerlo.kartyalapokKiosztSzalIndit(dealerJatekosSorszam);
             megallit();
             vakokErtekeBeallit();
-            lehetosegekBeallit();
             ujkorIndit = false;
-        } else {
-            szalStop = true;
+            lehetosegekBeallit();
+        } else if (aktivJatekosokSzama == 1) {
+            szalVezerlo.jatekVezerloSzalLeallit();
             folytat();
             AdatKezelo.jatekAllasTorol();
-            szalVezerlo.nyertesSzalIndit();            
+            szalVezerlo.nyertesSzalIndit();
+        } else {
+            szalVezerlo.miSzalLeallit();
+            szalVezerlo.jatekVezerloSzalLeallit();
+            folytat();
+            AdatKezelo.jatekAllasTorol();
+            szalVezerlo.kilepes();
         }
     }
-    
+
     /**
      * Beállítja a kisvak, nagyvak, dealer és az aktuális aktív játékos sorszámát
      * rekurzió segítségével az új kör indításakor.
@@ -88,14 +91,13 @@ public class JatekVezerlo extends Thread implements Serializable{
         dealerJatekosSorszam = szalVezerlo.aktivJatekosSorszamKeres(dealerJatekosSorszam);
         kisVakJatekosSorszam = szalVezerlo.aktivJatekosSorszamKeres((byte) (dealerJatekosSorszam + eltolas));
         nagyVakJatekosSorszam = szalVezerlo.aktivJatekosSorszamKeres((byte) (kisVakJatekosSorszam + eltolas));
-        jatekosSorszam = szalVezerlo.aktivJatekosSorszamKeres((byte) (nagyVakJatekosSorszam + eltolas));        
+        aktJatekosSorszam = szalVezerlo.aktivJatekosSorszamKeres((byte) (nagyVakJatekosSorszam + eltolas));        
     }
     
     /**
      * Beállítja a vakok értékeit.
      */
-    private void vakokErtekeBeallit() {
-        
+    private void vakokErtekeBeallit() {        
         if (korOszto > 0 && korokSzama > 0 && korokSzama % korOszto == 0) {
             kisVakErtek *= 2;
             nagyVakErtek = kisVakErtek * 2;
@@ -134,14 +136,14 @@ public class JatekVezerlo extends Thread implements Serializable{
      * Beállítja a soron következő játékos lehetőségeit.
      */
     private void lehetosegekBeallit() {
-        aktJatekosZsetonOsszeg = szalVezerlo.getJatekosZsetonOsszeg(jatekosSorszam);
+        aktJatekosZsetonOsszeg = szalVezerlo.getJatekosZsetonOsszeg(aktJatekosSorszam);
 
-        if (aktJatekosZsetonOsszeg <= osszeg - jatekosokTetje[jatekosSorszam]) { //Ez a lehetőség akkor van, ha az aktuális játékos zsetonjainak értéke kevesebb mint az előzőleg feltett tét
+        if (aktJatekosZsetonOsszeg <= osszeg - jatekosokTetje[aktJatekosSorszam]) { //Ez a lehetőség akkor van, ha az aktuális játékos zsetonjainak értéke kevesebb mint az előzőleg feltett tét
             nyithat = false;
             emelhet = false;
             megadhat = false;
             passzolhat = false;
-        } else if (aktJatekosZsetonOsszeg <= osszeg * 2 - jatekosokTetje[jatekosSorszam]) {
+        } else if (aktJatekosZsetonOsszeg <= osszeg * 2 - jatekosokTetje[aktJatekosSorszam]) {
             nyithat = false;
             emelhet = false;
             megadhat = true;
@@ -151,7 +153,7 @@ public class JatekVezerlo extends Thread implements Serializable{
             emelhet = false;
             megadhat = false;
             passzolhat = true;
-        } else if (jatekosokTetje[jatekosSorszam] == osszeg) { //Új kör és első licit kör esetén ha a játékos a nagyvak, akkor van ez a lehetőség.
+        } else if (jatekosokTetje[aktJatekosSorszam] == osszeg) { //Új kör és első licit kör esetén ha a játékos a nagyvak, akkor van ez a lehetőség.
             nyithat = false;
             emelhet = true;
             megadhat = false;
@@ -163,18 +165,15 @@ public class JatekVezerlo extends Thread implements Serializable{
             passzolhat = false;
         }
         
-        /*---tesztelés---*/
-        szalVezerlo.setMikezeles(nyithat, emelhet, megadhat, passzolhat);
-        szalVezerlo.setjatekosSorszam(jatekosSorszam);
-        szalVezerlo.setjatekosMegadandoOsszeg(osszeg);
-        /*----------*/
-
         if (gepiJatekos()) {
-//            mi.kovetkezoJatekos(jatekosSorszam);
-//            mi.setLehetosegek(nyithat, emelhet, megadhat, passzolhat);
-        } else szalVezerlo.gombSorAllapotvalt();
-        
-        szalVezerlo.setMenthet(true);
+            if (szalVezerlo.isMiSzalFut()) {
+                szalVezerlo.miFolytat();
+            } else {
+                szalVezerlo.miSzalIndit();
+            }
+        } else {
+            szalVezerlo.gombSorAllapotvalt();
+        }
     }
         
     /**
@@ -182,7 +181,6 @@ public class JatekVezerlo extends Thread implements Serializable{
      */
     public void kovetkezoJatekos() {
         jatekosAllapotEllenorzes();
-        
         if (!ujkorIndit) {
             lehetosegekBeallit();
         }
@@ -194,21 +192,21 @@ public class JatekVezerlo extends Thread implements Serializable{
      * @return 
      */
     public boolean gepiJatekos(){        
-        return (jatekosSorszam != EMBER_JATEKOS_SORSZAM);
+        return (aktJatekosSorszam != EMBER_JATEKOS_SORSZAM);
     }
     
     /**
      * Kiválasztja az aktuális játékos sorszámát az aktív játékosok közül.
      */
     private void jatekosAllapotEllenorzes(){
-        jatekosSorszam++;         
+        aktJatekosSorszam++;         
         licitSzamlaloLeptet();   
 
-        if (jatekosSorszam == jatekosokSzama) {
-            jatekosSorszam = 0;
+        if (aktJatekosSorszam == jatekosokSzama) {
+            aktJatekosSorszam = 0;
         }
-
-        if (!szalVezerlo.isJatekosAktiv(jatekosSorszam)) { //Ha az adott sorszámú játékos nem aktív akkor a metódus meghívja önmagát.
+        
+        if (!szalVezerlo.isJatekosAktiv(aktJatekosSorszam)) { //Ha az adott sorszámú játékos nem aktív akkor a metódus meghívja önmagát.
             jatekosAllapotEllenorzes();
         }
     }
@@ -227,7 +225,7 @@ public class JatekVezerlo extends Thread implements Serializable{
      * Ha a játékos paszsol akkor ez a metódus hívódik meg.
      */
     public void passzol(){        
-        szalVezerlo.felhoSzalIndit("Passzol", jatekosSorszam);
+        szalVezerlo.felhoSzalIndit("Passzol", aktJatekosSorszam);
         folytat();
     }
     
@@ -239,10 +237,10 @@ public class JatekVezerlo extends Thread implements Serializable{
      */
     public void nyit(int nyitoOsszeg){
         osszeg = nyitoOsszeg;
-        jatekosokTetje[jatekosSorszam] = osszeg;
-        szalVezerlo.zsetonokPotba(jatekosSorszam, osszeg);     
+        jatekosokTetje[aktJatekosSorszam] = osszeg;
+        szalVezerlo.zsetonokPotba(aktJatekosSorszam, osszeg);     
         licitSzamlalo = 0;        
-        szalVezerlo.felhoSzalIndit("Nyit", jatekosSorszam);
+        szalVezerlo.felhoSzalIndit("Nyit", aktJatekosSorszam);
         folytat();
     }
     
@@ -253,13 +251,13 @@ public class JatekVezerlo extends Thread implements Serializable{
      * @param emeltOsszeg
      */
     public void emel(int emeltOsszeg){        
-        osszeg -= jatekosokTetje[jatekosSorszam];
+        osszeg -= jatekosokTetje[aktJatekosSorszam];
         osszeg += emeltOsszeg;
-        jatekosokTetje[jatekosSorszam] += osszeg;
-        szalVezerlo.zsetonokPotba(jatekosSorszam, osszeg);     
-        osszeg = jatekosokTetje[jatekosSorszam];
+        jatekosokTetje[aktJatekosSorszam] += osszeg;
+        szalVezerlo.zsetonokPotba(aktJatekosSorszam, osszeg);     
+        osszeg = jatekosokTetje[aktJatekosSorszam];
         licitSzamlalo = 0;
-        szalVezerlo.felhoSzalIndit("Emel", jatekosSorszam);
+        szalVezerlo.felhoSzalIndit("Emel", aktJatekosSorszam);
         folytat();
     }
     
@@ -269,11 +267,11 @@ public class JatekVezerlo extends Thread implements Serializable{
      * hozzá adódik a pothoz.
      */
     public void megad(){
-        osszeg -= jatekosokTetje[jatekosSorszam];
-        jatekosokTetje[jatekosSorszam] += osszeg;
-        szalVezerlo.zsetonokPotba(jatekosSorszam, osszeg);
-        osszeg = jatekosokTetje[jatekosSorszam];
-        szalVezerlo.felhoSzalIndit("Megad", jatekosSorszam);
+        osszeg -= jatekosokTetje[aktJatekosSorszam];
+        jatekosokTetje[aktJatekosSorszam] += osszeg;
+        szalVezerlo.zsetonokPotba(aktJatekosSorszam, osszeg);
+        osszeg = jatekosokTetje[aktJatekosSorszam];
+        szalVezerlo.felhoSzalIndit("Megad", aktJatekosSorszam);
         folytat();
     }
     
@@ -286,16 +284,16 @@ public class JatekVezerlo extends Thread implements Serializable{
      */
     public void allIn(){
         int elozoOsszeg = osszeg;
-        osszeg = szalVezerlo.getJatekosZsetonOsszeg(jatekosSorszam);        
-        szalVezerlo.zsetonokPotba(jatekosSorszam, osszeg);
+        osszeg = szalVezerlo.getJatekosZsetonOsszeg(aktJatekosSorszam);        
+        szalVezerlo.zsetonokPotba(aktJatekosSorszam, osszeg);
                 
         if(osszeg > elozoOsszeg) licitSzamlalo = 0;
         else osszeg = elozoOsszeg;
         
-        szalVezerlo.jatekosPasszival(jatekosSorszam);
+        szalVezerlo.jatekosPasszival(aktJatekosSorszam);
         aktivJatekosokSzama--;
         allInSzamlalo++;
-        szalVezerlo.felhoSzalIndit("All in", jatekosSorszam);
+        szalVezerlo.felhoSzalIndit("All in", aktJatekosSorszam);
         
         if (aktivJatekosokSzama == 0) {               
             korVege = true;
@@ -310,18 +308,18 @@ public class JatekVezerlo extends Thread implements Serializable{
      * akkor a korVege metódust hívja meg.
      */
     public void bedob(){
-        szalVezerlo.jatekosPasszival(jatekosSorszam);
+        szalVezerlo.jatekosPasszival(aktJatekosSorszam);
         aktivJatekosokSzama--;
-        szalVezerlo.felhoSzalIndit("Bedob", jatekosSorszam);
-        szalVezerlo.jatekosKiszall(jatekosSorszam);
-        szalVezerlo.kartyalapokBedobSzalIndit(jatekosSorszam);
+        szalVezerlo.felhoSzalIndit("Bedob", aktJatekosSorszam);
+        szalVezerlo.jatekosKiszall(aktJatekosSorszam);
+        szalVezerlo.kartyalapokBedobSzalIndit(aktJatekosSorszam);
         
         if (aktivJatekosokSzama == 1 && allInSzamlalo == 0) {
             korVege = true;
         } else if (aktivJatekosokSzama == 0) {
             korVege = true;
         }
-
+        
         folytat();
     }
     
@@ -329,18 +327,23 @@ public class JatekVezerlo extends Thread implements Serializable{
      * A licitSzamlalo értékét inkrementálja. Ha az érték egyenlő a játékosok
      * számával akkor az ujLicitkor() metódust hívja meg.
      */
-    private void licitSzamlaloLeptet(){
-        if (++licitSzamlalo == jatekosokSzama) ujLicitkor();
+    private void licitSzamlaloLeptet() {
+        if (++licitSzamlalo == jatekosokSzama) {
+            szalVezerlo.setMenthet(false);
+            ujLicitkor();
+        } else {
+            szalVezerlo.setMenthet(true);
+        }
     }
-    
+
     /**
      * Elindít egy új licit kört. Ha a leosztott kártyalapok száma 5 akkor
      * meghívja a korVege() metódust.
      */
-    private void ujLicitkor(){              
-        jatekosSorszam = kisVakJatekosSorszam;
+    private void ujLicitkor(){             
+        aktJatekosSorszam = kisVakJatekosSorszam;
         
-        if (szalVezerlo.leosztottKartyalapokSzama() < LEOSZTHATO_KARTYALAPOK_SZAMA && aktivJatekosokSzama > 1) {
+        if (szalVezerlo.leosztottKartyalapokSzama() < LEOSZTHATO_KARTYALAPOK_SZAMA && aktivJatekosokSzama > 1) {            
             szalVezerlo.kartyalapokLeosztSzalIndit();
             megallit();
         } else {
@@ -378,7 +381,7 @@ public class JatekVezerlo extends Thread implements Serializable{
                 ujKor();
             } else if (korVege) {
                 korVege();
-            } else if(!jatekosBlokkol){
+            } else if(!jatekosBlokkol){            
                 kovetkezoJatekos();
             } else{
                 if (!gepiJatekos()) {
@@ -400,6 +403,10 @@ public class JatekVezerlo extends Thread implements Serializable{
                 }
             }
         }
+    }
+
+    public void setSzalStop(boolean szalStop) {
+        this.szalStop = szalStop;
     }
 
     public void setJatekosBlokkol(boolean jatekosBlokkol) {
@@ -426,8 +433,8 @@ public class JatekVezerlo extends Thread implements Serializable{
         return osszeg;
     }
 
-    public byte getJatekosSorszam() {
-        return jatekosSorszam;
+    public byte getAktJatekosSorszam() {
+        return aktJatekosSorszam;
     }
 
     public byte getDealerJatekosSorszam() {
@@ -436,5 +443,13 @@ public class JatekVezerlo extends Thread implements Serializable{
 
     public int[] getJatekosokTetje() {
         return jatekosokTetje;
+    }
+
+    public int getKisVakErtek() {
+        return kisVakErtek;
+    }
+
+    public int getNagyVakErtek() {
+        return nagyVakErtek;
     }
 }

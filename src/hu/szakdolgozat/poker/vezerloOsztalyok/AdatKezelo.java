@@ -198,7 +198,7 @@ public final class AdatKezelo {
      * @param eleresiUt
      * @return
      */
-    public static List<String> beallitasBetolt(File eleresiUt) {
+    public synchronized static List<String> beallitasBetolt(File eleresiUt) {
         dokumentumLetrehozas(eleresiUt);
         
         ArrayList<String> adatok = new ArrayList<>();

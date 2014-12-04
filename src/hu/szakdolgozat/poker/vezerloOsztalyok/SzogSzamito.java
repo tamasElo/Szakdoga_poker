@@ -185,6 +185,12 @@ public final class SzogSzamito {
         return foSzog;
     }
     
+    /**
+     * Betölti az osztályhoz tartozó xml adatokat ha szükséges.
+     * 
+     * @param szelesseg
+     * @param magassag 
+     */
     private synchronized static void xmlAdatokBetolt(int szelesseg, int magassag) {
         if (xmlAdatok == null) {
             xmlAdatok = AdatKezelo.aranyErtekekBetolt("Alakzatok", new Dimension(szelesseg, magassag));

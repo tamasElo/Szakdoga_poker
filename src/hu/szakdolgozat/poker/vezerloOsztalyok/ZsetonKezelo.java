@@ -23,7 +23,7 @@ public final class ZsetonKezelo {
      * @param osszeg
      * @return 
      */
-     public static List<Zseton> zsetonKioszt(int osszeg) {
+     public synchronized static List<Zseton> zsetonKioszt(int osszeg) {
          zsetonLista = new CopyOnWriteArrayList<>();        
          int maradek;
          int hanyados;

@@ -59,7 +59,7 @@ public class NyertesMozgato extends Thread {
                 nyertesKepSzelesseg += nyertesHorizontalisLepes;
                 nyertesKepMagassag += nyertesVertikalisLepes;
                 szovegMeret += szovegLepes;
-                szog += 0.1;
+                szog -= 0.1;
                 nyertes.setFont(new Font("Arial", 3, (int) szovegMeret));
                 nyertes.setNyertesKepSzelesseg(nyertesKepSzelesseg);
                 nyertes.setNyertesKepMagassag(nyertesKepMagassag);

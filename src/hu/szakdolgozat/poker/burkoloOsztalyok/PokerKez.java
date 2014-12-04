@@ -8,22 +8,31 @@ import java.util.List;
 public class PokerKez {
 
     private String pokerKezNev;
-    private byte pokerKezErtek;
+    private int pokerKezErtek;
     private List<Kartyalap> pokerKezKartyalapok;
     private List<Kartyalap> kiseroKartyalapok;
+    private byte outok;
 
-    public PokerKez(String pokerKezNev, byte pokerKezErtek, List<Kartyalap> pokerKezKartyalapok, List<Kartyalap> kiseroKartyalapok) {
+    public PokerKez(String pokerKezNev, int pokerKezErtek, List<Kartyalap> pokerKezKartyalapok, List<Kartyalap> kiseroKartyalapok) {
         this.pokerKezNev = pokerKezNev;
         this.pokerKezErtek = pokerKezErtek;
         this.pokerKezKartyalapok = pokerKezKartyalapok;
         this.kiseroKartyalapok = kiseroKartyalapok;
     }
 
+    public PokerKez(String pokerKezNev, int pokerKezErtek, List<Kartyalap> pokerKezKartyalapok, List<Kartyalap> kiseroKartyalapok, byte outok) {
+        this.pokerKezNev = pokerKezNev;
+        this.pokerKezErtek = pokerKezErtek;
+        this.pokerKezKartyalapok = pokerKezKartyalapok;
+        this.kiseroKartyalapok = kiseroKartyalapok;
+        this.outok = outok;
+    }
+
     public String getPokerKezNev() {
         return pokerKezNev;
     }
 
-    public byte getPokerKezErtek() {
+    public int getPokerKezErtek() {
         return pokerKezErtek;
     }
 
@@ -33,5 +42,9 @@ public class PokerKez {
 
     public List<Kartyalap> getKiseroKartyalapok() {
         return kiseroKartyalapok;
+    }
+
+    public byte getOutok() {
+        return outok;
     }
 }

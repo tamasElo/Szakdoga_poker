@@ -175,7 +175,8 @@ public class KartyaMozgato extends Thread {
         itr = xmlAdatok.get("KartyalapokKioszt").iterator();
         elteres = itr.next();
         xmlAdatok = AdatKezelo.aranyErtekekBetolt("GrafikaElemek", new Dimension(panelSzelesseg, panelMagassag));
-
+        kiszalltJatekosokKartyalapjai = szalVezerlo.getKiszalltJatekosokKartyalapjai();
+        
         double vegpontSzog;
         for (Map.Entry<Byte, List<Kartyalap>> entrySet : jatekosokKartyalapjai.entrySet()) {
             jatekosSorszam = entrySet.getKey();
@@ -191,6 +192,32 @@ public class KartyaMozgato extends Thread {
                 kx = vx + elteres * Math.cos(Math.toRadians(vegpontSzog));
                 ky = vy + elteres * Math.sin(Math.toRadians(vegpontSzog));
 
+                kartyalap.setKx(kx);
+                kartyalap.setKy(ky);
+                itr = xmlAdatok.get("Kartyalap").iterator();
+                kartyalap.setKartyaKepSzelesseg(itr.next());
+                kartyalap.setKartyaKepMagassag(itr.next());
+            }
+        }
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("KartyaMozgato", new Dimension(panelSzelesseg, panelMagassag));
+        itr = xmlAdatok.get("KartyalapokBedob").iterator();
+        elteres = itr.next();
+        xmlAdatok = AdatKezelo.aranyErtekekBetolt("GrafikaElemek", new Dimension(panelSzelesseg, panelMagassag));
+        
+        for (Map.Entry<Byte, List<Kartyalap>> entrySet : kiszalltJatekosokKartyalapjai.entrySet()) {
+            jatekosSorszam = entrySet.getKey();
+            List<Kartyalap> kartyalapok = entrySet.getValue();
+            elojel = 1;
+            vx = vegpontok.get(jatekosSorszam).x;
+            vy = vegpontok.get(jatekosSorszam).y;
+
+            vegSzog = SzogSzamito.szogSzamit(panelSzelesseg, panelMagassag, vx, vy);
+            
+            for (Kartyalap kartyalap : kartyalapok) {
+                vx = vegpontok.get(jatekosSorszam).x;
+                vy = vegpontok.get(jatekosSorszam).y;                
+                kx = vx + elteres * Math.cos(Math.toRadians(vegSzog+180));
+                ky = vy + elteres * Math.sin(Math.toRadians(vegSzog+180));
                 kartyalap.setKx(kx);
                 kartyalap.setKy(ky);
                 itr = xmlAdatok.get("Kartyalap").iterator();
@@ -430,7 +457,7 @@ public class KartyaMozgato extends Thread {
      * Leosztja a lapokat a paklitól indulva az asztal közepére a megfelelő eltolással.
      */
     @SuppressWarnings("SleepWhileInLoop")
-    private void kartyalapLeosztas(){        
+    private void kartyalapLeosztas(){     
         Kartyalap kartyalap;   
         int leosztandoKartyalapokSzama;
         double veletlenX, veletlenY;   

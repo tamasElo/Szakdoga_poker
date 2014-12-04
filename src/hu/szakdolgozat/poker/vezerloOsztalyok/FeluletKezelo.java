@@ -6,10 +6,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.DisplayMode;
+import java.awt.Point;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 public class FeluletKezelo {
 
@@ -20,9 +20,11 @@ public class FeluletKezelo {
     private SzalVezerlo szalVezerlo;
     private JFrame pokerFrame;
     private KepernyoKezelo kepernyoKezelo;
+    private Point ablakPozicio;
     private byte kepernyoAllapot;
     private boolean elsimitas;
     private boolean felbontasValtozott;
+    private boolean ablakKozepen;
 
     public static void main(String[] args) {
         FeluletKezelo fk = new FeluletKezelo();
@@ -43,6 +45,8 @@ public class FeluletKezelo {
         pokerFrame.setTitle("Póker");
         pokerFrame.setBackground(Color.black);
         pokerFrame.getContentPane().setPreferredSize(felbontas);
+        pokerFrame.setResizable(false);
+        if(ablakPozicio != null) pokerFrame.setLocation(ablakPozicio);
     }
 
     /**
@@ -67,17 +71,19 @@ public class FeluletKezelo {
         if (jatekterPanel != null) {
             pokerFrame.remove(jatekterPanel);
         }
-        JPanel panel = new JPanel(); panel.setSize(felbontas);
-        pokerFrame.getContentPane().add(panel);        
-        pokerFrame.setResizable(false);
-        pokerFrame.pack();
-        pokerFrame.remove(panel);
+        
         pokerFrame.getContentPane().add(jatekMenuPanel);
-        pokerFrame.pack();
-        pokerFrame.setLocationRelativeTo(null);
+        pokerFrame.pack();   
+        pokerFrame.pack();// Kétszer kell meghívni, hogy a panel a helyére kerüljön.
+        
+        if (!ablakKozepen) {
+            pokerFrame.setLocationRelativeTo(null);
+            ablakKozepen = true;
+        }
+        
         AudioLejatszo.audioLejatszas(AudioLejatszo.MENU_ZENE, true);
     }
-    
+
     /**
      * Betölti a játék tér panelt.
      * 
@@ -106,8 +112,12 @@ public class FeluletKezelo {
      * Alkalmazza a betöltött beállításokat.
      */
     public void beallitasokAlkalmaz() {
-        beallitasokBetolt();                
-        
+        beallitasokBetolt();
+
+        if (pokerFrame != null) {
+            ablakPozicio = pokerFrame.getLocation();
+        }
+
         if (!kepernyoKezelo.kepernyoModEllenorzes(kepernyoMod)) {
             kepernyoMod = new DisplayMode(1024, 768, 32, 60);
             felbontas = new Dimension(kepernyoMod.getWidth(), kepernyoMod.getHeight());

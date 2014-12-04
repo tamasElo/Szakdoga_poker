@@ -70,6 +70,12 @@ public class KepernyoKezelo {
         return tamogatott;
     }
     
+    /**
+     * Kiszámítja, hogy a képarány széles vagy normál.
+     * 
+     * @param felbontas
+     * @return 
+     */
     public static byte keparanySzamit(Dimension felbontas){
         if((double) Math.round(10 * felbontas.getWidth() / felbontas.getHeight()) / 10 == 1.3)
             return NORMAL_KEPERNYO;

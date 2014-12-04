@@ -57,6 +57,7 @@ public class SzalVezerlo implements Serializable {
     private List<Zseton> pot;
     private boolean kartyaGrafikaElore;
     private JatekVezerlo jatekVezerlo;
+    private transient Mi mi;
     private Vak kisVak;
     private Vak nagyVak;
     private Dealer dealer;
@@ -221,9 +222,9 @@ public class SzalVezerlo implements Serializable {
         }
     }
     
-    public void toltesRajzol(Graphics2D g2D){
+    public void toltesRajzol(Graphics g){
         if(varakozasMozgato != null && varakozasMozgato.isAlive()){
-            toltes.rajzol(g2D, jatekterPanel);
+            toltes.rajzol(g, jatekterPanel);
         }
     }
 
@@ -280,7 +281,8 @@ public class SzalVezerlo implements Serializable {
      * távolságra legyenek.
      */
     public void jatekosokBeallit() {
-        String[] jatekosNevek = {"Sanyi", "Pityu", "Géza", "András", "Eszti", "Szabi", "Reni", "Józsi", "Kriszti"};
+        String[] jatekosNevek = {"Sanyi", "Isti", "Gergő", "András", "Eszti",
+            "Szabi", "Reni", "Józsi", "Kriszti", "Ati", "Livi", "Bazsi", "Roli", "Krisztián"};
         String jatekosNev;
         boolean talalat = false;
 
@@ -379,6 +381,42 @@ public class SzalVezerlo implements Serializable {
         jatekVezerlo.folytat();
     }
     
+    public void jatekVezerloSzalLeallit(){
+        jatekVezerlo.setSzalStop(true);
+    }
+    
+    /**
+     * Elindítja az mi szálat.
+     */
+    public void miSzalIndit() {
+        if (!jatekterPanel.isMent()) {
+            mi = new Mi(jatekVezerlo, this);
+            mi.start();
+        }
+    }
+
+    /**
+     * Folytatja az mi szál futását.
+     */
+    public void miFolytat(){
+        mi.folytat();
+    }    
+    
+    /**
+     * Leállítja az mi szál futását.
+     */
+    public void miSzalLeallit(){
+        mi.setSzalStop(true);
+    }
+    
+    /**
+     * Megadja, hogy fut-e az mi szál.
+     * 
+     * @return 
+     */
+    public boolean isMiSzalFut() {
+        return mi != null && mi.isAlive();
+    }
     
     /**
      * Betölti a kártya paklit.
@@ -636,26 +674,28 @@ public class SzalVezerlo implements Serializable {
      * Aktiválja a megfelelő gombokat a gombsorból.
      */
     public void gombSorAllapotvalt() {
-        boolean[] aktivalandoGombok = {true, true, true, false, true, true};
+        if (!jatekterPanel.isMent()) {
+            boolean[] aktivalandoGombok = {true, true, true, false, true, true};
 
-        if (!jatekVezerlo.isMegadhat() && !jatekVezerlo.isPasszolhat()) {
-            aktivalandoGombok[1] = false;
-        }
-
-        if (!jatekVezerlo.isEmelhet() && !jatekVezerlo.isNyithat()) {
-            for (byte i = 2; i < 5; i++) {
-                aktivalandoGombok[i] = false;
+            if (!jatekVezerlo.isMegadhat() && !jatekVezerlo.isPasszolhat()) {
+                aktivalandoGombok[1] = false;
             }
+
+            if (!jatekVezerlo.isEmelhet() && !jatekVezerlo.isNyithat()) {
+                for (byte i = 2; i < 5; i++) {
+                    aktivalandoGombok[i] = false;
+                }
+            }
+
+            jatekterPanel.gombsorAktival(aktivalandoGombok);
+            jatekterPanel.setMegadandoOsszeg(jatekVezerlo.getOsszeg() - jatekVezerlo.getJatekosokTetje()[JatekVezerlo.EMBER_JATEKOS_SORSZAM]);
+            jatekterPanel.setLepesKoz(kisVakErtekVisszaad());
+            jatekterPanel.setEmelendoOsszeg(jatekVezerlo.getOsszeg() == 0 ? nagyVakErtekVisszaad() : jatekVezerlo.getOsszeg());
+            jatekterPanel.setMinOsszeg(jatekVezerlo.getOsszeg() == 0 ? nagyVakErtekVisszaad() : jatekVezerlo.getOsszeg());
+            jatekterPanel.setMaxOsszeg(getJatekosZsetonOsszeg(JatekVezerlo.EMBER_JATEKOS_SORSZAM));
         }
-        
-        jatekterPanel.gombsorAktival(aktivalandoGombok);
-        jatekterPanel.setMegadandoOsszeg(jatekVezerlo.getOsszeg() - jatekVezerlo.getJatekosokTetje()[JatekVezerlo.EMBER_JATEKOS_SORSZAM]);
-        jatekterPanel.setLepesKoz(kisVakErtekVisszaad());
-        jatekterPanel.setEmelendoOsszeg(jatekVezerlo.getOsszeg() == 0 ? nagyVakErtekVisszaad() : jatekVezerlo.getOsszeg());
-        jatekterPanel.setMinOsszeg(jatekVezerlo.getOsszeg() == 0 ? nagyVakErtekVisszaad() : jatekVezerlo.getOsszeg());
-        jatekterPanel.setMaxOsszeg(getJatekosZsetonOsszeg(JatekVezerlo.EMBER_JATEKOS_SORSZAM));
     }
-        
+
     /**
      * Aktiválja azokat a játékosokat, akiknek vannak még zsetonjaik.
      */
@@ -733,15 +773,20 @@ public class SzalVezerlo implements Serializable {
     /**
      * Az beállítja a grafika elemek méreteit és pozícióit a felbontáshoz igazítva és korrigál néhány eltérést.
      */
-    public void betoltottAdatokFrissit(){
+    public void betoltottAdatokFrissit() {
         byte dealerJatekosSorszam = jatekVezerlo.getDealerJatekosSorszam();
         keveresAnimacio = new ImageIcon(this.getClass().getResource("/hu/szakdolgozat/poker/adatFajlok/kartyaPakli/keveresAnimacio.gif")).getImage();
-        jatekVezerlo.setJatekosBlokkol(true); 
+        jatekVezerlo.setJatekosBlokkol(true);
+        
+        if (jatekVezerlo.getAktJatekosSorszam() != JatekVezerlo.EMBER_JATEKOS_SORSZAM) {
+            miSzalIndit();
+        }
+        
         kartyaPakliBetolt(dealerJatekosSorszam);
         korongokMozgatSzalIndit(dealerJatekosSorszam);
         zsetonokKioszt();
-    }      
-   
+    }
+
     /**
      * Betölti az audió és játékmenet beállításokat.
      */
@@ -761,7 +806,7 @@ public class SzalVezerlo implements Serializable {
     /**
      * Kilép a főmenübe.
      */
-    public void kilepes(){        
+    public void kilepes(){     
         jatekterSzalLeallit();
         varakozasSzalLeallit();
         feluletKezelo.jatekMenuPanelBetolt(feluletKezelo);
@@ -932,23 +977,5 @@ public class SzalVezerlo implements Serializable {
     
     public boolean isKartyaGrafikaElore() {
         return kartyaGrafikaElore;
-    }
-    
-    /*----------tesztelés---------------------*/    
-    public void setMikezeles(boolean nyithat, boolean emelhet, boolean megadhat, boolean passzolhat) {
-        boolean[] tomb = {nyithat, emelhet, megadhat, passzolhat};
-        jatekterPanel.migombsoraktival(tomb);
-    }
-    
-    public int getOsszeg(){
-        return jatekVezerlo.getOsszeg();
-    }
-    
-    public void setjatekosSorszam(byte jatekosSorszam) {       
-       jatekterPanel.setNevlabel(jatekosok.get(jatekosSorszam).getNev());
-    }
-
-    public void setjatekosMegadandoOsszeg(int osszeg) {
-        jatekterPanel.setOsszeg(osszeg);
     }
 }

@@ -12,8 +12,8 @@ public final class PokerKezKiertekelo {
 
     private static List<Byte> nyertesJatekosokSorszama;
     private static Map<Byte, PokerKez> jatekosokPokerKeze;
-    private static byte legmagasabbPokerKezErtek;
-    private static byte aktPokerKezErtek;
+    private static int legmagasabbPokerKezErtek;
+    private static int aktPokerKezErtek;
 
     private PokerKezKiertekelo(){}
     
@@ -54,6 +54,20 @@ public final class PokerKezKiertekelo {
         return nyertesJatekosokPokerKeze;
     }
 
+    /**
+     * Kikeresi egy átadott játékos kártyalapjai és a leosztott kártyalapok alapján
+     * a játékos póker kezét.
+     * 
+     * @param jatekosKartyalapok
+     * @param leosztottKartyalapok
+     * @return 
+     */
+    public static PokerKez pokerKezKeres(List<Kartyalap> jatekosKartyalapok ,List<Kartyalap> leosztottKartyalapok){        
+        Map<Byte, List<Kartyalap>> jatekosokKartyalapjai = new HashMap<>();
+        jatekosokKartyalapjai.put((byte)0, jatekosKartyalapok);
+        return nyertesPokerKezKeres(jatekosokKartyalapjai, leosztottKartyalapok).get((byte) 0);
+    }
+    
     /**
      * Megvizsgálja hogy kinek van a legmagasabb értékű póker keze. Ha több
      * ilyen is van, akkor meghívja a dontetlenPokerKezekVizsgal() metódust.

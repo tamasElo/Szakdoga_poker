@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.ImageObserver;
 import java.io.Serializable;
+import java.util.Objects;
 import javax.swing.ImageIcon;
 
 public class Kartyalap implements Serializable, Comparable<Kartyalap> {
@@ -12,17 +13,17 @@ public class Kartyalap implements Serializable, Comparable<Kartyalap> {
     private final ImageIcon hatlap;
     private final ImageIcon elmosodottHatlap;
     private final ImageIcon keret;
-    private double kx;
-    private double ky;
-    private double kartyaKepSzelesseg;
-    private double kartyaKepMagassag;
-    private double keretKepSzelesseg;
-    private double keretKepMagassag;
+    private transient double kx;
+    private transient double ky;
+    private transient double kartyaKepSzelesseg;
+    private transient double kartyaKepMagassag;
+    private transient double keretKepSzelesseg;
+    private transient double keretKepMagassag;
     private final byte kartyaErtek;
     private final String kartyaNev;
     private final String kartyaSzin;
     private boolean mutat;
-    private boolean keretRajzol;
+    private transient boolean keretRajzol;
     private boolean elmosas;
     private double forgat;
 
@@ -66,6 +67,20 @@ public class Kartyalap implements Serializable, Comparable<Kartyalap> {
             g2D.setTransform(at);
         }
     }   
+    
+    @Override
+    public boolean equals(Object o) {
+        Kartyalap kartyalap = (Kartyalap) o;        
+        return o instanceof Kartyalap && this.kartyaErtek == kartyalap.getKartyaErtek() && this.kartyaSzin.equals(kartyalap.getKartyaSzin());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + this.kartyaErtek;
+        hash = 29 * hash + Objects.hashCode(this.kartyaSzin);
+        return hash;
+    }
     
     @Override
     public int compareTo(Kartyalap t) {

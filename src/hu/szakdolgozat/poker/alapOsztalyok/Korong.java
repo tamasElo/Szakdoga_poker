@@ -10,10 +10,10 @@ public abstract class Korong implements Serializable{
 
     private ImageIcon korongKep;
     private ImageIcon elmosodottKorongKep;
-    private double kx;
-    private double ky;
-    private double korongKepSzelesseg;
-    private double korongKepMagassag;
+    private transient double kx;
+    private transient double ky;
+    private transient double korongKepSzelesseg;
+    private transient double korongKepMagassag;
     private double forgat;
     private boolean elmosas;
 

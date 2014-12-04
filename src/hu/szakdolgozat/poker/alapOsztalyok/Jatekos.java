@@ -14,8 +14,8 @@ public class Jatekos implements Serializable{
     private boolean aktiv;
     private static byte index;
     private byte sorszam;
-    private double kx;
-    private double ky;
+    private transient double kx;
+    private transient double ky;
     private String pokerKezNev;
 
     public Jatekos(String nev) {

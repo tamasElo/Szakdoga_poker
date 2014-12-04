@@ -6,7 +6,6 @@ import hu.szakdolgozat.poker.vezerloOsztalyok.AdatKezelo;
 import hu.szakdolgozat.poker.vezerloOsztalyok.FeluletKezelo;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
 import hu.szakdolgozat.poker.vezerloOsztalyok.AudioLejatszo;
-import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
