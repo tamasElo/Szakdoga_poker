@@ -53,7 +53,6 @@ public class JatekVezerlo extends Thread implements Serializable{
      * Elindít egy új kört.
      */
     private void ujKor() {   
-        szalVezerlo.setMenthet(false);
         szalVezerlo.jatekosokAktival();
         aktivJatekosokSzama = szalVezerlo.aktivJatekosokKeres();
         
@@ -183,6 +182,7 @@ public class JatekVezerlo extends Thread implements Serializable{
         jatekosAllapotEllenorzes();
         if (!ujkorIndit) {
             lehetosegekBeallit();
+            szalVezerlo.setMenthet(true);
         }
     }
     
@@ -215,7 +215,6 @@ public class JatekVezerlo extends Thread implements Serializable{
      * A kör végén a nyertes játékosok keresését indítja el.
      */
     private void korVege(){ 
-        szalVezerlo.setMenthet(false);
         szalVezerlo.nyertesJatekosKeres();
         korVege = false;
         ujkorIndit = true;
@@ -329,11 +328,8 @@ public class JatekVezerlo extends Thread implements Serializable{
      */
     private void licitSzamlaloLeptet() {
         if (++licitSzamlalo == jatekosokSzama) {
-            szalVezerlo.setMenthet(false);
             ujLicitkor();
-        } else {
-            szalVezerlo.setMenthet(true);
-        }
+        } 
     }
 
     /**
@@ -390,17 +386,18 @@ public class JatekVezerlo extends Thread implements Serializable{
                 
                 jatekosBlokkol = false;
             }
-            
-            if(szalStop) break;
-                
+
+            if (szalStop) {
+                break;
+            }
+
             megallit();
+            szalVezerlo.setMenthet(false);
             
-            {
-                try {
-                    sleep(ido);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(JatekVezerlo.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            try {
+                sleep(ido);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(JatekVezerlo.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

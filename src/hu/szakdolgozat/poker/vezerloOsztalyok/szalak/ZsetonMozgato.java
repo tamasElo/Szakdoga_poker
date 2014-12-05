@@ -233,8 +233,6 @@ public class ZsetonMozgato extends Thread {
                 Logger.getLogger(ZsetonMozgato.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
-        szalVezerlo.setMenthet(true);
     }
     
     /**
