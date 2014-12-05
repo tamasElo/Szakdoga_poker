@@ -12,14 +12,21 @@ public class PakliKezeloTest {
     
     public PakliKezeloTest() {
     }
-
+    
     /**
-     * Leellenőrzi hogy a pakli minden lapja különbözik-e.
+     * Leellenőrzi, hogy a pakli mérete megfelelő-e.
+     */
+    @Test
+    public void testPakliBetolt(){
+        assertTrue(PakliKezelo.pakliBetolt().size() == PakliKezelo.PAKLI_MERET);
+    }
+    /**
+     * Leellenőrzi, hogy a pakli minden lapja különbözik-e.
      */
     @Test
     public void testKevertPakli() {
         List<Kartyalap>pakli = PakliKezelo.kevertPakli();
         Set<Kartyalap>halmaz = new HashSet<>(pakli);//Ha át rakom halmazba a listát akkor az azonos elemek közül kitöröl egyet
         assertTrue(pakli.size() == halmaz.size());                 
-   }    
+    }
 }

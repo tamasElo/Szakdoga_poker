@@ -71,13 +71,13 @@ public class SzogSzamitoTest {
     @Test
     public void testForgasSzogSzamit() {
         egyezes = true;
-        szog = SzogSzamito.forgasSzogSzamit(200, 100, 10, 45);
+        szog = SzogSzamito.forgasSzogSzamit(200, 100, 10, 40);
         if(szog > 0) egyezes = false;
-         szog = SzogSzamito.forgasSzogSzamit(200, 100, 190, 45);
+         szog = SzogSzamito.forgasSzogSzamit(200, 100, 190, 40);
         if(szog < 0) egyezes = false;
-         szog = SzogSzamito.forgasSzogSzamit(200, 100, 10, 55);
+         szog = SzogSzamito.forgasSzogSzamit(200, 100, 10, 60);
         if(szog < 0) egyezes = false;
-         szog = SzogSzamito.forgasSzogSzamit(200, 100, 190, 55);
+         szog = SzogSzamito.forgasSzogSzamit(200, 100, 190, 60);
         if(szog > 0) egyezes = false;
         assertTrue(egyezes);
     }
