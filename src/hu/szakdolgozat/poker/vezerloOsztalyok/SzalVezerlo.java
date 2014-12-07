@@ -1,5 +1,6 @@
 package hu.szakdolgozat.poker.vezerloOsztalyok;
 
+import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.Mi;
 import hu.szakdolgozat.poker.alapOsztalyok.Dealer;
 import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.JatekVezerlo;
 import hu.szakdolgozat.poker.alapOsztalyok.Felho;
