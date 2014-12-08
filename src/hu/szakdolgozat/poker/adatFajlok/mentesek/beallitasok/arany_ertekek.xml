@@ -1,2 +1,785 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Elemek><Komponensek><Normal><lblGrafikaAudio><X Arany="szelesseg">4.0</X><Y Arany="magassag">8.0</Y><Szelesseg Arany="magassag">4.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">60.0</BetuMeret></lblGrafikaAudio><lblFelbontas><X Arany="szelesseg">4.0</X><Y Arany="magassag">6.0</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblFelbontas><lblFelbontasE><X Arany="szelesseg">2.644628099173554</X><Y Arany="magassag">6.0</Y><Szelesseg Arany="magassag">6.666666666666667</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblFelbontasE><sliFelbontas><X Arany="szelesseg">3.2323232323232323</X><Y Arany="magassag">5.9405940594059405</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></sliFelbontas><rbtnAblakos><X Arany="szelesseg">4.0</X><Y Arany="magassag">4.8</Y><Szelesseg Arany="magassag">8.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></rbtnAblakos><rbtnTeljesKepernyo><X Arany="szelesseg">3.2</X><Y Arany="magassag">4.8</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></rbtnTeljesKepernyo><cbElsimitas><X Arany="szelesseg">4.0</X><Y Arany="magassag">4.0</Y><Szelesseg Arany="magassag">8.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></cbElsimitas><cbMenuZene><X Arany="szelesseg">4.0</X><Y Arany="magassag">3.4285714285714284</Y><Szelesseg Arany="magassag">8.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></cbMenuZene><cbHang><X Arany="szelesseg">4.0</X><Y Arany="magassag">3.0</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></cbHang><lblJatekmenet><X Arany="szelesseg">4.0</X><Y Arany="magassag">2.4</Y><Szelesseg Arany="magassag">4.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">60.0</BetuMeret></lblJatekmenet><lblNev><X Arany="szelesseg">4.0</X><Y Arany="magassag">2.1818181818181817</Y><Szelesseg Arany="magassag">24.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblNev><lblJatekosokSzama><X Arany="szelesseg">4.0</X><Y Arany="magassag">2.0</Y><Szelesseg Arany="magassag">8.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblJatekosokSzama><lblOsszeg><X Arany="szelesseg">4.0</X><Y Arany="magassag">1.8461538461538463</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblOsszeg><lblNagyVakErtek><X Arany="szelesseg">4.0</X><Y Arany="magassag">1.7142857142857142</Y><Szelesseg Arany="magassag">8.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblNagyVakErtek><lblVakEmeles><X Arany="szelesseg">4.0</X><Y Arany="magassag">1.6</Y><Szelesseg Arany="magassag">4.285714285714286</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblVakEmeles><txtNev><X Arany="szelesseg">3.5555555555555554</X><Y Arany="magassag">2.1818181818181817</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></txtNev><sliJatekosokSzama><X Arany="szelesseg">2.9357798165137616</X><Y Arany="magassag">1.9933554817275747</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></sliJatekosokSzama><sliOsszeg><X Arany="szelesseg">3.4408602150537635</X><Y Arany="magassag">1.8404907975460123</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></sliOsszeg><sliNagyVakErtek><X Arany="szelesseg">2.9465930018416207</X><Y Arany="magassag">1.7094017094017093</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></sliNagyVakErtek><sliVakEmeles><X Arany="szelesseg">2.4427480916030535</X><Y Arany="magassag">1.5957446808510638</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></sliVakEmeles><lblJatekosokSzamaE><X Arany="szelesseg">2.4427480916030535</X><Y Arany="magassag">2.0</Y><Szelesseg Arany="magassag">40.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblJatekosokSzamaE><lblOsszegE><X Arany="szelesseg">2.782608695652174</X><Y Arany="magassag">1.8461538461538463</Y><Szelesseg Arany="magassag">17.142857142857142</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblOsszegE><lblNagyVakErtekE><X Arany="szelesseg">2.4615384615384617</X><Y Arany="magassag">1.7142857142857142</Y><Szelesseg Arany="magassag">40.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblNagyVakErtekE><lblVakEmelesE><X Arany="szelesseg">2.0779220779220777</X><Y Arany="magassag">1.6</Y><Szelesseg Arany="magassag">40.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblVakEmelesE><scpPokerSzabaly><X Arany="szelesseg">4</X><Y Arany="magassag">6</Y><Szelesseg Arany="magassag">1.5</Szelesseg><Magassag Arany="magassag">2.0</Magassag></scpPokerSzabaly></Normal><Szeles><lblGrafikaAudio><X Arany="szelesseg">3.950617283950617</X><Y Arany="magassag">8.0</Y><Szelesseg Arany="magassag">4.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">60.0</BetuMeret></lblGrafikaAudio><lblFelbontas><X Arany="szelesseg">3.950617283950617</X><Y Arany="magassag">6.0</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblFelbontas><lblFelbontasE><X Arany="szelesseg">2.857142857142857</X><Y Arany="magassag">6.0</Y><Szelesseg Arany="magassag">8.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblFelbontasE><sliFelbontas><X Arany="szelesseg">3.3333333333333335</X><Y Arany="magassag">5.9405940594059405</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></sliFelbontas><rbtnAblakos><X Arany="szelesseg">4.0</X><Y Arany="magassag">4.8</Y><Szelesseg Arany="magassag">8.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></rbtnAblakos><rbtnTeljesKepernyo><X Arany="szelesseg">3.3333333333333335</X><Y Arany="magassag">4.8</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></rbtnTeljesKepernyo><cbElsimitas><X Arany="szelesseg">4.0</X><Y Arany="magassag">4.0</Y><Szelesseg Arany="magassag">8.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></cbElsimitas><cbMenuZene><X Arany="szelesseg">4.0</X><Y Arany="magassag">3.4285714285714284</Y><Szelesseg Arany="magassag">8.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></cbMenuZene><cbHang><X Arany="szelesseg">4.0</X><Y Arany="magassag">3.0</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></cbHang><lblJatekmenet><X Arany="szelesseg">3.950617283950617</X><Y Arany="magassag">2.4</Y><Szelesseg Arany="magassag">4.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">60.0</BetuMeret></lblJatekmenet><lblNev><X Arany="szelesseg">3.950617283950617</X><Y Arany="magassag">2.1818181818181817</Y><Szelesseg Arany="magassag">24.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblNev><lblJatekosokSzama><X Arany="szelesseg">3.950617283950617</X><Y Arany="magassag">2.0</Y><Szelesseg Arany="magassag">8.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblJatekosokSzama><lblOsszeg><X Arany="szelesseg">3.950617283950617</X><Y Arany="magassag">1.8461538461538463</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblOsszeg><lblNagyVakErtek><X Arany="szelesseg">3.950617283950617</X><Y Arany="magassag">1.7142857142857142</Y><Szelesseg Arany="magassag">8.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblNagyVakErtek><lblVakEmeles><X Arany="szelesseg">3.950617283950617</X><Y Arany="magassag">1.6</Y><Szelesseg Arany="magassag">4.285714285714286</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblVakEmeles><txtNev><X Arany="szelesseg">3.6363636363636362</X><Y Arany="magassag">2.1818181818181817</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></txtNev><sliJatekosokSzama><X Arany="szelesseg">3.0476190476190474</X><Y Arany="magassag">1.9933554817275747</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></sliJatekosokSzama><sliOsszeg><X Arany="szelesseg">3.4408602150537635</X><Y Arany="magassag">1.8404907975460123</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></sliOsszeg><sliNagyVakErtek><X Arany="szelesseg">3.076923076923077</X><Y Arany="magassag">1.7094017094017093</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></sliNagyVakErtek><sliVakEmeles><X Arany="szelesseg">2.644628099173554</X><Y Arany="magassag">1.5957446808510638</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></sliVakEmeles><lblJatekosokSzamaE><X Arany="szelesseg">2.622950819672131</X><Y Arany="magassag">2.0</Y><Szelesseg Arany="magassag">40.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblJatekosokSzamaE><lblOsszegE><X Arany="szelesseg">2.909090909090909</X><Y Arany="magassag">1.8461538461538463</Y><Szelesseg Arany="magassag">17.142857142857142</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblOsszegE><lblNagyVakErtekE><X Arany="szelesseg">2.644628099173554</X><Y Arany="magassag">1.7142857142857142</Y><Szelesseg Arany="magassag">40.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblNagyVakErtekE><lblVakEmelesE><X Arany="szelesseg">2.335766423357664</X><Y Arany="magassag">1.6</Y><Szelesseg Arany="magassag">40.0</Szelesseg><Magassag Arany="magassag">40.0</Magassag><BetuMeret Arany="magassag">80.0</BetuMeret></lblVakEmelesE><scpPokerSzabaly><X Arany="szelesseg">3.2</X><Y Arany="magassag">6</Y><Szelesseg Arany="magassag">1.5</Szelesseg><Magassag Arany="magassag">2.0</Magassag></scpPokerSzabaly></Szeles></Komponensek><Menupontok><Normal><JatekFolytat><X Arany="szelesseg">2.0</X><Y Arany="magassag">2.42914979757085</Y></JatekFolytat><UjJatek><X Arany="szelesseg">2.0</X><Y Arany="magassag">2.1937842778793417</Y></UjJatek><Beallitasok><X Arany="szelesseg">2.0</X><Y Arany="magassag">2.0</Y></Beallitasok><Segitseg><X Arany="szelesseg">2.0</X><Y Arany="magassag">1.8376722817764166</Y></Segitseg><Kilepes><X Arany="szelesseg">2.0</X><Y Arany="magassag">1.6997167138810199</Y></Kilepes><Vissza><X Arany="szelesseg">1.5</X><Y Arany="magassag">1.4</Y></Vissza><Alkalmaz><X Arany="szelesseg">3.0018761726078798</X><Y Arany="magassag">1.4</Y></Alkalmaz><BetuMeret><KisBetuMeret Arany="magassag">48</KisBetuMeret><NagyBetuMeret Arany="magassag">34.285714</NagyBetuMeret></BetuMeret></Normal><Szeles><JatekFolytat><X Arany="szelesseg">2.0</X><Y Arany="magassag">2.42914979757085</Y></JatekFolytat><UjJatek><X Arany="szelesseg">2.0</X><Y Arany="magassag">2.1937842778793417</Y></UjJatek><Beallitasok><X Arany="szelesseg">2.0</X><Y Arany="magassag">2.0</Y></Beallitasok><Segitseg><X Arany="szelesseg">2.0</X><Y Arany="magassag">1.8376722817764166</Y></Segitseg><Kilepes><X Arany="szelesseg">2.0</X><Y Arany="magassag">1.6997167138810199</Y></Kilepes><Vissza><X Arany="szelesseg">1.6</X><Y Arany="magassag">1.4</Y></Vissza><Alkalmaz><X Arany="szelesseg">3.0018761726078798</X><Y Arany="magassag">1.4</Y></Alkalmaz><BetuMeret><KisBetuMeret Arany="magassag">48</KisBetuMeret><NagyBetuMeret Arany="magassag">34.285714</NagyBetuMeret></BetuMeret></Szeles></Menupontok><Gombok><Normal><Allin><X Arany="szelesseg">2.472952086553323</X><Y Arany="magassag">1.0498687664041995</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">20.0</Magassag></Allin><Tart_megad><X Arany="szelesseg">2.1447721179624666</X><Y Arany="magassag">1.0498687664041995</Y><Szelesseg Arany="magassag">18.75</Szelesseg><Magassag Arany="magassag">18.75</Magassag></Tart_megad><Nyit_emel><X Arany="szelesseg">1.9230769230769231</X><Y Arany="magassag">1.0526315789473684</Y><Szelesseg Arany="magassag">18.75</Szelesseg><Magassag Arany="magassag">18.75</Magassag></Nyit_emel><Minusz><X Arany="szelesseg">1.8058690744920993</X><Y Arany="magassag">1.0318142734307825</Y><Szelesseg Arany="magassag">37.5</Szelesseg><Magassag Arany="magassag">70.58823529411765</Magassag></Minusz><Plussz><X Arany="szelesseg">1.807909604519774</X><Y Arany="magassag">1.059135039717564</Y><Szelesseg Arany="magassag">30.0</Szelesseg><Magassag Arany="magassag">30.0</Magassag></Plussz><Bedob><X Arany="szelesseg">1.689545934530095</X><Y Arany="magassag">1.0498687664041995</Y><Szelesseg Arany="magassag">24.0</Szelesseg><Magassag Arany="magassag">24.0</Magassag></Bedob></Normal><Szeles><Allin><X Arany="szelesseg">2.2988505747126435</X><Y Arany="magassag">1.0498687664041995</Y><Szelesseg Arany="magassag">12.0</Szelesseg><Magassag Arany="magassag">20.0</Magassag></Allin><Tart_megad><X Arany="szelesseg">2.0833333333333335</X><Y Arany="magassag">1.0498687664041995</Y><Szelesseg Arany="magassag">18.75</Szelesseg><Magassag Arany="magassag">18.75</Magassag></Tart_megad><Nyit_emel><X Arany="szelesseg">1.927710843373494</X><Y Arany="magassag">1.0526315789473684</Y><Szelesseg Arany="magassag">18.75</Szelesseg><Magassag Arany="magassag">18.75</Magassag></Nyit_emel><Minusz><X Arany="szelesseg">1.8411967779056386</X><Y Arany="magassag">1.0318142734307825</Y><Szelesseg Arany="magassag">37.5</Szelesseg><Magassag Arany="magassag">70.58823529411765</Magassag></Minusz><Plussz><X Arany="szelesseg">1.8433179723502304</X><Y Arany="magassag">1.059135039717564</Y><Szelesseg Arany="magassag">30.0</Szelesseg><Magassag Arany="magassag">30.0</Magassag></Plussz><Bedob><X Arany="szelesseg">1.7524644030668126</X><Y Arany="magassag">1.0498687664041995</Y><Szelesseg Arany="magassag">24.0</Szelesseg><Magassag Arany="magassag">24.0</Magassag></Bedob></Szeles></Gombok><GrafikaElemek><Normal><KeveresAnimacio><X Arany="szelesseg">2.286</X><Y Arany="magassag">2.143</Y><Szelesseg Arany="magassag">6.0</Szelesseg><Magassag Arany="magassag">16.0</Magassag></KeveresAnimacio><Kartyalap><Szelesseg Arany="magassag">16.901</Szelesseg><Magassag Arany="magassag">11.765</Magassag></Kartyalap><Zseton><Szelesseg Arany="magassag">40</Szelesseg><Magassag Arany="magassag">40</Magassag></Zseton><Dealer><Szelesseg Arany="magassag">24</Szelesseg><Magassag Arany="magassag">24</Magassag></Dealer><Vak><Szelesseg Arany="magassag">26.6666666</Szelesseg><Magassag Arany="magassag">26.666666666</Magassag></Vak><Felho><Szelesseg Arany="magassag">10.90909090</Szelesseg><Magassag Arany="magassag">10.256410256410</Magassag></Felho><Nyertes><X Arany="szelesseg">2</X><Y Arany="magassag">2</Y><Szelesseg Arany="magassag">3</Szelesseg><Magassag Arany="magassag">6</Magassag></Nyertes><Toltes><X Arany="szelesseg">2</X><Y Arany="magassag">2</Y><Szelesseg Arany="magassag">12</Szelesseg><Magassag Arany="magassag">12</Magassag></Toltes></Normal><Szeles><KeveresAnimacio><X Arany="szelesseg">2.20678513</X><Y Arany="magassag">2.143</Y><Szelesseg Arany="magassag">6.0</Szelesseg><Magassag Arany="magassag">16.0</Magassag></KeveresAnimacio><Kartyalap><Szelesseg Arany="magassag">16.901</Szelesseg><Magassag Arany="magassag">11.765</Magassag></Kartyalap><Zseton><Szelesseg Arany="magassag">40</Szelesseg><Magassag Arany="magassag">40</Magassag></Zseton><Dealer><Szelesseg Arany="magassag">24</Szelesseg><Magassag Arany="magassag">24</Magassag></Dealer><Vak><Szelesseg Arany="magassag">26.6666666</Szelesseg><Magassag Arany="magassag">26.666666666</Magassag></Vak><Felho><Szelesseg Arany="magassag">10.90909090</Szelesseg><Magassag Arany="magassag">10.256410256410</Magassag></Felho><Nyertes><X Arany="szelesseg">2</X><Y Arany="magassag">2</Y><Szelesseg Arany="magassag">3</Szelesseg><Magassag Arany="magassag">6</Magassag></Nyertes><Toltes><X Arany="szelesseg">2</X><Y Arany="magassag">2</Y><Szelesseg Arany="magassag">12</Szelesseg><Magassag Arany="magassag">12</Magassag></Toltes></Szeles></GrafikaElemek><KartyaMozgato><Normal><Konstruktor><Lepes Arany="magassag">400.0</Lepes></Konstruktor><PakliBetolt><SzorasHatar Arany="magassag">240.0</SzorasHatar></PakliBetolt><PakliMozgat><Elteres Arany="magassag">8</Elteres></PakliMozgat><KartyalapokKioszt><Elteres Arany="magassag">60.0</Elteres></KartyalapokKioszt><KartyalapokBedob><Elteres Arany="magassag">48.0</Elteres></KartyalapokBedob><KartyalapLeosztas><Novekmeny Arany="szelesseg">2.5</Novekmeny><NovekmenyNovel Arany="magassag">120.0</NovekmenyNovel><velXMin Arany="magassag">465.0</velXMin><velXMax Arany="magassag">232.5</velXMax><velYMin Arany="magassag">240.0</velYMin><velYMax Arany="magassag">120.0</velYMax></KartyalapLeosztas><KartyalapokNagyit><Elteres Arany="magassag">16.0</Elteres></KartyalapokNagyit><KeretAnimacio><SinusSzorzo Arany="magassag">48.0</SinusSzorzo></KeretAnimacio><KartyalapokPakliba><MinSzelesseg Arany="magassag">17.142857</MinSzelesseg></KartyalapokPakliba><KartyalapokBeusztatasa><AnimacioSzelesseg Arany="magassag">10.909</AnimacioSzelesseg><AnimacioMagassag Arany="magassag">7.5</AnimacioMagassag><VyMin Arany="magassag">6</VyMin><VyMax Arany="magassag">1.5</VyMax></KartyalapokBeusztatasa></Normal><Szeles><Konstruktor><Lepes Arany="magassag">400.0</Lepes></Konstruktor><PakliBetolt><SzorasHatar Arany="magassag">240.0</SzorasHatar></PakliBetolt><PakliMozgat><Elteres Arany="magassag">8</Elteres></PakliMozgat><KartyalapokKioszt><Elteres Arany="magassag">60.0</Elteres></KartyalapokKioszt><KartyalapokBedob><Elteres Arany="magassag">48.0</Elteres></KartyalapokBedob><KartyalapLeosztas><Novekmeny Arany="szelesseg">2.36</Novekmeny><NovekmenyNovel Arany="magassag">120.0</NovekmenyNovel><velXMin Arany="magassag">465.0</velXMin><velXMax Arany="magassag">232.5</velXMax><velYMin Arany="magassag">240.0</velYMin><velYMax Arany="magassag">120.0</velYMax></KartyalapLeosztas><KartyalapokNagyit><Elteres Arany="magassag">16.0</Elteres></KartyalapokNagyit><KeretAnimacio><SinusSzorzo Arany="magassag">48.0</SinusSzorzo></KeretAnimacio><KartyalapokPakliba><MinSzelesseg Arany="magassag">17.142857</MinSzelesseg></KartyalapokPakliba><KartyalapokBeusztatasa><AnimacioSzelesseg Arany="magassag">10.909</AnimacioSzelesseg><AnimacioMagassag Arany="magassag">7.5</AnimacioMagassag><VyMin Arany="magassag">6</VyMin><VyMax Arany="magassag">1.5</VyMax></KartyalapokBeusztatasa></Szeles></KartyaMozgato><KorongMozgato><Normal><Konstruktor><Elteres Arany="magassag">10</Elteres></Konstruktor><KorongokMozgat><Lepes Arany="magassag">400</Lepes></KorongokMozgat></Normal><Szeles><Konstruktor><Elteres Arany="magassag">10</Elteres></Konstruktor><KorongokMozgat><Lepes Arany="magassag">400</Lepes></KorongokMozgat></Szeles></KorongMozgato><ZsetonMozgato><Normal><Konstruktor><Lepes Arany="magassag">400</Lepes><SzorasMin Arany="magassag">-600</SzorasMin><SzorasMax Arany="magassag">300</SzorasMax></Konstruktor><ZsetonokBetolt><ElsoElteres Arany="magassag">8</ElsoElteres><MasodikElteres Arany="magassag">30</MasodikElteres></ZsetonokBetolt><ZsetonokUjratolt><ElsoElteres Arany="magassag">8</ElsoElteres><MasodikElteres Arany="magassag">30</MasodikElteres></ZsetonokUjratolt><JatekosTetMozgat><X Arany="szelesseg">1.684210526</X><Y Arany="magassag">1.6</Y></JatekosTetMozgat><PotNyertesekhezMozgat><ElsoElteres Arany="magassag">8</ElsoElteres><MasodikElteres Arany="magassag">30</MasodikElteres></PotNyertesekhezMozgat><JatekosZsetonPoziciok><Elteres Arany="magassag">30</Elteres></JatekosZsetonPoziciok><PotZsetonPoziciok><Elteres Arany="magassag">30</Elteres></PotZsetonPoziciok></Normal><Szeles><Konstruktor><Lepes Arany="magassag">400</Lepes><SzorasMin Arany="magassag">-600</SzorasMin><SzorasMax Arany="magassag">300</SzorasMax></Konstruktor><ZsetonokBetolt><ElsoElteres Arany="magassag">8</ElsoElteres><MasodikElteres Arany="magassag">30</MasodikElteres></ZsetonokBetolt><ZsetonokUjratolt><ElsoElteres Arany="magassag">8</ElsoElteres><MasodikElteres Arany="magassag">30</MasodikElteres></ZsetonokUjratolt><JatekosTetMozgat><X Arany="szelesseg">1.758241</X><Y Arany="magassag">1.6</Y></JatekosTetMozgat><PotNyertesekhezMozgat><ElsoElteres Arany="magassag">8</ElsoElteres><MasodikElteres Arany="magassag">30</MasodikElteres></PotNyertesekhezMozgat><JatekosZsetonPoziciok><Elteres Arany="magassag">30</Elteres></JatekosZsetonPoziciok><PotZsetonPoziciok><Elteres Arany="magassag">30</Elteres></PotZsetonPoziciok></Szeles></ZsetonMozgato><Alakzatok><Normal><KerekitettTeglalap><X Arany="szelesseg">5.517</X><Y Arany="magassag">4.0</Y><Szelesseg Arany="szelesseg">1.5686274</Szelesseg><Magassag Arany="magassag">2.0</Magassag><BalKerekites Arany="magassag">2.0</BalKerekites><JobbKerekites Arany="magassag">2.0</JobbKerekites></KerekitettTeglalap><BalKor><X Arany="szelesseg">2.726</X><Y Arany="magassag">2.0</Y></BalKor><JobbKor><X Arany="szelesseg">1.579</X><Y Arany="magassag">2.0</Y></JobbKor></Normal><Szeles><KerekitettTeglalap><X Arany="szelesseg">4.017657</X><Y Arany="magassag">4.0</Y><Szelesseg Arany="szelesseg">1.99416</Szelesseg><Magassag Arany="magassag">2.0</Magassag><BalKerekites Arany="magassag">2.0</BalKerekites><JobbKerekites Arany="magassag">2.0</JobbKerekites></KerekitettTeglalap><BalKor><X Arany="szelesseg">2.5773584</X><Y Arany="magassag">2.0</Y></BalKor><JobbKor><X Arany="szelesseg">1.632019</X><Y Arany="magassag">2.0</Y></JobbKor></Szeles></Alakzatok></Elemek>
+<Elemek>
+    <Komponensek>
+        <Normal>
+            <lblGrafikaAudio>
+                <X Arany="szelesseg">4.0</X>
+                <Y Arany="magassag">8.0</Y>
+                <Szelesseg Arany="magassag">4.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">60.0</BetuMeret>
+            </lblGrafikaAudio>
+            <lblFelbontas>
+                <X Arany="szelesseg">4.0</X>
+                <Y Arany="magassag">6.0</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblFelbontas>
+            <lblFelbontasE>
+                <X Arany="szelesseg">2.644628099173554</X>
+                <Y Arany="magassag">6.0</Y>
+                <Szelesseg Arany="magassag">6.666666666666667</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblFelbontasE>
+            <sliFelbontas>
+                <X Arany="szelesseg">3.2323232323232323</X>
+                <Y Arany="magassag">5.9405940594059405</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </sliFelbontas>
+            <rbtnAblakos>
+                <X Arany="szelesseg">4.0</X>
+                <Y Arany="magassag">4.8</Y>
+                <Szelesseg Arany="magassag">8.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </rbtnAblakos>
+            <rbtnTeljesKepernyo>
+                <X Arany="szelesseg">3.2</X>
+                <Y Arany="magassag">4.8</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </rbtnTeljesKepernyo>
+            <cbElsimitas>
+                <X Arany="szelesseg">4.0</X>
+                <Y Arany="magassag">4.0</Y>
+                <Szelesseg Arany="magassag">8.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </cbElsimitas>
+            <cbMenuZene>
+                <X Arany="szelesseg">4.0</X>
+                <Y Arany="magassag">3.4285714285714284</Y>
+                <Szelesseg Arany="magassag">8.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </cbMenuZene>
+            <cbHang>
+                <X Arany="szelesseg">4.0</X>
+                <Y Arany="magassag">3.0</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </cbHang>
+            <lblJatekmenet>
+                <X Arany="szelesseg">4.0</X>
+                <Y Arany="magassag">2.4</Y>
+                <Szelesseg Arany="magassag">4.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">60.0</BetuMeret>
+            </lblJatekmenet>
+            <lblNev>
+                <X Arany="szelesseg">4.0</X>
+                <Y Arany="magassag">2.1818181818181817</Y>
+                <Szelesseg Arany="magassag">24.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblNev>
+            <lblJatekosokSzama>
+                <X Arany="szelesseg">4.0</X>
+                <Y Arany="magassag">2.0</Y>
+                <Szelesseg Arany="magassag">8.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblJatekosokSzama>
+            <lblOsszeg>
+                <X Arany="szelesseg">4.0</X>
+                <Y Arany="magassag">1.8461538461538463</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblOsszeg>
+            <lblNagyVakErtek>
+                <X Arany="szelesseg">4.0</X>
+                <Y Arany="magassag">1.7142857142857142</Y>
+                <Szelesseg Arany="magassag">8.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblNagyVakErtek>
+            <lblVakEmeles>
+                <X Arany="szelesseg">4.0</X>
+                <Y Arany="magassag">1.6</Y>
+                <Szelesseg Arany="magassag">4.285714285714286</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblVakEmeles>
+            <txtNev>
+                <X Arany="szelesseg">3.5555555555555554</X>
+                <Y Arany="magassag">2.1818181818181817</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </txtNev>
+            <sliJatekosokSzama>
+                <X Arany="szelesseg">2.9357798165137616</X>
+                <Y Arany="magassag">1.9933554817275747</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </sliJatekosokSzama>
+            <sliOsszeg>
+                <X Arany="szelesseg">3.4408602150537635</X>
+                <Y Arany="magassag">1.8404907975460123</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </sliOsszeg>
+            <sliNagyVakErtek>
+                <X Arany="szelesseg">2.9465930018416207</X>
+                <Y Arany="magassag">1.7094017094017093</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </sliNagyVakErtek>
+            <sliVakEmeles>
+                <X Arany="szelesseg">2.4427480916030535</X>
+                <Y Arany="magassag">1.5957446808510638</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </sliVakEmeles>
+            <lblJatekosokSzamaE>
+                <X Arany="szelesseg">2.4427480916030535</X>
+                <Y Arany="magassag">2.0</Y>
+                <Szelesseg Arany="magassag">40.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblJatekosokSzamaE>
+            <lblOsszegE>
+                <X Arany="szelesseg">2.782608695652174</X>
+                <Y Arany="magassag">1.8461538461538463</Y>
+                <Szelesseg Arany="magassag">17.142857142857142</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblOsszegE>
+            <lblNagyVakErtekE>
+                <X Arany="szelesseg">2.4615384615384617</X>
+                <Y Arany="magassag">1.7142857142857142</Y>
+                <Szelesseg Arany="magassag">40.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblNagyVakErtekE>
+            <lblVakEmelesE>
+                <X Arany="szelesseg">2.0779220779220777</X>
+                <Y Arany="magassag">1.6</Y>
+                <Szelesseg Arany="magassag">40.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblVakEmelesE>
+            <scpPokerSzabaly>
+                <X Arany="szelesseg">4</X>
+                <Y Arany="magassag">6</Y>
+                <Szelesseg Arany="magassag">1.5</Szelesseg>
+                <Magassag Arany="magassag">2.0</Magassag>
+            </scpPokerSzabaly>
+        </Normal>
+        <Szeles>
+            <lblGrafikaAudio>
+                <X Arany="szelesseg">3.950617283950617</X>
+                <Y Arany="magassag">8.0</Y>
+                <Szelesseg Arany="magassag">4.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">60.0</BetuMeret>
+            </lblGrafikaAudio>
+            <lblFelbontas>
+                <X Arany="szelesseg">3.950617283950617</X>
+                <Y Arany="magassag">6.0</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblFelbontas>
+            <lblFelbontasE>
+                <X Arany="szelesseg">2.857142857142857</X>
+                <Y Arany="magassag">6.0</Y>
+                <Szelesseg Arany="magassag">8.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblFelbontasE>
+            <sliFelbontas>
+                <X Arany="szelesseg">3.3333333333333335</X>
+                <Y Arany="magassag">5.9405940594059405</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </sliFelbontas>
+            <rbtnAblakos>
+                <X Arany="szelesseg">4.0</X>
+                <Y Arany="magassag">4.8</Y>
+                <Szelesseg Arany="magassag">8.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </rbtnAblakos>
+            <rbtnTeljesKepernyo>
+                <X Arany="szelesseg">3.3333333333333335</X>
+                <Y Arany="magassag">4.8</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </rbtnTeljesKepernyo>
+            <cbElsimitas>
+                <X Arany="szelesseg">4.0</X>
+                <Y Arany="magassag">4.0</Y>
+                <Szelesseg Arany="magassag">8.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </cbElsimitas>
+            <cbMenuZene>
+                <X Arany="szelesseg">4.0</X>
+                <Y Arany="magassag">3.4285714285714284</Y>
+                <Szelesseg Arany="magassag">8.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </cbMenuZene>
+            <cbHang>
+                <X Arany="szelesseg">4.0</X>
+                <Y Arany="magassag">3.0</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </cbHang>
+            <lblJatekmenet>
+                <X Arany="szelesseg">3.950617283950617</X>
+                <Y Arany="magassag">2.4</Y>
+                <Szelesseg Arany="magassag">4.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">60.0</BetuMeret>
+            </lblJatekmenet>
+            <lblNev>
+                <X Arany="szelesseg">3.950617283950617</X>
+                <Y Arany="magassag">2.1818181818181817</Y>
+                <Szelesseg Arany="magassag">24.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblNev>
+            <lblJatekosokSzama>
+                <X Arany="szelesseg">3.950617283950617</X>
+                <Y Arany="magassag">2.0</Y>
+                <Szelesseg Arany="magassag">8.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblJatekosokSzama>
+            <lblOsszeg>
+                <X Arany="szelesseg">3.950617283950617</X>
+                <Y Arany="magassag">1.8461538461538463</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblOsszeg>
+            <lblNagyVakErtek>
+                <X Arany="szelesseg">3.950617283950617</X>
+                <Y Arany="magassag">1.7142857142857142</Y>
+                <Szelesseg Arany="magassag">8.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblNagyVakErtek>
+            <lblVakEmeles>
+                <X Arany="szelesseg">3.950617283950617</X>
+                <Y Arany="magassag">1.6</Y>
+                <Szelesseg Arany="magassag">4.285714285714286</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblVakEmeles>
+            <txtNev>
+                <X Arany="szelesseg">3.6363636363636362</X>
+                <Y Arany="magassag">2.1818181818181817</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </txtNev>
+            <sliJatekosokSzama>
+                <X Arany="szelesseg">3.0476190476190474</X>
+                <Y Arany="magassag">1.9933554817275747</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </sliJatekosokSzama>
+            <sliOsszeg>
+                <X Arany="szelesseg">3.4408602150537635</X>
+                <Y Arany="magassag">1.8404907975460123</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </sliOsszeg>
+            <sliNagyVakErtek>
+                <X Arany="szelesseg">3.076923076923077</X>
+                <Y Arany="magassag">1.7094017094017093</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </sliNagyVakErtek>
+            <sliVakEmeles>
+                <X Arany="szelesseg">2.644628099173554</X>
+                <Y Arany="magassag">1.5957446808510638</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </sliVakEmeles>
+            <lblJatekosokSzamaE>
+                <X Arany="szelesseg">2.622950819672131</X>
+                <Y Arany="magassag">2.0</Y>
+                <Szelesseg Arany="magassag">40.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblJatekosokSzamaE>
+            <lblOsszegE>
+                <X Arany="szelesseg">2.909090909090909</X>
+                <Y Arany="magassag">1.8461538461538463</Y>
+                <Szelesseg Arany="magassag">17.142857142857142</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblOsszegE>
+            <lblNagyVakErtekE>
+                <X Arany="szelesseg">2.644628099173554</X>
+                <Y Arany="magassag">1.7142857142857142</Y>
+                <Szelesseg Arany="magassag">40.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblNagyVakErtekE>
+            <lblVakEmelesE>
+                <X Arany="szelesseg">2.335766423357664</X>
+                <Y Arany="magassag">1.6</Y>
+                <Szelesseg Arany="magassag">40.0</Szelesseg>
+                <Magassag Arany="magassag">40.0</Magassag>
+                <BetuMeret Arany="magassag">80.0</BetuMeret>
+            </lblVakEmelesE>
+            <scpPokerSzabaly>
+                <X Arany="szelesseg">3.2</X>
+                <Y Arany="magassag">6</Y>
+                <Szelesseg Arany="magassag">1.5</Szelesseg>
+                <Magassag Arany="magassag">2.0</Magassag>
+            </scpPokerSzabaly>
+        </Szeles>
+    </Komponensek>
+    <Menupontok>
+        <Normal>
+            <JatekFolytat>
+                <X Arany="szelesseg">2.0</X>
+                <Y Arany="magassag">2.42914979757085</Y>
+            </JatekFolytat>
+            <UjJatek>
+                <X Arany="szelesseg">2.0</X>
+                <Y Arany="magassag">2.1937842778793417</Y>
+            </UjJatek>
+            <Beallitasok>
+                <X Arany="szelesseg">2.0</X>
+                <Y Arany="magassag">2.0</Y>
+            </Beallitasok>
+            <Segitseg>
+                <X Arany="szelesseg">2.0</X>
+                <Y Arany="magassag">1.8376722817764166</Y>
+            </Segitseg>
+            <Kilepes>
+                <X Arany="szelesseg">2.0</X>
+                <Y Arany="magassag">1.6997167138810199</Y>
+            </Kilepes>
+            <Vissza>
+                <X Arany="szelesseg">1.5</X>
+                <Y Arany="magassag">1.4</Y>
+            </Vissza>
+            <Alkalmaz>
+                <X Arany="szelesseg">3.0018761726078798</X>
+                <Y Arany="magassag">1.4</Y>
+            </Alkalmaz>
+            <BetuMeret>
+                <KisBetuMeret Arany="magassag">48</KisBetuMeret>
+                <NagyBetuMeret Arany="magassag">34.285714</NagyBetuMeret>
+            </BetuMeret>
+        </Normal>
+        <Szeles>
+            <JatekFolytat>
+                <X Arany="szelesseg">2.0</X>
+                <Y Arany="magassag">2.42914979757085</Y>
+            </JatekFolytat>
+            <UjJatek>
+                <X Arany="szelesseg">2.0</X>
+                <Y Arany="magassag">2.1937842778793417</Y>
+            </UjJatek>
+            <Beallitasok>
+                <X Arany="szelesseg">2.0</X>
+                <Y Arany="magassag">2.0</Y>
+            </Beallitasok>
+            <Segitseg>
+                <X Arany="szelesseg">2.0</X>
+                <Y Arany="magassag">1.8376722817764166</Y>
+            </Segitseg>
+            <Kilepes>
+                <X Arany="szelesseg">2.0</X>
+                <Y Arany="magassag">1.6997167138810199</Y>
+            </Kilepes>
+            <Vissza>
+                <X Arany="szelesseg">1.6</X>
+                <Y Arany="magassag">1.4</Y>
+            </Vissza>
+            <Alkalmaz>
+                <X Arany="szelesseg">3.0018761726078798</X>
+                <Y Arany="magassag">1.4</Y>
+            </Alkalmaz>
+            <BetuMeret>
+                <KisBetuMeret Arany="magassag">48</KisBetuMeret>
+                <NagyBetuMeret Arany="magassag">34.285714</NagyBetuMeret>
+            </BetuMeret>
+        </Szeles>
+    </Menupontok>
+    <Gombok>
+        <Normal>
+            <Allin>
+                <X Arany="szelesseg">2.472952086553323</X>
+                <Y Arany="magassag">1.0498687664041995</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">20.0</Magassag>
+            </Allin>
+            <Tart_megad>
+                <X Arany="szelesseg">2.1447721179624666</X>
+                <Y Arany="magassag">1.0498687664041995</Y>
+                <Szelesseg Arany="magassag">18.75</Szelesseg>
+                <Magassag Arany="magassag">18.75</Magassag>
+            </Tart_megad>
+            <Nyit_emel>
+                <X Arany="szelesseg">1.9230769230769231</X>
+                <Y Arany="magassag">1.0526315789473684</Y>
+                <Szelesseg Arany="magassag">18.75</Szelesseg>
+                <Magassag Arany="magassag">18.75</Magassag>
+            </Nyit_emel>
+            <Minusz>
+                <X Arany="szelesseg">1.8058690744920993</X>
+                <Y Arany="magassag">1.0318142734307825</Y>
+                <Szelesseg Arany="magassag">37.5</Szelesseg>
+                <Magassag Arany="magassag">70.58823529411765</Magassag>
+            </Minusz>
+            <Plussz>
+                <X Arany="szelesseg">1.807909604519774</X>
+                <Y Arany="magassag">1.059135039717564</Y>
+                <Szelesseg Arany="magassag">30.0</Szelesseg>
+                <Magassag Arany="magassag">30.0</Magassag>
+            </Plussz>
+            <Bedob>
+                <X Arany="szelesseg">1.689545934530095</X>
+                <Y Arany="magassag">1.0498687664041995</Y>
+                <Szelesseg Arany="magassag">24.0</Szelesseg>
+                <Magassag Arany="magassag">24.0</Magassag>
+            </Bedob>
+        </Normal>
+        <Szeles>
+            <Allin>
+                <X Arany="szelesseg">2.2988505747126435</X>
+                <Y Arany="magassag">1.0498687664041995</Y>
+                <Szelesseg Arany="magassag">12.0</Szelesseg>
+                <Magassag Arany="magassag">20.0</Magassag>
+            </Allin>
+            <Tart_megad>
+                <X Arany="szelesseg">2.0833333333333335</X>
+                <Y Arany="magassag">1.0498687664041995</Y>
+                <Szelesseg Arany="magassag">18.75</Szelesseg>
+                <Magassag Arany="magassag">18.75</Magassag>
+            </Tart_megad>
+            <Nyit_emel>
+                <X Arany="szelesseg">1.927710843373494</X>
+                <Y Arany="magassag">1.0526315789473684</Y>
+                <Szelesseg Arany="magassag">18.75</Szelesseg>
+                <Magassag Arany="magassag">18.75</Magassag>
+            </Nyit_emel>
+            <Minusz>
+                <X Arany="szelesseg">1.8411967779056386</X>
+                <Y Arany="magassag">1.0318142734307825</Y>
+                <Szelesseg Arany="magassag">37.5</Szelesseg>
+                <Magassag Arany="magassag">70.58823529411765</Magassag>
+            </Minusz>
+            <Plussz>
+                <X Arany="szelesseg">1.8433179723502304</X>
+                <Y Arany="magassag">1.059135039717564</Y>
+                <Szelesseg Arany="magassag">30.0</Szelesseg>
+                <Magassag Arany="magassag">30.0</Magassag>
+            </Plussz>
+            <Bedob>
+                <X Arany="szelesseg">1.7524644030668126</X>
+                <Y Arany="magassag">1.0498687664041995</Y>
+                <Szelesseg Arany="magassag">24.0</Szelesseg>
+                <Magassag Arany="magassag">24.0</Magassag>
+            </Bedob>
+        </Szeles>
+    </Gombok>
+    <GrafikaElemek>
+        <Normal>
+            <KeveresAnimacio>
+                <X Arany="szelesseg">2.286</X>
+                <Y Arany="magassag">2.143</Y>
+                <Szelesseg Arany="magassag">6.0</Szelesseg>
+                <Magassag Arany="magassag">16.0</Magassag>
+            </KeveresAnimacio>
+            <Kartyalap>
+                <Szelesseg Arany="magassag">16.901</Szelesseg>
+                <Magassag Arany="magassag">11.765</Magassag>
+            </Kartyalap>
+            <Zseton>
+                <Szelesseg Arany="magassag">40</Szelesseg>
+                <Magassag Arany="magassag">40</Magassag>
+            </Zseton>
+            <Dealer>
+                <Szelesseg Arany="magassag">24</Szelesseg>
+                <Magassag Arany="magassag">24</Magassag>
+            </Dealer>
+            <Vak>
+                <Szelesseg Arany="magassag">26.6666666</Szelesseg>
+                <Magassag Arany="magassag">26.666666666</Magassag>
+            </Vak>
+            <Felho>
+                <Szelesseg Arany="magassag">10.90909090</Szelesseg>
+                <Magassag Arany="magassag">10.256410256410</Magassag>
+            </Felho>
+            <Nyertes>
+                <X Arany="szelesseg">2</X>
+                <Y Arany="magassag">2</Y>
+                <Szelesseg Arany="magassag">3</Szelesseg>
+                <Magassag Arany="magassag">6</Magassag>
+            </Nyertes>
+            <Toltes>
+                <X Arany="szelesseg">2</X>
+                <Y Arany="magassag">2</Y>
+                <Szelesseg Arany="magassag">12</Szelesseg>
+                <Magassag Arany="magassag">12</Magassag>
+            </Toltes>
+        </Normal>
+        <Szeles>
+            <KeveresAnimacio>
+                <X Arany="szelesseg">2.20678513</X>
+                <Y Arany="magassag">2.143</Y>
+                <Szelesseg Arany="magassag">6.0</Szelesseg>
+                <Magassag Arany="magassag">16.0</Magassag>
+            </KeveresAnimacio>
+            <Kartyalap>
+                <Szelesseg Arany="magassag">16.901</Szelesseg>
+                <Magassag Arany="magassag">11.765</Magassag>
+            </Kartyalap>
+            <Zseton>
+                <Szelesseg Arany="magassag">40</Szelesseg>
+                <Magassag Arany="magassag">40</Magassag>
+            </Zseton>
+            <Dealer>
+                <Szelesseg Arany="magassag">24</Szelesseg>
+                <Magassag Arany="magassag">24</Magassag>
+            </Dealer>
+            <Vak>
+                <Szelesseg Arany="magassag">26.6666666</Szelesseg>
+                <Magassag Arany="magassag">26.666666666</Magassag>
+            </Vak>
+            <Felho>
+                <Szelesseg Arany="magassag">10.90909090</Szelesseg>
+                <Magassag Arany="magassag">10.256410256410</Magassag>
+            </Felho>
+            <Nyertes>
+                <X Arany="szelesseg">2</X>
+                <Y Arany="magassag">2</Y>
+                <Szelesseg Arany="magassag">3</Szelesseg>
+                <Magassag Arany="magassag">6</Magassag>
+            </Nyertes>
+            <Toltes>
+                <X Arany="szelesseg">2</X>
+                <Y Arany="magassag">2</Y>
+                <Szelesseg Arany="magassag">12</Szelesseg>
+                <Magassag Arany="magassag">12</Magassag>
+            </Toltes>
+        </Szeles>
+    </GrafikaElemek>
+    <KartyaMozgato>
+        <Normal>
+            <Konstruktor>
+                <Lepes Arany="magassag">400.0</Lepes>
+            </Konstruktor>
+            <PakliBetolt>
+                <SzorasHatar Arany="magassag">240.0</SzorasHatar>
+            </PakliBetolt>
+            <PakliMozgat>
+                <Elteres Arany="magassag">8</Elteres>
+            </PakliMozgat>
+            <KartyalapokKioszt>
+                <Elteres Arany="magassag">60.0</Elteres>
+            </KartyalapokKioszt>
+            <KartyalapokBedob>
+                <Elteres Arany="magassag">48.0</Elteres>
+            </KartyalapokBedob>
+            <KartyalapLeosztas>
+                <Novekmeny Arany="szelesseg">2.5</Novekmeny>
+                <NovekmenyNovel Arany="magassag">120.0</NovekmenyNovel>
+                <velXMin Arany="magassag">465.0</velXMin>
+                <velXMax Arany="magassag">232.5</velXMax>
+                <velYMin Arany="magassag">240.0</velYMin>
+                <velYMax Arany="magassag">120.0</velYMax>
+            </KartyalapLeosztas>
+            <KartyalapokNagyit>
+                <Elteres Arany="magassag">16.0</Elteres>
+            </KartyalapokNagyit>
+            <KeretAnimacio>
+                <SinusSzorzo Arany="magassag">48.0</SinusSzorzo>
+            </KeretAnimacio>
+            <KartyalapokPakliba>
+                <MinSzelesseg Arany="magassag">17.142857</MinSzelesseg>
+            </KartyalapokPakliba>
+            <KartyalapokBeusztatasa>
+                <AnimacioSzelesseg Arany="magassag">10.909</AnimacioSzelesseg>
+                <AnimacioMagassag Arany="magassag">7.5</AnimacioMagassag>
+                <VyMin Arany="magassag">6</VyMin>
+                <VyMax Arany="magassag">1.5</VyMax>
+            </KartyalapokBeusztatasa>
+        </Normal>
+        <Szeles>
+            <Konstruktor>
+                <Lepes Arany="magassag">400.0</Lepes>
+            </Konstruktor>
+            <PakliBetolt>
+                <SzorasHatar Arany="magassag">240.0</SzorasHatar>
+            </PakliBetolt>
+            <PakliMozgat>
+                <Elteres Arany="magassag">8</Elteres>
+            </PakliMozgat>
+            <KartyalapokKioszt>
+                <Elteres Arany="magassag">60.0</Elteres>
+            </KartyalapokKioszt>
+            <KartyalapokBedob>
+                <Elteres Arany="magassag">48.0</Elteres>
+            </KartyalapokBedob>
+            <KartyalapLeosztas>
+                <Novekmeny Arany="szelesseg">2.36</Novekmeny>
+                <NovekmenyNovel Arany="magassag">120.0</NovekmenyNovel>
+                <velXMin Arany="magassag">465.0</velXMin>
+                <velXMax Arany="magassag">232.5</velXMax>
+                <velYMin Arany="magassag">240.0</velYMin>
+                <velYMax Arany="magassag">120.0</velYMax>
+            </KartyalapLeosztas>
+            <KartyalapokNagyit>
+                <Elteres Arany="magassag">16.0</Elteres>
+            </KartyalapokNagyit>
+            <KeretAnimacio>
+                <SinusSzorzo Arany="magassag">48.0</SinusSzorzo>
+            </KeretAnimacio>
+            <KartyalapokPakliba>
+                <MinSzelesseg Arany="magassag">17.142857</MinSzelesseg>
+            </KartyalapokPakliba>
+            <KartyalapokBeusztatasa>
+                <AnimacioSzelesseg Arany="magassag">10.909</AnimacioSzelesseg>
+                <AnimacioMagassag Arany="magassag">7.5</AnimacioMagassag>
+                <VyMin Arany="magassag">6</VyMin>
+                <VyMax Arany="magassag">1.5</VyMax>
+            </KartyalapokBeusztatasa>
+        </Szeles>
+    </KartyaMozgato>
+    <KorongMozgato>
+        <Normal>
+            <Konstruktor>
+                <Elteres Arany="magassag">10</Elteres>
+            </Konstruktor>
+            <KorongokMozgat>
+                <Lepes Arany="magassag">400</Lepes>
+            </KorongokMozgat>
+        </Normal>
+        <Szeles>
+            <Konstruktor>
+                <Elteres Arany="magassag">10</Elteres>
+            </Konstruktor>
+            <KorongokMozgat>
+                <Lepes Arany="magassag">400</Lepes>
+            </KorongokMozgat>
+        </Szeles>
+    </KorongMozgato>
+    <ZsetonMozgato>
+        <Normal>
+            <Konstruktor>
+                <Lepes Arany="magassag">400</Lepes>
+                <SzorasMin Arany="magassag">-600</SzorasMin>
+                <SzorasMax Arany="magassag">300</SzorasMax>
+            </Konstruktor>
+            <ZsetonokBetolt>
+                <ElsoElteres Arany="magassag">8</ElsoElteres>
+                <MasodikElteres Arany="magassag">30</MasodikElteres>
+            </ZsetonokBetolt>
+            <ZsetonokUjratolt>
+                <ElsoElteres Arany="magassag">8</ElsoElteres>
+                <MasodikElteres Arany="magassag">30</MasodikElteres>
+            </ZsetonokUjratolt>
+            <JatekosTetMozgat>
+                <X Arany="szelesseg">1.684210526</X>
+                <Y Arany="magassag">1.6</Y>
+            </JatekosTetMozgat>
+            <PotNyertesekhezMozgat>
+                <ElsoElteres Arany="magassag">8</ElsoElteres>
+                <MasodikElteres Arany="magassag">30</MasodikElteres>
+            </PotNyertesekhezMozgat>
+            <JatekosZsetonPoziciok>
+                <Elteres Arany="magassag">30</Elteres>
+            </JatekosZsetonPoziciok>
+            <PotZsetonPoziciok>
+                <Elteres Arany="magassag">30</Elteres>
+            </PotZsetonPoziciok>
+        </Normal>
+        <Szeles>
+            <Konstruktor>
+                <Lepes Arany="magassag">400</Lepes>
+                <SzorasMin Arany="magassag">-600</SzorasMin>
+                <SzorasMax Arany="magassag">300</SzorasMax>
+            </Konstruktor>
+            <ZsetonokBetolt>
+                <ElsoElteres Arany="magassag">8</ElsoElteres>
+                <MasodikElteres Arany="magassag">30</MasodikElteres>
+            </ZsetonokBetolt>
+            <ZsetonokUjratolt>
+                <ElsoElteres Arany="magassag">8</ElsoElteres>
+                <MasodikElteres Arany="magassag">30</MasodikElteres>
+            </ZsetonokUjratolt>
+            <JatekosTetMozgat>
+                <X Arany="szelesseg">1.758241</X>
+                <Y Arany="magassag">1.6</Y>
+            </JatekosTetMozgat>
+            <PotNyertesekhezMozgat>
+                <ElsoElteres Arany="magassag">8</ElsoElteres>
+                <MasodikElteres Arany="magassag">30</MasodikElteres>
+            </PotNyertesekhezMozgat>
+            <JatekosZsetonPoziciok>
+                <Elteres Arany="magassag">30</Elteres>
+            </JatekosZsetonPoziciok>
+            <PotZsetonPoziciok>
+                <Elteres Arany="magassag">30</Elteres>
+            </PotZsetonPoziciok>
+        </Szeles>
+    </ZsetonMozgato>
+    <Alakzatok>
+        <Normal>
+            <KerekitettTeglalap>
+                <X Arany="szelesseg">5.517</X>
+                <Y Arany="magassag">4.0</Y>
+                <Szelesseg Arany="szelesseg">1.5686274</Szelesseg>
+                <Magassag Arany="magassag">2.0</Magassag>
+                <BalKerekites Arany="magassag">2.0</BalKerekites>
+                <JobbKerekites Arany="magassag">2.0</JobbKerekites>
+            </KerekitettTeglalap>
+            <BalKor>
+                <X Arany="szelesseg">2.726</X>
+                <Y Arany="magassag">2.0</Y>
+            </BalKor>
+            <JobbKor>
+                <X Arany="szelesseg">1.579</X>
+                <Y Arany="magassag">2.0</Y>
+            </JobbKor>
+        </Normal>
+        <Szeles>
+            <KerekitettTeglalap>
+                <X Arany="szelesseg">4.017657</X>
+                <Y Arany="magassag">4.0</Y>
+                <Szelesseg Arany="szelesseg">1.99416</Szelesseg>
+                <Magassag Arany="magassag">2.0</Magassag>
+                <BalKerekites Arany="magassag">2.0</BalKerekites>
+                <JobbKerekites Arany="magassag">2.0</JobbKerekites>
+            </KerekitettTeglalap>
+            <BalKor>
+                <X Arany="szelesseg">2.5773584</X>
+                <Y Arany="magassag">2.0</Y>
+            </BalKor>
+            <JobbKor>
+                <X Arany="szelesseg">1.632019</X>
+                <Y Arany="magassag">2.0</Y>
+            </JobbKor>
+        </Szeles>
+    </Alakzatok>
+</Elemek>

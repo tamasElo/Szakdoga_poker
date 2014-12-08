@@ -1,2 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Jatekmenet><nev>Tomi</nev><jatekosokSzama>5</jatekosokSzama><osszeg>2500</osszeg><nagyvakErtek>30</nagyvakErtek><vakErtekEmeles>4</vakErtekEmeles></Jatekmenet>
+<Jatekmenet>
+    <nev>Tomi</nev>
+    <jatekosokSzama>4</jatekosokSzama>
+    <osszeg>2500</osszeg>
+    <nagyvakErtek>30</nagyvakErtek>
+    <vakErtekEmeles>4</vakErtekEmeles>
+</Jatekmenet>

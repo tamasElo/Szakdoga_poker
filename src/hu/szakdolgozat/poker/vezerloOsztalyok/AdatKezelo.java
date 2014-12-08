@@ -1,5 +1,7 @@
 package hu.szakdolgozat.poker.vezerloOsztalyok;
 
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,10 +12,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
-import org.w3c.dom.bootstrap.DOMImplementationRegistry;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSSerializer;
-import org.w3c.dom.ls.LSOutput;
 import java.awt.DisplayMode;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JOptionPane;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -178,17 +177,13 @@ public final class AdatKezelo {
      */
     private static void xmlFajlbaKiiras(File file) {
         try {
-            DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
-
-            DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
-
-            LSSerializer writer = impl.createLSSerializer();
-            LSOutput output = impl.createLSOutput();
-
-            output.setByteStream(new FileOutputStream(file));
-            writer.write(doc, output);
-        } catch (IOException | IllegalAccessException | InstantiationException | ClassNotFoundException ie) {
-            JOptionPane.showMessageDialog(null, ie.getMessage());
+            OutputFormat format = new OutputFormat(doc);
+            format.setIndenting(true);
+            XMLSerializer serializer = new XMLSerializer(
+                    new FileOutputStream(file), format);
+            serializer.serialize(doc);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }
 
@@ -200,14 +195,17 @@ public final class AdatKezelo {
      */
     public synchronized static List<String> beallitasBetolt(File eleresiUt) {
         dokumentumLetrehozas(eleresiUt);
+        doc.getDocumentElement().normalize();
         
         ArrayList<String> adatok = new ArrayList<>();
         Element docEle = doc.getDocumentElement();
         NodeList nl = docEle.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
-            adatok.add(nl.item(i).getTextContent());
+            if (nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                adatok.add(nl.item(i).getTextContent());
+            }
         }
-
+        
         return adatok;
     }
     
@@ -220,36 +218,42 @@ public final class AdatKezelo {
      */
     public synchronized static Map<String, List<Double>> aranyErtekekBetolt(String elemNev, Dimension felbontas) {
         dokumentumLetrehozas(ARANY_ERTEKEK);
+        doc.getDocumentElement().normalize();
+        
         List<Double> ertekek;
         Map<String,List<Double>> adatok = new HashMap<>();
         double szelesseg = felbontas.getWidth(), magassag = felbontas.getHeight();
         double ertek, aranyErtek;
         Element docEle = doc.getDocumentElement();         
-        Element elem;
-        NodeList nl = docEle.getElementsByTagName(elemNev);
+        Element elem = (Element) docEle.getElementsByTagName(elemNev).item(0);
+        NodeList nl = KepernyoKezelo.keparanySzamit(felbontas) == KepernyoKezelo.NORMAL_KEPERNYO
+                ? elem.getElementsByTagName("Normal").item(0).getChildNodes() 
+                : elem.getElementsByTagName("Szeles").item(0).getChildNodes();
         NodeList nl2;
-        nl = nl.item(0).getChildNodes();
-        nl = nl.item(KepernyoKezelo.keparanySzamit(felbontas)).getChildNodes();
 
         for (int i = 0; i < nl.getLength(); i++) {
-            ertekek = new ArrayList<>();
-            nl2 =  nl.item(i).getChildNodes();
-            elemNev = nl.item(i).getNodeName();
-            
-            for (int j = 0; j < nl2.getLength(); j++) {
-               elem = (Element) nl2.item(j);
-               ertek = Double.parseDouble(nl2.item(j).getTextContent());
-               
-                if (elem.getAttribute("Arany").equals("szelesseg")) {
-                    aranyErtek = szelesseg / ertek;
-                } else {
-                    aranyErtek = magassag / ertek;
+            if (nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                ertekek = new ArrayList<>();
+                nl2 = nl.item(i).getChildNodes();
+                elemNev = nl.item(i).getNodeName();
+
+                for (int j = 0; j < nl2.getLength(); j++) {
+                    if (nl2.item(j).getNodeType() == Node.ELEMENT_NODE) {
+                        elem = (Element) nl2.item(j);
+                        ertek = Double.parseDouble(elem.getTextContent());
+
+                        if (elem.getAttribute("Arany").equals("szelesseg")) {
+                            aranyErtek = szelesseg / ertek;
+                        } else {
+                            aranyErtek = magassag / ertek;
+                        }
+
+                        ertekek.add(aranyErtek);
+                    }
                 }
-                
-                ertekek.add(aranyErtek);
+
+                adatok.put(elemNev, ertekek);
             }
-            
-            adatok.put(elemNev, ertekek);
         }
 
         return adatok;

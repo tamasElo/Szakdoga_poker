@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Grafika><Vertikalis>1024</Vertikalis><Horizontalis>768</Horizontalis><Szinmelyseg>32</Szinmelyseg><Kepfrissites>60</Kepfrissites><KepernyoAllapot>0</KepernyoAllapot><Elsimitas>true</Elsimitas></Grafika>
+<Grafika>
+    <Vertikalis>1024</Vertikalis>
+    <Horizontalis>768</Horizontalis>
+    <Szinmelyseg>32</Szinmelyseg>
+    <Kepfrissites>60</Kepfrissites>
+    <KepernyoAllapot>0</KepernyoAllapot>
+    <Elsimitas>true</Elsimitas>
+</Grafika>
