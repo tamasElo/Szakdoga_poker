@@ -5,7 +5,6 @@ import hu.szakdolgozat.poker.vezerloOsztalyok.Lapkombinaciok;
 import hu.szakdolgozat.poker.vezerloOsztalyok.PokerKezKiertekelo;
 import hu.szakdolgozat.poker.vezerloOsztalyok.SzalVezerlo;
 import hu.szakdolgozat.poker.vezerloOsztalyok.ZsetonKezelo;
-import hu.szakdolgozat.poker.vezerloOsztalyok.szalak.JatekVezerlo;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
