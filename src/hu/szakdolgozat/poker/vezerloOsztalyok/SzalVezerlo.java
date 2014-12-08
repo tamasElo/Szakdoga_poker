@@ -223,9 +223,9 @@ public class SzalVezerlo implements Serializable {
         }
     }
     
-    public void toltesRajzol(Graphics g){
+    public void toltesRajzol(Graphics2D g2D){
         if(varakozasMozgato != null && varakozasMozgato.isAlive()){
-            toltes.rajzol(g, jatekterPanel);
+            toltes.rajzol(g2D, jatekterPanel);
         }
     }
 
@@ -549,7 +549,7 @@ public class SzalVezerlo implements Serializable {
         varakozasMozgato = new VarakozasMozgato(this);
         xmlAdatok = AdatKezelo.aranyErtekekBetolt("GrafikaElemek", new Dimension(jatekterPanelSzelesseg(), jatekterPanelMagassag()));
         itr = xmlAdatok.get("Toltes").iterator();
-        toltes = new Toltes();
+        toltes = new Toltes(new ImageIcon("src/hu/szakdolgozat/poker/adatFajlok/varakozas/tolt.png").getImage());
         toltes.setKx(itr.next());
         toltes.setKy(itr.next());
         toltes.setToltoKepMagassag(itr.next());

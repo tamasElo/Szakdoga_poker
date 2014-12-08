@@ -172,8 +172,7 @@ public class ZsetonMozgato extends Thread {
         List<Zseton> jatekosZsetonjai = szalVezerlo.getJatekosokZsetonjai().get(jatekosSorszam);        
         List<Zseton> jatekosTetje = ZsetonKezelo.pot(jatekosZsetonjai, jatekosTetOsszege);
         
-        szalVezerlo.pothozAd(jatekosTetje);         
-        szalVezerlo.setMenthet(false);
+        szalVezerlo.pothozAd(jatekosTetje);     
         
         for (Zseton zseton : jatekosZsetonjai) {
             if (zseton.getKx() == 0) {

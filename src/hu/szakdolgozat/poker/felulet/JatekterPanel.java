@@ -147,7 +147,7 @@ public class JatekterPanel extends JPanel implements Runnable{
             szalVezerlo.potRajzol(g2D);
         }
 
-        szalVezerlo.toltesRajzol(g);
+        szalVezerlo.toltesRajzol(g2D);
         szalVezerlo.felhoRajzol(g);        
         szalVezerlo.nyertesRajzol(g2D);
         

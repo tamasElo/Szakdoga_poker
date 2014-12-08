@@ -63,9 +63,9 @@ public class JatekVezerlo extends Thread implements Serializable{
             szalVezerlo.korongokMozgatSzalIndit(dealerJatekosSorszam);
             szalVezerlo.kartyalapokKiosztSzalIndit(dealerJatekosSorszam);
             megallit();
-            vakokErtekeBeallit();
+            vakokErtekeBeallit();    
+            lehetosegekBeallit();        
             ujkorIndit = false;
-            lehetosegekBeallit();
         } else if (aktivJatekosokSzama == 1) {
             szalVezerlo.jatekVezerloSzalLeallit();
             folytat();
@@ -172,6 +172,10 @@ public class JatekVezerlo extends Thread implements Serializable{
             }
         } else {
             szalVezerlo.gombSorAllapotvalt();
+        }
+        
+        if (ujkorIndit) {
+            szalVezerlo.setMenthet(true);
         }
     }
         
