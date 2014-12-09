@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Audio>
-    <MenuZene>true</MenuZene>
-    <Hangok>true</Hangok>
+    <MenuZene>false</MenuZene>
+    <Hangok>false</Hangok>
 </Audio>
