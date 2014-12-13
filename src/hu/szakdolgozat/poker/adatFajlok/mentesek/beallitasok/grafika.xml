@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
 <Grafika>
-    <Vertikalis>1024</Vertikalis>
-    <Horizontalis>768</Horizontalis>
+    <Vertikalis>1152</Vertikalis>
+    <Horizontalis>864</Horizontalis>
     <Szinmelyseg>32</Szinmelyseg>
     <Kepfrissites>60</Kepfrissites>
     <KepernyoAllapot>0</KepernyoAllapot>

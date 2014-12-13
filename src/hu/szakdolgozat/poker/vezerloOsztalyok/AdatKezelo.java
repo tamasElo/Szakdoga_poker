@@ -1,7 +1,5 @@
 package hu.szakdolgozat.poker.vezerloOsztalyok;
 
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,7 +19,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -172,18 +179,24 @@ public final class AdatKezelo {
 
     /**
      * Kiírja a paraméterként átadott xml fájlba az adatokat.
-     * 
-     * @param file 
+     *
+     * @param file
      */
     private static void xmlFajlbaKiiras(File file) {
         try {
-            OutputFormat format = new OutputFormat(doc);
-            format.setIndenting(true);
-            XMLSerializer serializer = new XMLSerializer(
-                    new FileOutputStream(file), format);
-            serializer.serialize(doc);
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage());
+            DOMSource domSource = new DOMSource(doc);
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            StreamResult sr = new StreamResult(file);
+
+            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+            transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.transform(domSource, sr);
+        } catch (TransformerConfigurationException ex) {
+            Logger.getLogger(AdatKezelo.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
+            Logger.getLogger(AdatKezelo.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
