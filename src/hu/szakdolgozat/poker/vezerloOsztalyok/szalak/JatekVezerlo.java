@@ -82,7 +82,6 @@ public class JatekVezerlo extends Thread implements Serializable{
 
     /**
      * Beállítja a kisvak, nagyvak, dealer és az aktuális aktív játékos sorszámát
-     * rekurzió segítségével az új kör indításakor.
      */
     private void jatekosSorszamokBeallit(){
         byte eltolas = 1;
